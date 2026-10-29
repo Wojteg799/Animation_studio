@@ -1,12 +1,16 @@
-// See all configuration options: https://remotion.dev/docs/config
-// Each option also is available as a CLI flag: https://remotion.dev/docs/cli
-
-// Note: When using the Node.JS APIs, the config file doesn't apply. Instead, pass options directly to the APIs
+// Remotion configuration for Alpha Transparent ProRes 4444 export
+// Documentation: https://remotion.dev/docs/config
 
 import { Config } from "@remotion/cli/config";
 import { webpackOverride } from "./src/remotion/webpack-override.mjs";
 
-Config.setRspack(true);
-Config.setVideoImageFormat("jpeg");
+// Enable PNG image format to preserve the Alpha channel on each rendered frame
+Config.setVideoImageFormat("png");
 
+// Default to Apple ProRes 4444 with Alpha (yuva444p10le) for NLEs (DaVinci, Premiere, FCP)
+Config.setCodec("prores");
+Config.setProResProfile("4444");
+Config.setPixelFormat("yuva444p10le");
+
+Config.setRspack(true);
 Config.overrideBundlerConfig(webpackOverride);

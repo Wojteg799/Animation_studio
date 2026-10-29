@@ -1,88 +1,34 @@
-<img src="https://github.com/remotion-dev/template-next/assets/1629785/9092db5f-7c0c-4d38-97c4-5f5a61f5cc098" />
-<br/>
-<br/>
+# 🎬 DocuMotion Studio – Generator Nakładek Wideo i Kinowych Teł
 
-This is a Next.js template for building programmatic video apps, with [`@remotion/player`](https://remotion.dev/player) and [`@remotion/lambda`](https://remotion.dev/lambda) built in.
+**DocuMotion Studio** to profesjonalne studio webowe oparte na **Next.js (App Router)** i **Remotion**, stworzone do szybkiego tworzenia i renderowania animacji, infografik oraz kinowych teł do filmów dokumentalnych na YouTube (np. w stylu *Vox*, *Johnny Harris*, śledztwa dziennikarskie, historia, geopolityka, biografie).
 
-Tailwind CSS is included.
+---
 
-<img src="https://github.com/remotion-dev/template-next/assets/1629785/c9c2e5ca-2637-4ec8-8e40-a8feb5740d88" />
+## 🚀 Szablony w Studiu
 
-## Getting Started
+### 1. 📜 Ciemny Papier Archiwalny & Kurz (`DarkParchmentBackground`)
+- **Organiczna faktura papieru**: Włókna celulozowe, struktura sprasowanego papieru welinowego i mikroskopijne plamki czasu.
+- **Oświetlenie**: Punktowe światło lampki biurkowej archiwisty (*Desk Lamp*), smuga światła z góry lub rozproszone światło.
+- **Drobiny kurzu**: Powoli unoszący się kurz archiwalny w świetle lampy.
+- **Style**: *Charcoal Dossier*, *Aged Sepia Document*, *Black Archival Vellum*, *Midnight Ink Wash*.
+- **Pętla**: 100% bezszwowa pętla 2-minutowa (3600 klatek przy 30fps).
 
-[Use this template](https://github.com/new?template_name=template-next-app-dir-tailwind&template_owner=remotion-dev) to clone it into your GitHub account. Run
+### 2. 🌌 Czarne Kinowe Tło z Cząsteczkami (`CinematicParticlesBackground`)
+- **Głęboka czerń z duszą**: 20-stopniowy wygładzony gradient smoothstep z podwójną tarczą ditheringu anty-bandingowego.
+- **Białe cząsteczki**: 3 plany głębi (ostry pyłek w tle, lśniące drobiny, rozmyty bokeh na pierwszym planie).
+- **Style**: *Deep Obsidian Noir*, *Midnight Cosmic Blue*, *Archival Warm Charcoal*, *Emerald Void*, *Pure Minimal*.
+- **Pętla**: 100% bezszwowa pętla 2-minutowa (3600 klatek przy 30fps).
 
-```
-npm i --loglevel=error
-```
+### 3. 🏷️ Archival Dossier / Lower Third (`DocumentaryLowerThird`)
+- **Przezroczyste tło (Alpha)**: Apple ProRes 4444 RGBA do bezpośredniego przeciągania na oś czasu DaVinci Resolve / Premiere Pro bez kluczowania.
+- **Fizyka**: Płynny wjazd i wyjazd oparty na `spring()` z Remotion.
 
-afterwards. Alternatively, use this command to scaffold a project:
+---
 
-```
-npx create-video@latest --next
-```
+## 🛠️ Uruchomienie
 
-## Commands
-
-Start the Next.js dev server:
-
-```
+Kliknij dwukrotnie plik **`start.bat`** (lub **`uruchom.bat`**) albo uruchom w terminalu:
+```bash
 npm run dev
 ```
-
-Open the Remotion Studio:
-
-```
-npx remotion studio
-```
-
-Render a video locally:
-
-```
-npx remotion render
-```
-
-Upgrade Remotion:
-
-```
-npx remotion upgrade
-```
-
-The following script will set up your Remotion Bundle and Lambda function on AWS:
-
-```
-node deploy.mjs
-```
-
-You should run this script after:
-
-- changing the video template
-- changing `config.mjs`
-- upgrading Remotion to a newer version
-
-## Set up rendering on AWS Lambda
-
-This template supports rendering the videos via [Remotion Lambda](https://remotion.dev/lambda).
-
-1. Copy the `.env.example` file to `.env` and fill in the values.
-   Complete the [Lambda setup guide](https://www.remotion.dev/docs/lambda/setup) to get your AWS credentials.
-
-1. Edit the `config.mjs` file to your desired Lambda settings.
-
-1. Run `node deploy.mjs` to deploy your Lambda function and Remotion Bundle.
-
-## Docs
-
-Get started with Remotion by reading the [fundamentals page](https://www.remotion.dev/docs/the-fundamentals).
-
-## Help
-
-We provide help on our [Discord server](https://remotion.dev/discord).
-
-## Issues
-
-Found an issue with Remotion? [File an issue here](https://remotion.dev/issue).
-
-## License
-
-Note that for some entities a company license is needed. [Read the terms here](https://github.com/remotion-dev/remotion/blob/main/LICENSE.md).
+Aplikacja uruchomi się pod adresem: `http://localhost:3000`

@@ -17,7 +17,11 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
-    "noUnusedLocals": true,
+    "noUnusedLocals": false,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
     "plugins": [
       {
         "name": "next"

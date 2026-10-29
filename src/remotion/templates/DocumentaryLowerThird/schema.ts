@@ -1,0 +1,50 @@
+import { z } from "zod";
+
+export const DocumentaryLowerThirdSchema = z.object({
+  title: z.string().default("DR. J. ROBERT OPPENHEIMER"),
+  subtitle: z.string().default("Theoretical Physicist • Director of Los Alamos (1943–1945)"),
+  badgeText: z.string().default("ARCHIVAL RECORD #0492 // MANHATTAN PROJECT"),
+  dateLocation: z.string().default("JULY 16, 1945 • WHITE SANDS PROVING GROUND"),
+  themeId: z.string().default("cinematic-gold"),
+  customPrimary: z.string().optional(),
+  customSecondary: z.string().optional(),
+  customCardBg: z.string().optional(),
+  customTextPrimary: z.string().optional(),
+  customTextSecondary: z.string().optional(),
+  photoUrl: z.string().optional(),
+  photoShape: z.enum(["circle", "rounded-rect", "stamp", "none"]).default("rounded-rect"),
+  styleVariant: z.enum(["dossier", "modern-minimal", "technical-hud"]).default("dossier"),
+  springDamping: z.number().min(5).max(40).default(14),
+  springStiffness: z.number().min(30).max(300).default(120),
+  springMass: z.number().min(0.2).max(3).default(0.8),
+  scale: z.number().min(0.5).max(1.8).default(1.0),
+  offsetX: z.number().default(90),
+  offsetY: z.number().default(780),
+  entranceFrames: z.number().min(10).max(60).default(24),
+  exitFrames: z.number().min(10).max(60).default(22),
+  showScanline: z.boolean().default(true),
+  showCrosshair: z.boolean().default(true),
+});
+
+export type DocumentaryLowerThirdProps = z.infer<typeof DocumentaryLowerThirdSchema>;
+
+export const defaultDocumentaryLowerThirdProps: DocumentaryLowerThirdProps = {
+  title: "DR. J. ROBERT OPPENHEIMER",
+  subtitle: "Theoretical Physicist • Director of Los Alamos (1943–1945)",
+  badgeText: "ARCHIVAL RECORD #0492 // MANHATTAN PROJECT",
+  dateLocation: "JULY 16, 1945 • WHITE SANDS PROVING GROUND",
+  themeId: "cinematic-gold",
+  photoUrl: "",
+  photoShape: "rounded-rect",
+  styleVariant: "dossier",
+  springDamping: 14,
+  springStiffness: 120,
+  springMass: 0.8,
+  scale: 1.0,
+  offsetX: 90,
+  offsetY: 780,
+  entranceFrames: 24,
+  exitFrames: 22,
+  showScanline: true,
+  showCrosshair: true,
+};
