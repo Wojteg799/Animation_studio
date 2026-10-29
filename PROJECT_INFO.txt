@@ -1,0 +1,138 @@
+================================================================================
+DOCUMOTION STUDIO (Animation_studio) - AI CONTEXT & ARCHITECTURE GUIDE
+================================================================================
+Dla każdego modelu AI / asystenta programowania pracującego nad tym projektem.
+Ten plik wyjaśnia architekturę, szablony, mechanikę renderowania i reguły projektu.
+
+--------------------------------------------------------------------------------
+1. CZYM JEST TEN PROJEKT? (PROJECT OVERVIEW)
+--------------------------------------------------------------------------------
+DocuMotion Studio to aplikacja webowa typu Video Studio stworzona w Next.js (App Router)
+oraz Remotion. Służy do tworzenia, edycji na żywo w przeglądarce i renderowania
+kinowych animacji, czołówek (intros), teł (backgrounds) oraz belek dokumentalnych (lower thirds)
+do filmów na YouTube (np. w stylu Vox, Johnny Harris, śledztw internetowych,
+tajemnic historycznych i dokumentów).
+
+Aplikacja łączy:
+1. Interaktywny podgląd w przeglądarce (Remotion Player) z panelem suwaków i przełączników.
+2. Serwerowy silnik renderujący w Node.js (@remotion/bundler + @remotion/renderer),
+   eksportujący bezpośrednio do:
+   - Apple ProRes 4444 (.mov) z natywnym przezroczystym kanałem Alpha (dla nakładek na wideo).
+   - Broadcast MP4 H.264 CRF 17 (.mp4) o wysokiej jakości i małym rozmiarze (dla teł i intro).
+
+--------------------------------------------------------------------------------
+2. STOS TECHNOLOGICZNY (TECH STACK)
+--------------------------------------------------------------------------------
+- Framework: Next.js 14+ (App Router, React 18, TypeScript)
+- Silnik wideo: Remotion 4.x (@remotion/bundler, @remotion/renderer, @remotion/player)
+- Style: Tailwind CSS + Vanilla CSS (ciemny, kinowy interfejs w stylu DaVinci / Premiere)
+- Walidacja danych & schematy: Zod (każdy szablon ma swój schema.ts)
+- Ikony: lucide-react
+- Serwer deweloperski: npm run dev / uruchom.bat (domyślny port: http://localhost:3000)
+
+--------------------------------------------------------------------------------
+3. STRUKTURA KATALOGÓW (DIRECTORY STRUCTURE)
+--------------------------------------------------------------------------------
+c:\Users\...\Animation_studio\
+├── public/
+│   ├── outputs/              # Wyrenderowane pliki wideo (.mov / .mp4) - ignorowane w git
+│   └── uploads/              # Wgrane grafiki użytkownika (.png / .ico)
+├── src/
+│   ├── app/
+│   │   ├── api/
+│   │   │   ├── render/       # POST /api/render - uruchamia zadanie renderowania w tle
+│   │   │   │   └── [id]/     # GET /api/render/[id] - polling statusu i postępu %
+│   │   │   │       └── download/ # GET pobieranie gotowego pliku wideo
+│   │   │   └── upload/       # POST /api/upload - wgrywanie assetów
+│   │   ├── layout.tsx
+│   │   └── page.tsx          # Główny dashboard studia (Sidebar, Player, Panel Kontrolny)
+│   ├── components/
+│   │   └── studio/           # Komponenty UI panelu kontrolnego:
+│   │       ├── LeftSidebar.tsx          # Wybór szablonów (kategorie)
+│   │       ├── PreviewPlayer.tsx        # Odtwarzacz Remotion Player z suwakiem czasu
+│   │       ├── StudioHeader.tsx         # Rozdzielczość, FPS, Przycisk Renderuj
+│   │       ├── RenderModal.tsx          # Modal z paskiem postępu renderowania
+│   │       ├── JoyDivisionControls.tsx  # Kontrolki do animacji 25 kaset / Unknown Pleasures
+│   │       ├── CassetteIntroControls.tsx# Kontrolki do intro z retro kasetą i podpisem
+│   │       ├── VoidControls.tsx         # Kontrolki do teł cząsteczkowych (Pitch Black)
+│   │       └── ...
+│   ├── lib/
+│   │   ├── render-manager.ts # Mózg renderowania w Node.js (wielowątkowość, bundler, auto-cache)
+│   │   ├── types.ts          # Typy statusów renderowania, rozdzielczości, formatów
+│   │   └── themes.ts         # Palety kolorystyczne
+│   └── remotion/
+│       ├── index.ts          # Punkt wejścia dla Remotion Bundlera
+│       ├── Root.tsx          # Rejestracja <Composition> z dynamicznym calculateMetadata
+│       └── templates/        # SZABLONY ANIMACJI:
+│           ├── registry.ts   # Rejestr wszystkich dostępnych szablonów w UI
+│           ├── JoyDivisionCassetteMorph/       # 25 kaset -> okładka Unknown Pleasures
+│           ├── RetroCassetteIntro/             # Intro z kasetą i pismem odręcznym
+│           ├── MinimalVoidParticles/           # Lekkie czarne tła z drobinami (3 presety)
+│           ├── CinematicParticlesBackground/   # Płynne cząsteczki z ditheringiem
+│           ├── DarkParchmentBackground/        # Faktura archiwalnego papieru i lampa
+│           └── DocumentaryLowerThird/          # Belki dokumentalne z przezroczystością
+├── uruchom.bat               # Skrypt uruchamiający studio jednym kliknięciem w Windows
+├── start.bat                 # Alternatywny launcher
+├── package.json
+└── tsconfig.json
+
+--------------------------------------------------------------------------------
+4. KLUCZOWE SZABLONY I ICH LOGIKA (KEY TEMPLATES)
+--------------------------------------------------------------------------------
+
+A. Joy Division: 25 Kaset → Unknown Pleasures (id: "joy-division-cassette-morph")
+   - Koncepcja: 25 kaset magnetofonowych w minimalistycznym białym outline, które
+     przeistaczają się w 25 linii pulsara PSR B1919+21 z okładki Unknown Pleasures.
+   - Faza 0 (Intro - Rozdawanie kart): Każdy z 5 rzędów (po 5 kaset naraz) wlatuje po kolei
+     na ekran z fizyką uderzenia w blat (krzywa back-ease-out z lekkim kątem obrotu).
+   - Faza 1 (Siatka 5x5): Kompaktowy spacing (180x115 px), brak wychodzenia poza ekran,
+     ruch wirujących szpulek taśmy (spoolSpinSpeed).
+   - Faza 2 (Ułożenie w 25 rzędów): Kasety zjeżdżają pionowo jedna na drugą zachowując 100%
+     naturalne proporcje bez wcześniejszego deformowania (alignStyle: "natural-stack").
+   - Faza 3 (Spłaszczenie): Kasety rozciągają się w poziomie i spłaszczają w płaskie linie.
+   - Faza 4 (Wyrastanie gór): Z płaskich linii wyrastają fale radiowe pulsarów.
+   - Brak napisów na dole - czysty, minimalistyczny obraz.
+   - Pliki: MorphWaveLine.tsx, CassetteWireframe.tsx, pulsar-data.ts, schema.ts, index.tsx.
+
+B. Retro Kaseta Magnetofonowa Intro (id: "retro-cassette-intro")
+   - Koncepcja: Napis "Horyzont Zdarzeń Prezentuje", wjeżdżająca vintage kaseta magnetofonowa
+     oraz animowany długopis podpisujący odręcznie etykietę ("Najbardziej tajemnicza piosenka...").
+   - Pliki: CassetteSVG.tsx, HandwritingText.tsx, schema.ts, index.tsx.
+
+C. Minimal Void Particles & Backgrounds (id: "minimal-void-particles" / "minimal-void-glow" / "minimal-void-stardust")
+   - Koncepcja: 100% smoliście czarne tło (#000000) z subtelnymi unoszącymi się drobinami.
+   - Zaprojektowane do renderowania jako lekki plik MP4 (H.264 CRF 17), dzięki czemu
+     2-minutowe tło waży kilka-kilkanaście MB zamiast 500MB+ w bezstratnym ProResie.
+
+--------------------------------------------------------------------------------
+5. JAK DZIAŁA SILNIK RENDEROWANIA (RENDER ENGINE MECHANICS)
+--------------------------------------------------------------------------------
+Plik: src/lib/render-manager.ts
+- Renderowanie odbywa się asynchronicznie w procesie serwera Next.js.
+- Automatyczne unieważnianie bundle (Hot Source-Invalidation):
+  Funkcja `getOrBuildBundle` sprawdza timestampy (mtime) plików w folderze `src/remotion/`.
+  Jeśli jakikolwiek plik szablonu zostanie zmodyfikowany, stary bundle w tempie jest unieważniany
+  i kompilowany jest świeży kod. Zapobiega to renderowaniu starych wersji kodu.
+- Bezpieczna wielowątkowość (Concurrency):
+  Używa połowy dostępnych rdzeni CPU (max 4), aby nie zawiesić komputera użytkownika
+  podczas kodowania klatek.
+- Inteligentny wybór formatu:
+  - Nakładki / Belki z przezroczystością -> Apple ProRes 4444 (yuva444p10le).
+  - Tła i animacje pełnoekranowe bez przezroczystości -> MP4 H.264 (CRF 17, yuv420p).
+
+--------------------------------------------------------------------------------
+6. ZASADY PRACY DLA AI PRZY MODYFIKACJACH (RULES FOR FUTURE AI)
+--------------------------------------------------------------------------------
+1. Gdy dodajesz lub zmieniasz właściwości animacji (props):
+   - Zawsze zaktualizuj Zod Schema w `src/remotion/templates/<Template>/schema.ts`
+     oraz obiekt `default...Props`.
+   - Zaktualizuj kontrolki w `src/components/studio/<Template>Controls.tsx`.
+   - Upewnij się, że w `src/app/page.tsx` w funkcji `handleRender` nowe propsy są łączone
+     z domyślnymi (np. `inputProps = { ...defaultProps, ...currentProps }`).
+2. Bezpieczne marginesy w 1920x1080:
+   - Żadne elementy w początkowych siatkach nie mogą wychodzić poza bezpieczny obszar
+     ekranu (zostawiaj min. 100-200px marginesu od krawędzi 1920x1080).
+3. Testowanie i weryfikacja:
+   - Sprawdzenie TypeScriptu: uruchom `npx tsc --noEmit` przed zakończeniem prac.
+   - Dev server uruchamia się przez `npm run dev` na porcie 3000.
+================================================================================
