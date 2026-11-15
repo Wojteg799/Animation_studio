@@ -413,3 +413,4 @@ export const CharacterBadge: React.FC<CharacterBadgeProps> = ({
     </div>
   );
 };
+

@@ -176,3 +176,4 @@ export const defaultCharacterStageProps: CharacterStageProps = {
 
   durationInFrames: 240,
 };
+

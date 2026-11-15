@@ -49,3 +49,4 @@ export const AVATAR_PRESETS: AvatarPreset[] = [
     svgDataUri: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="%23091e1d"/><circle cx="100" cy="72" r="40" fill="%23e2e8f0"/><circle cx="83" cy="70" r="14" fill="none" stroke="%2310b981" stroke-width="4"/><circle cx="117" cy="70" r="14" fill="none" stroke="%2310b981" stroke-width="4"/><line x1="97" y1="70" x2="103" y2="70" stroke="%2310b981" stroke-width="4"/><path d="M35 190 C40 140 70 120 100 120 C130 120 160 140 165 190 Z" fill="%23f8fafc"/><polygon points="90,120 110,120 115,190 85,190" fill="%23059669"/></svg>`,
   },
 ];
+

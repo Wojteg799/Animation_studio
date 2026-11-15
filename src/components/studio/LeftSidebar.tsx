@@ -162,36 +162,33 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
             {isCharacterCategory
               ? "SEKCJA: POSTACIE"
               : isIntroCategory
-              ? "SEKCJA: INTRO"
-              : isBackgroundCategory
-              ? "SEKCJA: TŁO"
-              : "SEKCJA: NAKŁADKA"}
+                ? "SEKCJA: INTRO"
+                : isBackgroundCategory
+                  ? "SEKCJA: TŁO"
+                  : "SEKCJA: NAKŁADKA"}
           </span>
         </div>
 
-        {/* Category switcher pills (4 Sekcje: Postacie, Intro, Tła, Nakładki) */}
-        <div className="grid grid-cols-4 gap-1 p-1 bg-[#0c0c12] rounded-xl border border-white/5">
-          <button
-            type="button"
-            onClick={() => onSelectTemplate("character-stage")}
-            className={`py-2 px-1 rounded-lg text-[10px] font-semibold flex flex-col items-center justify-center gap-1 transition-all ${
-              isCharacterCategory
-                ? "bg-amber-500 text-black shadow-md font-bold"
-                : "text-zinc-400 hover:text-white"
-            }`}
-          >
-            <User className="w-3.5 h-3.5" />
-            <span>Postacie</span>
-          </button>
+          {/* Category switcher pills (4 Sekcje: Postacie, Intro, Tła, Nakładki) */}
+          <div className="grid grid-cols-4 gap-1 p-1 bg-[#0c0c12] rounded-xl border border-white/5">
+            <button
+              type="button"
+              onClick={() => onSelectTemplate("character-stage")}
+              className={`py-2 px-1 rounded-lg text-[10px] font-semibold flex flex-col items-center justify-center gap-1 transition-all ${isCharacterCategory
+                  ? "bg-amber-500 text-black shadow-md font-bold"
+                  : "text-zinc-400 hover:text-white"
+                }`}
+            >
+              <User className="w-3.5 h-3.5" />
+              <span>Postacie</span>
+            </button>
 
-          <button
-            type="button"
-            onClick={() => onSelectTemplate("joy-division-cassette-morph")}
-            className={`py-2 px-1 rounded-lg text-[10px] font-semibold flex flex-col items-center justify-center gap-1 transition-all ${
-              isIntroCategory
-                ? "bg-amber-500 text-black shadow-md font-bold"
-                : "text-zinc-400 hover:text-white"
-            }`}
+            <button
+              type="button"
+              onClick={() => onSelectTemplate("joy-division-cassette-morph")}
+                    ? "bg-amber-500 text-black shadow-md font-bold"
+                    : "text-zinc-400 hover:text-white"
+                  }`}
           >
             <Disc className="w-3.5 h-3.5" />
             <span>Intro</span>
@@ -200,11 +197,10 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
           <button
             type="button"
             onClick={() => onSelectTemplate("minimal-void-particles")}
-            className={`py-2 px-1 rounded-lg text-[10px] font-semibold flex flex-col items-center justify-center gap-1 transition-all ${
-              isBackgroundCategory
-                ? "bg-amber-500 text-black shadow-md font-bold"
-                : "text-zinc-400 hover:text-white"
-            }`}
+              className = {`py-2 px-1 rounded-lg text-[10px] font-semibold flex flex-col items-center justify-center gap-1 transition-all ${isBackgroundCategory
+                  ? "bg-amber-500 text-black shadow-md font-bold"
+                  : "text-zinc-400 hover:text-white"
+                }`}
           >
             <Moon className="w-3.5 h-3.5" />
             <span>Tła</span>
@@ -213,11 +209,10 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
           <button
             type="button"
             onClick={() => onSelectTemplate("documentary-lower-third")}
-            className={`py-2 px-1 rounded-lg text-[10px] font-semibold flex flex-col items-center justify-center gap-1 transition-all ${
-              !isCharacterCategory && !isIntroCategory && !isBackgroundCategory
+            className={`py-2 px-1 rounded-lg text-[10px] font-semibold flex flex-col items-center justify-center gap-1 transition-all ${!isCharacterCategory && !isIntroCategory && !isBackgroundCategory
                 ? "bg-amber-500 text-black shadow-md font-bold"
                 : "text-zinc-400 hover:text-white"
-            }`}
+              }`}
           >
             <Layers className="w-3.5 h-3.5" />
             <span>Nakładki</span>
@@ -236,11 +231,10 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
               <button
                 type="button"
                 onClick={() => onSelectTemplate("joy-division-cassette-morph")}
-                className={`p-2 rounded-lg border text-center transition-all flex flex-col items-center gap-0.5 ${
-                  selectedTemplateId === "joy-division-cassette-morph"
+                className={`p-2 rounded-lg border text-center transition-all flex flex-col items-center gap-0.5 ${selectedTemplateId === "joy-division-cassette-morph"
                     ? "bg-amber-500/20 border-amber-500/70 shadow text-amber-300 font-bold"
                     : "bg-[#181822] hover:bg-[#20202e] border-white/5 text-zinc-400 hover:text-white"
-                }`}
+                  }`}
                 title="25 kaset w białym outline przeistacza się w okładkę Joy Division Unknown Pleasures"
               >
                 <Activity className="w-3.5 h-3.5 text-amber-400" />
@@ -252,11 +246,10 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
               <button
                 type="button"
                 onClick={() => onSelectTemplate("retro-cassette-intro")}
-                className={`p-2 rounded-lg border text-center transition-all flex flex-col items-center gap-0.5 ${
-                  selectedTemplateId === "retro-cassette-intro"
+                className={`p-2 rounded-lg border text-center transition-all flex flex-col items-center gap-0.5 ${selectedTemplateId === "retro-cassette-intro"
                     ? "bg-amber-500/20 border-amber-500/70 shadow text-amber-300 font-bold"
                     : "bg-[#181822] hover:bg-[#20202e] border-white/5 text-zinc-400 hover:text-white"
-                }`}
+                  }`}
                 title="Vintage kaseta z kręcącymi się szpulkami i długopisem podpisującym tytuł"
               >
                 <Disc className="w-3.5 h-3.5 text-amber-400" />
@@ -279,11 +272,10 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
               <button
                 type="button"
                 onClick={() => onSelectTemplate("minimal-void-particles")}
-                className={`p-1.5 rounded-lg border text-center transition-all flex flex-col items-center gap-0.5 ${
-                  selectedTemplateId === "minimal-void-particles"
+                className={`p-1.5 rounded-lg border text-center transition-all flex flex-col items-center gap-0.5 ${selectedTemplateId === "minimal-void-particles"
                     ? "bg-amber-500/20 border-amber-500/70 shadow text-amber-300 font-bold"
                     : "bg-[#181822] hover:bg-[#20202e] border-white/5 text-zinc-400 hover:text-white"
-                }`}
+                  }`}
                 title="Wersja 1: 100% Czysta Czerń #000000 - zero gradientu, zero bandingu"
               >
                 <Moon className="w-3.5 h-3.5 text-amber-400" />
@@ -295,11 +287,10 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
               <button
                 type="button"
                 onClick={() => onSelectTemplate("minimal-void-glow")}
-                className={`p-1.5 rounded-lg border text-center transition-all flex flex-col items-center gap-0.5 ${
-                  selectedTemplateId === "minimal-void-glow"
+                className={`p-1.5 rounded-lg border text-center transition-all flex flex-col items-center gap-0.5 ${selectedTemplateId === "minimal-void-glow"
                     ? "bg-amber-500/20 border-amber-500/70 shadow text-amber-300 font-bold"
                     : "bg-[#181822] hover:bg-[#20202e] border-white/5 text-zinc-400 hover:text-white"
-                }`}
+                  }`}
                 title="Wersja 2: Subtelny Antracyt - minimalna poświata ~3.5%"
               >
                 <Sun className="w-3.5 h-3.5 text-amber-400" />
@@ -311,11 +302,10 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
               <button
                 type="button"
                 onClick={() => onSelectTemplate("minimal-void-stardust")}
-                className={`p-1.5 rounded-lg border text-center transition-all flex flex-col items-center gap-0.5 ${
-                  selectedTemplateId === "minimal-void-stardust"
+                className={`p-1.5 rounded-lg border text-center transition-all flex flex-col items-center gap-0.5 ${selectedTemplateId === "minimal-void-stardust"
                     ? "bg-amber-500/20 border-amber-500/70 shadow text-amber-300 font-bold"
                     : "bg-[#181822] hover:bg-[#20202e] border-white/5 text-zinc-400 hover:text-white"
-                }`}
+                  }`}
                 title="Wersja 3: Gwiezdny Pył 3D - głębia z mikro-cząsteczek bez gradientu"
               >
                 <Sparkles className="w-3.5 h-3.5 text-amber-400" />
@@ -328,318 +318,313 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
       </div>
 
       {/* BODY CONTENT DEPENDING ON TEMPLATE TYPE */}
-      {selectedTemplateId === "character-stage" ? (
-        /* ================= 00. STUDIO POSTACI & RELACJI CONTROLS ================= */
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
-          <CharacterStageControls
-            props={characterStageProps}
-            updateProp={updateCharacterStageProp}
-            durationFrames={durationFrames}
-            setDurationFrames={setDurationFrames}
-            fps={fps}
-          />
-        </div>
-      ) : selectedTemplateId === "joy-division-cassette-morph" ? (
-        /* ================= 0A. JOY DIVISION 25 KASET MORPH CONTROLS ================= */
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
-          <JoyDivisionControls
-            props={joyDivisionProps}
-            updateProp={updateJoyDivisionProp}
-            durationFrames={durationFrames}
-            setDurationFrames={setDurationFrames}
-            fps={fps}
-          />
-        </div>
-      ) : selectedTemplateId === "retro-cassette-intro" ? (
-        /* ================= 0B. RETRO CASSETTE INTRO CONTROLS ================= */
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
-          <CassetteIntroControls
-            props={cassetteProps}
-            updateProp={updateCassetteProp}
-            durationFrames={durationFrames}
-            setDurationFrames={setDurationFrames}
-            fps={fps}
-          />
-        </div>
-      ) : isVoidCategory ? (
-        /* ================= 1. MINIMAL VOID PARTICLES CONTROLS (3 WERSJE) ================= */
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
-          <VoidControls
-            props={voidProps}
-            updateProp={updateVoidProp}
-            applyFullProps={setVoidProps}
-            durationFrames={durationFrames}
-            setDurationFrames={setDurationFrames}
-            fps={fps}
-          />
-        </div>
-      ) : selectedTemplateId === "dark-parchment-background" ? (
-        /* ================= 2. DARK PARCHMENT CONTROLS ================= */
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
-          <ParchmentControls
-            props={parchmentProps}
-            updateProp={updateParchmentProp}
-            durationFrames={durationFrames}
-            setDurationFrames={setDurationFrames}
-            fps={fps}
-          />
-        </div>
-      ) : selectedTemplateId === "cinematic-particles-background" ? (
-        /* ================= 3. PARTICLES GRADIENT CONTROLS ================= */
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
-          <ParticlesControls
-            props={particlesProps}
-            updateProp={updateParticlesProp}
-            durationFrames={durationFrames}
-            setDurationFrames={setDurationFrames}
-            fps={fps}
-          />
-        </div>
-      ) : (
-        /* ================= 4. OVERLAY LOWER THIRD CONTROLS ================= */
-        <>
-          {/* Overlay Navigation Tabs */}
-          <div className="flex items-center border-b border-white/10 bg-[#0e0e14] px-2 pt-2">
-            <button
-              type="button"
-              onClick={() => setActiveOverlayTab("content")}
-              className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-medium border-b-2 transition-all ${
-                activeOverlayTab === "content"
-                  ? "border-amber-500 text-amber-400 font-bold bg-white/[0.02]"
-                  : "border-transparent text-zinc-400 hover:text-white"
-              }`}
-            >
-              <FileText className="w-3.5 h-3.5" />
-              <span>Wsad</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActiveOverlayTab("themes")}
-              className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-medium border-b-2 transition-all ${
-                activeOverlayTab === "themes"
-                  ? "border-amber-500 text-amber-400 font-bold bg-white/[0.02]"
-                  : "border-transparent text-zinc-400 hover:text-white"
-              }`}
-            >
-              <Palette className="w-3.5 h-3.5" />
-              <span>Styl</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActiveOverlayTab("physics")}
-              className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-medium border-b-2 transition-all ${
-                activeOverlayTab === "physics"
-                  ? "border-amber-500 text-amber-400 font-bold bg-white/[0.02]"
-                  : "border-transparent text-zinc-400 hover:text-white"
-              }`}
-            >
-              <Activity className="w-3.5 h-3.5" />
-              <span>Fizyka</span>
-            </button>
-          </div>
-
+        { selectedTemplateId === "character-stage" ? (
+          /* ================= 00. STUDIO POSTACI & RELACJI CONTROLS ================= */
           <div className="flex-1 overflow-y-auto p-4 space-y-4">
-            {activeOverlayTab === "content" && (
-              <div className="space-y-4 animate-in fade-in">
-                {/* Style Variant Selector */}
-                <div>
-                  <label className="block text-[11px] font-mono text-zinc-400 uppercase tracking-wider mb-1.5">
-                    Wariant Stylistyczny
-                  </label>
-                  <div className="grid grid-cols-3 gap-1.5">
-                    {[
-                      { id: "dossier", label: "Akt / Dossier" },
-                      { id: "modern-minimal", label: "Vox / Minimal" },
-                      { id: "technical-hud", label: "HUD / Intel" },
-                    ].map((v) => (
-                      <button
-                        key={v.id}
-                        type="button"
-                        onClick={() => updateLowerThirdProp("styleVariant", v.id as any)}
-                        className={`py-1.5 px-2 rounded-lg text-xs font-medium transition-all ${
-                          lowerThirdProps.styleVariant === v.id
-                            ? "bg-amber-500 text-black font-bold shadow-sm"
-                            : "bg-[#181822] hover:bg-[#20202e] text-zinc-300 border border-white/5"
-                        }`}
-                      >
-                        {v.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
+            <CharacterStageControls
+              props={characterStageProps}
+              updateProp={updateCharacterStageProp}
+              durationFrames={durationFrames}
+              setDurationFrames={setDurationFrames}
+              fps={fps}
+            />
+          </div>
+        ) : selectedTemplateId === "joy-division-cassette-morph" ? (
+          /* ================= 0A. JOY DIVISION 25 KASET MORPH CONTROLS ================= */
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <JoyDivisionControls
+              props={joyDivisionProps}
+              updateProp={updateJoyDivisionProp}
+              durationFrames={durationFrames}
+              setDurationFrames={setDurationFrames}
+              fps={fps}
+            />
+          </div>
+        ) : selectedTemplateId === "retro-cassette-intro" ? (
+          /* ================= 0B. RETRO CASSETTE INTRO CONTROLS ================= */
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <CassetteIntroControls
+              props={cassetteProps}
+              updateProp={updateCassetteProp}
+              durationFrames={durationFrames}
+              setDurationFrames={setDurationFrames}
+              fps={fps}
+            />
+          </div>
+        ) : isVoidCategory ? (
+          /* ================= 1. MINIMAL VOID PARTICLES CONTROLS (3 WERSJE) ================= */
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <VoidControls
+              props={voidProps}
+              updateProp={updateVoidProp}
+              applyFullProps={setVoidProps}
+              durationFrames={durationFrames}
+              setDurationFrames={setDurationFrames}
+              fps={fps}
+            />
+          </div>
+        ) : selectedTemplateId === "dark-parchment-background" ? (
+          /* ================= 2. DARK PARCHMENT CONTROLS ================= */
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <ParchmentControls
+              props={parchmentProps}
+              updateProp={updateParchmentProp}
+              durationFrames={durationFrames}
+              setDurationFrames={setDurationFrames}
+              fps={fps}
+            />
+          </div>
+        ) : selectedTemplateId === "cinematic-particles-background" ? (
+          /* ================= 3. PARTICLES GRADIENT CONTROLS ================= */
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <ParticlesControls
+              props={particlesProps}
+              updateProp={updateParticlesProp}
+              durationFrames={durationFrames}
+              setDurationFrames={setDurationFrames}
+              fps={fps}
+            />
+          </div>
+        ) : (
+          /* ================= 4. OVERLAY LOWER THIRD CONTROLS ================= */
+          <>
+            {/* Overlay Navigation Tabs */}
+            <div className="flex items-center border-b border-white/10 bg-[#0e0e14] px-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setActiveOverlayTab("content")}
+                className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-medium border-b-2 transition-all ${activeOverlayTab === "content"
+                    ? "border-amber-500 text-amber-400 font-bold bg-white/[0.02]"
+                    : "border-transparent text-zinc-400 hover:text-white"
+                  }`}
+              >
+                <FileText className="w-3.5 h-3.5" />
+                <span>Wsad</span>
+              </button>
 
-                {/* Title Input */}
-                <div>
-                  <label className="block text-[11px] text-zinc-300 font-medium mb-1 flex items-center gap-1">
-                    <User className="w-3 h-3 text-amber-400" />
-                    <span>Tytuł Główny / Nazwisko</span>
-                  </label>
-                  <input
-                    type="text"
-                    value={lowerThirdProps.title}
-                    onChange={(e) => updateLowerThirdProp("title", e.target.value)}
-                    className="w-full studio-input text-xs font-semibold"
-                    placeholder="np. DR. J. ROBERT OPPENHEIMER"
-                  />
-                </div>
+              <button
+                type="button"
+                onClick={() => setActiveOverlayTab("themes")}
+                className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-medium border-b-2 transition-all ${activeOverlayTab === "themes"
+                    ? "border-amber-500 text-amber-400 font-bold bg-white/[0.02]"
+                    : "border-transparent text-zinc-400 hover:text-white"
+                  }`}
+              >
+                <Palette className="w-3.5 h-3.5" />
+                <span>Styl</span>
+              </button>
 
-                {/* Subtitle Input */}
-                <div>
-                  <label className="block text-[11px] text-zinc-300 font-medium mb-1 flex items-center gap-1">
-                    <FileText className="w-3 h-3 text-amber-400" />
-                    <span>Podtytuł / Rola / Opis</span>
-                  </label>
-                  <input
-                    type="text"
-                    value={lowerThirdProps.subtitle}
-                    onChange={(e) => updateLowerThirdProp("subtitle", e.target.value)}
-                    className="w-full studio-input text-xs"
-                    placeholder="np. Dyrektor Laboratorium Los Alamos (1943–1945)"
-                  />
-                </div>
+              <button
+                type="button"
+                onClick={() => setActiveOverlayTab("physics")}
+                className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-medium border-b-2 transition-all ${activeOverlayTab === "physics"
+                    ? "border-amber-500 text-amber-400 font-bold bg-white/[0.02]"
+                    : "border-transparent text-zinc-400 hover:text-white"
+                  }`}
+              >
+                <Activity className="w-3.5 h-3.5" />
+                <span>Fizyka</span>
+              </button>
+            </div>
 
-                {/* Badge Tag Input */}
-                <div>
-                  <label className="block text-[11px] text-zinc-300 font-medium mb-1 flex items-center gap-1">
-                    <Tag className="w-3 h-3 text-amber-400" />
-                    <span>Znacznik Archiwalny</span>
-                  </label>
-                  <input
-                    type="text"
-                    value={lowerThirdProps.badgeText}
-                    onChange={(e) => updateLowerThirdProp("badgeText", e.target.value)}
-                    className="w-full studio-input text-xs font-mono"
-                    placeholder="np. ARCHIVAL RECORD #0492 // MANHATTAN PROJECT"
-                  />
-                </div>
-
-                {/* Date & Location Input */}
-                <div>
-                  <label className="block text-[11px] text-zinc-300 font-medium mb-1 flex items-center gap-1">
-                    <Calendar className="w-3 h-3 text-amber-400" />
-                    <span>Data & Miejsce</span>
-                  </label>
-                  <input
-                    type="text"
-                    value={lowerThirdProps.dateLocation}
-                    onChange={(e) => updateLowerThirdProp("dateLocation", e.target.value)}
-                    className="w-full studio-input text-xs font-mono"
-                    placeholder="np. JULY 16, 1945 • WHITE SANDS PROVING GROUND"
-                  />
-                </div>
-
-                {/* Photo / Cutout Upload Section */}
-                <div className="pt-2 border-t border-white/10">
-                  <label className="block text-[11px] text-zinc-300 font-medium mb-2 flex items-center justify-between">
-                    <span className="flex items-center gap-1">
-                      <ImageIcon className="w-3 h-3 text-amber-400" />
-                      Portret / Zdjęcie archiwalne
-                    </span>
-                    {lowerThirdProps.photoUrl && (
-                      <button
-                        type="button"
-                        onClick={() => updateLowerThirdProp("photoUrl", "")}
-                        className="text-[10px] text-red-400 hover:underline"
-                      >
-                        Usuń zdjęcie
-                      </button>
-                    )}
-                  </label>
-
-                  <div
-                    onClick={() => fileInputRef.current?.click()}
-                    className="p-4 rounded-xl border border-dashed border-white/20 hover:border-amber-500/50 bg-[#161622]/60 hover:bg-[#1b1b2a] transition-all cursor-pointer flex flex-col items-center justify-center text-center group"
-                  >
-                    <div className="w-8 h-8 rounded-full bg-white/5 group-hover:bg-amber-500/10 text-zinc-400 group-hover:text-amber-400 flex items-center justify-center transition-colors mb-1.5">
-                      <Upload className="w-4 h-4" />
-                    </div>
-                    <div className="text-xs font-medium text-white group-hover:text-amber-300">
-                      {lowerThirdProps.photoUrl ? "Zmień zdjęcie" : "Przeciągnij zdjęcie lub kliknij"}
-                    </div>
-                    <div className="text-[10px] text-zinc-500 mt-0.5">
-                      PNG, JPG lub WebP
-                    </div>
-                  </div>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={handlePhotoUpload}
-                  />
-
-                  {lowerThirdProps.photoUrl && (
-                    <div className="mt-3">
-                      <span className="block text-[10px] font-mono text-zinc-400 uppercase mb-1">
-                        Kształt ramki portretu:
-                      </span>
-                      <div className="grid grid-cols-3 gap-1.5 text-center">
-                        {(["rounded-rect", "circle", "stamp"] as const).map((s) => (
-                          <button
-                            key={s}
-                            type="button"
-                            onClick={() => updateLowerThirdProp("photoShape", s)}
-                            className={`py-1 rounded text-xs transition-all ${
-                              lowerThirdProps.photoShape === s
-                                ? "bg-amber-500 text-black font-bold"
-                                : "bg-[#181822] text-zinc-400 hover:text-white"
+            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+              {activeOverlayTab === "content" && (
+                <div className="space-y-4 animate-in fade-in">
+                  {/* Style Variant Selector */}
+                  <div>
+                    <label className="block text-[11px] font-mono text-zinc-400 uppercase tracking-wider mb-1.5">
+                      Wariant Stylistyczny
+                    </label>
+                    <div className="grid grid-cols-3 gap-1.5">
+                      {[
+                        { id: "dossier", label: "Akt / Dossier" },
+                        { id: "modern-minimal", label: "Vox / Minimal" },
+                        { id: "technical-hud", label: "HUD / Intel" },
+                      ].map((v) => (
+                        <button
+                          key={v.id}
+                          type="button"
+                          onClick={() => updateLowerThirdProp("styleVariant", v.id as any)}
+                          className={`py-1.5 px-2 rounded-lg text-xs font-medium transition-all ${lowerThirdProps.styleVariant === v.id
+                              ? "bg-amber-500 text-black font-bold shadow-sm"
+                              : "bg-[#181822] hover:bg-[#20202e] text-zinc-300 border border-white/5"
                             }`}
-                          >
-                            {s === "rounded-rect" ? "Zaokrąglony" : s === "circle" ? "Koło" : "Znaczek"}
-                          </button>
-                        ))}
+                        >
+                          {v.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Title Input */}
+                  <div>
+                    <label className="block text-[11px] text-zinc-300 font-medium mb-1 flex items-center gap-1">
+                      <User className="w-3 h-3 text-amber-400" />
+                      <span>Tytuł Główny / Nazwisko</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={lowerThirdProps.title}
+                      onChange={(e) => updateLowerThirdProp("title", e.target.value)}
+                      className="w-full studio-input text-xs font-semibold"
+                      placeholder="np. DR. J. ROBERT OPPENHEIMER"
+                    />
+                  </div>
+
+                  {/* Subtitle Input */}
+                  <div>
+                    <label className="block text-[11px] text-zinc-300 font-medium mb-1 flex items-center gap-1">
+                      <FileText className="w-3 h-3 text-amber-400" />
+                      <span>Podtytuł / Rola / Opis</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={lowerThirdProps.subtitle}
+                      onChange={(e) => updateLowerThirdProp("subtitle", e.target.value)}
+                      className="w-full studio-input text-xs"
+                      placeholder="np. Dyrektor Laboratorium Los Alamos (1943–1945)"
+                    />
+                  </div>
+
+                  {/* Badge Tag Input */}
+                  <div>
+                    <label className="block text-[11px] text-zinc-300 font-medium mb-1 flex items-center gap-1">
+                      <Tag className="w-3 h-3 text-amber-400" />
+                      <span>Znacznik Archiwalny</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={lowerThirdProps.badgeText}
+                      onChange={(e) => updateLowerThirdProp("badgeText", e.target.value)}
+                      className="w-full studio-input text-xs font-mono"
+                      placeholder="np. ARCHIVAL RECORD #0492 // MANHATTAN PROJECT"
+                    />
+                  </div>
+
+                  {/* Date & Location Input */}
+                  <div>
+                    <label className="block text-[11px] text-zinc-300 font-medium mb-1 flex items-center gap-1">
+                      <Calendar className="w-3 h-3 text-amber-400" />
+                      <span>Data & Miejsce</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={lowerThirdProps.dateLocation}
+                      onChange={(e) => updateLowerThirdProp("dateLocation", e.target.value)}
+                      className="w-full studio-input text-xs font-mono"
+                      placeholder="np. JULY 16, 1945 • WHITE SANDS PROVING GROUND"
+                    />
+                  </div>
+
+                  {/* Photo / Cutout Upload Section */}
+                  <div className="pt-2 border-t border-white/10">
+                    <label className="block text-[11px] text-zinc-300 font-medium mb-2 flex items-center justify-between">
+                      <span className="flex items-center gap-1">
+                        <ImageIcon className="w-3 h-3 text-amber-400" />
+                        Portret / Zdjęcie archiwalne
+                      </span>
+                      {lowerThirdProps.photoUrl && (
+                        <button
+                          type="button"
+                          onClick={() => updateLowerThirdProp("photoUrl", "")}
+                          className="text-[10px] text-red-400 hover:underline"
+                        >
+                          Usuń zdjęcie
+                        </button>
+                      )}
+                    </label>
+
+                    <div
+                      onClick={() => fileInputRef.current?.click()}
+                      className="p-4 rounded-xl border border-dashed border-white/20 hover:border-amber-500/50 bg-[#161622]/60 hover:bg-[#1b1b2a] transition-all cursor-pointer flex flex-col items-center justify-center text-center group"
+                    >
+                      <div className="w-8 h-8 rounded-full bg-white/5 group-hover:bg-amber-500/10 text-zinc-400 group-hover:text-amber-400 flex items-center justify-center transition-colors mb-1.5">
+                        <Upload className="w-4 h-4" />
+                      </div>
+                      <div className="text-xs font-medium text-white group-hover:text-amber-300">
+                        {lowerThirdProps.photoUrl ? "Zmień zdjęcie" : "Przeciągnij zdjęcie lub kliknij"}
+                      </div>
+                      <div className="text-[10px] text-zinc-500 mt-0.5">
+                        PNG, JPG lub WebP
                       </div>
                     </div>
-                  )}
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handlePhotoUpload}
+                    />
+
+                    {lowerThirdProps.photoUrl && (
+                      <div className="mt-3">
+                        <span className="block text-[10px] font-mono text-zinc-400 uppercase mb-1">
+                          Kształt ramki portretu:
+                        </span>
+                        <div className="grid grid-cols-3 gap-1.5 text-center">
+                          {(["rounded-rect", "circle", "stamp"] as const).map((s) => (
+                            <button
+                              key={s}
+                              type="button"
+                              onClick={() => updateLowerThirdProp("photoShape", s)}
+                              className={`py-1 rounded text-xs transition-all ${lowerThirdProps.photoShape === s
+                                  ? "bg-amber-500 text-black font-bold"
+                                  : "bg-[#181822] text-zinc-400 hover:text-white"
+                                }`}
+                            >
+                              {s === "rounded-rect" ? "Zaokrąglony" : s === "circle" ? "Koło" : "Znaczek"}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {activeOverlayTab === "themes" && (
-              <div className="animate-in fade-in">
-                <ColorThemePicker
-                  currentThemeId={lowerThirdProps.themeId}
-                  onSelectTheme={(id) => updateLowerThirdProp("themeId", id)}
-                  customPrimary={lowerThirdProps.customPrimary}
-                  setCustomPrimary={(col) => updateLowerThirdProp("customPrimary", col)}
-                  customSecondary={lowerThirdProps.customSecondary}
-                  setCustomSecondary={(col) => updateLowerThirdProp("customSecondary", col)}
-                  customCardBg={lowerThirdProps.customCardBg}
-                  setCustomCardBg={(col) => updateLowerThirdProp("customCardBg", col)}
-                  showScanline={lowerThirdProps.showScanline}
-                  setShowScanline={(val) => updateLowerThirdProp("showScanline", val)}
-                  showCrosshair={lowerThirdProps.showCrosshair}
-                  setShowCrosshair={(val) => updateLowerThirdProp("showCrosshair", val)}
-                />
-              </div>
-            )}
+              {activeOverlayTab === "themes" && (
+                <div className="animate-in fade-in">
+                  <ColorThemePicker
+                    currentThemeId={lowerThirdProps.themeId}
+                    onSelectTheme={(id) => updateLowerThirdProp("themeId", id)}
+                    customPrimary={lowerThirdProps.customPrimary}
+                    setCustomPrimary={(col) => updateLowerThirdProp("customPrimary", col)}
+                    customSecondary={lowerThirdProps.customSecondary}
+                    setCustomSecondary={(col) => updateLowerThirdProp("customSecondary", col)}
+                    customCardBg={lowerThirdProps.customCardBg}
+                    setCustomCardBg={(col) => updateLowerThirdProp("customCardBg", col)}
+                    showScanline={lowerThirdProps.showScanline}
+                    setShowScanline={(val) => updateLowerThirdProp("showScanline", val)}
+                    showCrosshair={lowerThirdProps.showCrosshair}
+                    setShowCrosshair={(val) => updateLowerThirdProp("showCrosshair", val)}
+                  />
+                </div>
+              )}
 
-            {activeOverlayTab === "physics" && (
-              <div className="animate-in fade-in">
-                <PhysicsControls
-                  damping={lowerThirdProps.springDamping}
-                  setDamping={(val) => updateLowerThirdProp("springDamping", val)}
-                  stiffness={lowerThirdProps.springStiffness}
-                  setStiffness={(val) => updateLowerThirdProp("springStiffness", val)}
-                  mass={lowerThirdProps.springMass}
-                  setMass={(val) => updateLowerThirdProp("springMass", val)}
-                  scale={lowerThirdProps.scale}
-                  setScale={(val) => updateLowerThirdProp("scale", val)}
-                  offsetX={lowerThirdProps.offsetX}
-                  setOffsetX={(val) => updateLowerThirdProp("offsetX", val)}
-                  offsetY={lowerThirdProps.offsetY}
-                  setOffsetY={(val) => updateLowerThirdProp("offsetY", val)}
-                  durationFrames={durationFrames}
-                  setDurationFrames={setDurationFrames}
-                  fps={fps}
-                />
-              </div>
-            )}
-          </div>
-        </>
-      )}
+              {activeOverlayTab === "physics" && (
+                <div className="animate-in fade-in">
+                  <PhysicsControls
+                    damping={lowerThirdProps.springDamping}
+                    setDamping={(val) => updateLowerThirdProp("springDamping", val)}
+                    stiffness={lowerThirdProps.springStiffness}
+                    setStiffness={(val) => updateLowerThirdProp("springStiffness", val)}
+                    mass={lowerThirdProps.springMass}
+                    setMass={(val) => updateLowerThirdProp("springMass", val)}
+                    scale={lowerThirdProps.scale}
+                    setScale={(val) => updateLowerThirdProp("scale", val)}
+                    offsetX={lowerThirdProps.offsetX}
+                    setOffsetX={(val) => updateLowerThirdProp("offsetX", val)}
+                    offsetY={lowerThirdProps.offsetY}
+                    setOffsetY={(val) => updateLowerThirdProp("offsetY", val)}
+                    durationFrames={durationFrames}
+                    setDurationFrames={setDurationFrames}
+                    fps={fps}
+                  />
+                </div>
+              )}
+            </div>
+          </>
+        )}
     </aside>
   );
 };

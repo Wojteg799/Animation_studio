@@ -291,3 +291,4 @@ export const CharacterStage: React.FC<CharacterStageProps> = ({
     </div>
   );
 };
+

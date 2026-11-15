@@ -102,11 +102,10 @@ export const CharacterStageControls: React.FC<CharacterStageControlsProps> = ({
         <button
           type="button"
           onClick={() => setActiveTab("characters")}
-          className={`py-2 rounded-lg font-medium transition-all flex flex-col items-center gap-1 ${
-            activeTab === "characters"
+          className={`py-2 rounded-lg font-medium transition-all flex flex-col items-center gap-1 ${activeTab === "characters"
               ? "bg-amber-500 text-black font-bold shadow"
               : "text-zinc-400 hover:text-white"
-          }`}
+            }`}
         >
           <User className="w-3.5 h-3.5" />
           <span className="text-[10px]">Postacie</span>
@@ -115,11 +114,10 @@ export const CharacterStageControls: React.FC<CharacterStageControlsProps> = ({
         <button
           type="button"
           onClick={() => setActiveTab("motion")}
-          className={`py-2 rounded-lg font-medium transition-all flex flex-col items-center gap-1 ${
-            activeTab === "motion"
+          className={`py-2 rounded-lg font-medium transition-all flex flex-col items-center gap-1 ${activeTab === "motion"
               ? "bg-amber-500 text-black font-bold shadow"
               : "text-zinc-400 hover:text-white"
-          }`}
+            }`}
         >
           <Move className="w-3.5 h-3.5" />
           <span className="text-[10px]">Ruch A→B</span>
@@ -128,11 +126,10 @@ export const CharacterStageControls: React.FC<CharacterStageControlsProps> = ({
         <button
           type="button"
           onClick={() => setActiveTab("interactions")}
-          className={`py-2 rounded-lg font-medium transition-all flex flex-col items-center gap-1 ${
-            activeTab === "interactions"
+          className={`py-2 rounded-lg font-medium transition-all flex flex-col items-center gap-1 ${activeTab === "interactions"
               ? "bg-amber-500 text-black font-bold shadow"
               : "text-zinc-400 hover:text-white"
-          }`}
+            }`}
         >
           <Link2 className="w-3.5 h-3.5" />
           <span className="text-[10px]">Relacje</span>
@@ -141,11 +138,10 @@ export const CharacterStageControls: React.FC<CharacterStageControlsProps> = ({
         <button
           type="button"
           onClick={() => setActiveTab("scene")}
-          className={`py-2 rounded-lg font-medium transition-all flex flex-col items-center gap-1 ${
-            activeTab === "scene"
+          className={`py-2 rounded-lg font-medium transition-all flex flex-col items-center gap-1 ${activeTab === "scene"
               ? "bg-amber-500 text-black font-bold shadow"
               : "text-zinc-400 hover:text-white"
-          }`}
+            }`}
         >
           <Layers className="w-3.5 h-3.5" />
           <span className="text-[10px]">Scena / Tło</span>
@@ -183,11 +179,10 @@ export const CharacterStageControls: React.FC<CharacterStageControlsProps> = ({
               <button
                 type="button"
                 onClick={() => updateProp("sceneMode", "single")}
-                className={`py-2 px-3 rounded-lg text-xs font-medium transition-all flex items-center justify-center gap-2 ${
-                  props.sceneMode === "single"
+                className={`py-2 px-3 rounded-lg text-xs font-medium transition-all flex items-center justify-center gap-2 ${props.sceneMode === "single"
                     ? "bg-amber-500 text-black font-bold shadow"
                     : "bg-[#181824] text-zinc-400 hover:text-white"
-                }`}
+                  }`}
               >
                 <User className="w-3.5 h-3.5" />
                 <span>Pojedyncza Postać</span>
@@ -196,11 +191,10 @@ export const CharacterStageControls: React.FC<CharacterStageControlsProps> = ({
               <button
                 type="button"
                 onClick={() => updateProp("sceneMode", "duo")}
-                className={`py-2 px-3 rounded-lg text-xs font-medium transition-all flex items-center justify-center gap-2 ${
-                  props.sceneMode === "duo"
+                className={`py-2 px-3 rounded-lg text-xs font-medium transition-all flex items-center justify-center gap-2 ${props.sceneMode === "duo"
                     ? "bg-amber-500 text-black font-bold shadow"
                     : "bg-[#181824] text-zinc-400 hover:text-white"
-                }`}
+                  }`}
               >
                 <Users className="w-3.5 h-3.5" />
                 <span>2 Postacie (Interakcja)</span>
@@ -214,11 +208,10 @@ export const CharacterStageControls: React.FC<CharacterStageControlsProps> = ({
               <button
                 type="button"
                 onClick={() => setSelectedChar(1)}
-                className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
-                  selectedChar === 1
+                className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${selectedChar === 1
                     ? "bg-white/10 text-white border border-white/20 shadow-sm"
                     : "text-zinc-500 hover:text-zinc-300"
-                }`}
+                  }`}
               >
                 <div
                   className="w-2.5 h-2.5 rounded-full"
@@ -230,11 +223,10 @@ export const CharacterStageControls: React.FC<CharacterStageControlsProps> = ({
               <button
                 type="button"
                 onClick={() => setSelectedChar(2)}
-                className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
-                  selectedChar === 2
+                className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${selectedChar === 2
                     ? "bg-white/10 text-white border border-white/20 shadow-sm"
                     : "text-zinc-500 hover:text-zinc-300"
-                }`}
+                  }`}
               >
                 <div
                   className="w-2.5 h-2.5 rounded-full"
@@ -322,11 +314,10 @@ export const CharacterStageControls: React.FC<CharacterStageControlsProps> = ({
                     onClick={() =>
                       updateProp(isC1 ? "c1_borderColor" : "c2_borderColor", b.color)
                     }
-                    className={`p-2 rounded-lg border text-left transition-all flex items-center gap-2 ${
-                      isSelected
+                    className={`p-2 rounded-lg border text-left transition-all flex items-center gap-2 ${isSelected
                         ? "bg-white/10 border-white text-white font-bold"
                         : "bg-[#181822] border-white/5 text-zinc-400"
-                    }`}
+                      }`}
                   >
                     <div
                       className="w-3.5 h-3.5 rounded-full border border-black/40 shadow-sm"
@@ -425,11 +416,10 @@ export const CharacterStageControls: React.FC<CharacterStageControlsProps> = ({
                       onClick={() =>
                         updateProp(isC1 ? "c1_photoUrl" : "c2_photoUrl", p.svgDataUri)
                       }
-                      className={`p-2 rounded-xl border text-center transition-all flex flex-col items-center gap-1.5 ${
-                        isSelected
+                      className={`p-2 rounded-xl border text-center transition-all flex flex-col items-center gap-1.5 ${isSelected
                           ? "bg-amber-500/15 border-amber-500/80 shadow"
                           : "bg-[#181822] hover:bg-[#20202e] border-white/5 text-zinc-400"
-                      }`}
+                        }`}
                     >
                       <img
                         src={p.svgDataUri}
@@ -457,22 +447,20 @@ export const CharacterStageControls: React.FC<CharacterStageControlsProps> = ({
               <button
                 type="button"
                 onClick={() => setSelectedChar(1)}
-                className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
-                  selectedChar === 1
+                className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${selectedChar === 1
                     ? "bg-white/10 text-white border border-white/20 shadow-sm"
                     : "text-zinc-500 hover:text-zinc-300"
-                }`}
+                  }`}
               >
                 <span>Ruch Postaci 1</span>
               </button>
               <button
                 type="button"
                 onClick={() => setSelectedChar(2)}
-                className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
-                  selectedChar === 2
+                className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${selectedChar === 2
                     ? "bg-white/10 text-white border border-white/20 shadow-sm"
                     : "text-zinc-500 hover:text-zinc-300"
-                }`}
+                  }`}
               >
                 <span>Ruch Postaci 2</span>
               </button>
@@ -495,11 +483,10 @@ export const CharacterStageControls: React.FC<CharacterStageControlsProps> = ({
                     onClick={() =>
                       updateProp(isC1 ? "c1_enterType" : "c2_enterType", t.id as any)
                     }
-                    className={`w-full p-2.5 rounded-lg border text-left transition-all flex items-center justify-between ${
-                      isSelected
+                    className={`w-full p-2.5 rounded-lg border text-left transition-all flex items-center justify-between ${isSelected
                         ? "bg-amber-500/15 border-amber-500/80 text-white font-bold"
                         : "bg-[#181822] hover:bg-[#20202e] border-white/5 text-zinc-400"
-                    }`}
+                      }`}
                   >
                     <div>
                       <div className="text-xs">{t.label}</div>
@@ -572,11 +559,10 @@ export const CharacterStageControls: React.FC<CharacterStageControlsProps> = ({
                     !(isC1 ? props.c1_enableMovement : props.c2_enableMovement)
                   )
                 }
-                className={`px-2.5 py-1 rounded text-xs font-mono font-bold transition-all ${
-                  (isC1 ? props.c1_enableMovement : props.c2_enableMovement)
+                className={`px-2.5 py-1 rounded text-xs font-mono font-bold transition-all ${(isC1 ? props.c1_enableMovement : props.c2_enableMovement)
                     ? "bg-amber-500 text-black"
                     : "bg-zinc-800 text-zinc-400"
-                }`}
+                  }`}
               >
                 {(isC1 ? props.c1_enableMovement : props.c2_enableMovement)
                   ? "WŁĄCZONE"
@@ -745,11 +731,10 @@ export const CharacterStageControls: React.FC<CharacterStageControlsProps> = ({
               <button
                 type="button"
                 onClick={() => updateProp("showConnectionLine", !props.showConnectionLine)}
-                className={`px-2.5 py-1 rounded text-xs font-mono font-bold transition-all ${
-                  props.showConnectionLine
+                className={`px-2.5 py-1 rounded text-xs font-mono font-bold transition-all ${props.showConnectionLine
                     ? "bg-amber-500 text-black"
                     : "bg-zinc-800 text-zinc-400"
-                }`}
+                  }`}
               >
                 {props.showConnectionLine ? "WŁĄCZONA" : "WYŁĄCZONA"}
               </button>
@@ -773,11 +758,10 @@ export const CharacterStageControls: React.FC<CharacterStageControlsProps> = ({
                         key={s.id}
                         type="button"
                         onClick={() => updateProp("lineStyle", s.id as any)}
-                        className={`p-2 rounded-lg border text-left transition-all ${
-                          props.lineStyle === s.id
+                        className={`p-2 rounded-lg border text-left transition-all ${props.lineStyle === s.id
                             ? "bg-amber-500/15 border-amber-500/80 text-white font-bold"
                             : "bg-[#181822] border-white/5 text-zinc-400"
-                        }`}
+                          }`}
                       >
                         <div className="text-[11px]">{s.label}</div>
                         <span className="text-[9px] font-mono text-zinc-500">{s.badge}</span>
@@ -859,9 +843,8 @@ export const CharacterStageControls: React.FC<CharacterStageControlsProps> = ({
               <button
                 type="button"
                 onClick={() => updateProp("c2_talkingPulse", !props.c2_talkingPulse)}
-                className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${
-                  props.c2_talkingPulse ? "bg-amber-500 text-black" : "bg-zinc-800 text-zinc-400"
-                }`}
+                className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${props.c2_talkingPulse ? "bg-amber-500 text-black" : "bg-zinc-800 text-zinc-400"
+                  }`}
               >
                 {props.c2_talkingPulse ? "ON" : "OFF"}
               </button>
@@ -880,9 +863,8 @@ export const CharacterStageControls: React.FC<CharacterStageControlsProps> = ({
               <button
                 type="button"
                 onClick={() => updateProp("c1_isCrossedOut", !props.c1_isCrossedOut)}
-                className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${
-                  props.c1_isCrossedOut ? "bg-red-500 text-white" : "bg-zinc-800 text-zinc-400"
-                }`}
+                className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${props.c1_isCrossedOut ? "bg-red-500 text-white" : "bg-zinc-800 text-zinc-400"
+                  }`}
               >
                 {props.c1_isCrossedOut ? "WŁĄCZONE" : "WYŁĄCZONE"}
               </button>
@@ -903,11 +885,10 @@ export const CharacterStageControls: React.FC<CharacterStageControlsProps> = ({
                 onClick={() =>
                   updateProp("c1_showClassifiedStamp", !props.c1_showClassifiedStamp)
                 }
-                className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${
-                  props.c1_showClassifiedStamp
+                className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${props.c1_showClassifiedStamp
                     ? "bg-emerald-500 text-black"
                     : "bg-zinc-800 text-zinc-400"
-                }`}
+                  }`}
               >
                 {props.c1_showClassifiedStamp ? "ON" : "OFF"}
               </button>
@@ -951,11 +932,10 @@ export const CharacterStageControls: React.FC<CharacterStageControlsProps> = ({
                   key={bg.id}
                   type="button"
                   onClick={() => updateProp("backgroundStyle", bg.id as any)}
-                  className={`w-full p-2.5 rounded-lg border text-left transition-all ${
-                    props.backgroundStyle === bg.id
+                  className={`w-full p-2.5 rounded-lg border text-left transition-all ${props.backgroundStyle === bg.id
                       ? "bg-amber-500/15 border-amber-500/80 text-white font-bold"
                       : "bg-[#181822] hover:bg-[#20202e] border-white/5 text-zinc-400"
-                  }`}
+                    }`}
                 >
                   <div className="text-xs">{bg.label}</div>
                   <div className="text-[10px] text-zinc-500">{bg.desc}</div>
@@ -982,11 +962,10 @@ export const CharacterStageControls: React.FC<CharacterStageControlsProps> = ({
                     setDurationFrames(d.frames);
                     updateProp("durationInFrames", d.frames);
                   }}
-                  className={`w-full p-2.5 rounded-xl border text-left transition-all flex items-center justify-between ${
-                    durationFrames === d.frames
+                  className={`w-full p-2.5 rounded-xl border text-left transition-all flex items-center justify-between ${durationFrames === d.frames
                       ? "bg-amber-500/20 border-amber-500/80 text-white font-bold"
                       : "bg-[#161622] border-white/5 text-zinc-400"
-                  }`}
+                    }`}
                 >
                   <div>
                     <div className="text-xs text-white">{d.label}</div>
