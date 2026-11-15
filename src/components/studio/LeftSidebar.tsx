@@ -18,6 +18,8 @@ import {
   Shield,
   Disc,
 } from "lucide-react";
+import { CharacterStageProps } from "../../remotion/templates/CharacterStage/schema";
+import { CharacterStageControls } from "./CharacterStageControls";
 import { JoyDivisionCassetteMorphProps } from "../../remotion/templates/JoyDivisionCassetteMorph/schema";
 import { RetroCassetteIntroProps } from "../../remotion/templates/RetroCassetteIntro/schema";
 import { DocumentaryLowerThirdProps } from "../../remotion/templates/DocumentaryLowerThird/schema";
@@ -36,6 +38,11 @@ import { ParchmentControls } from "./ParchmentControls";
 interface LeftSidebarProps {
   selectedTemplateId: string;
   onSelectTemplate: (templateId: string) => void;
+  characterStageProps: CharacterStageProps;
+  updateCharacterStageProp: <K extends keyof CharacterStageProps>(
+    key: K,
+    val: CharacterStageProps[K]
+  ) => void;
   joyDivisionProps: JoyDivisionCassetteMorphProps;
   updateJoyDivisionProp: <K extends keyof JoyDivisionCassetteMorphProps>(
     key: K,
@@ -77,6 +84,8 @@ type OverlayTabType = "content" | "themes" | "physics";
 export const LeftSidebar: React.FC<LeftSidebarProps> = ({
   selectedTemplateId,
   onSelectTemplate,
+  characterStageProps,
+  updateCharacterStageProp,
   joyDivisionProps,
   updateJoyDivisionProp,
   cassetteProps,
@@ -96,6 +105,8 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
 }) => {
   const [activeOverlayTab, setActiveOverlayTab] = useState<OverlayTabType>("content");
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const isCharacterCategory = selectedTemplateId === "character-stage";
 
   const isIntroCategory =
     selectedTemplateId === "joy-division-cassette-morph" ||
@@ -148,7 +159,9 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
             Wybór Sekcji & Szablonu
           </label>
           <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-amber-500/10 text-amber-300 border border-amber-500/30">
-            {isIntroCategory
+            {isCharacterCategory
+              ? "SEKCJA: POSTACIE"
+              : isIntroCategory
               ? "SEKCJA: INTRO"
               : isBackgroundCategory
               ? "SEKCJA: TŁO"
@@ -156,12 +169,25 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
           </span>
         </div>
 
-        {/* Category switcher pills (3 Sekcje: Intro, Tła, Nakładki) */}
-        <div className="grid grid-cols-3 gap-1 p-1 bg-[#0c0c12] rounded-xl border border-white/5">
+        {/* Category switcher pills (4 Sekcje: Postacie, Intro, Tła, Nakładki) */}
+        <div className="grid grid-cols-4 gap-1 p-1 bg-[#0c0c12] rounded-xl border border-white/5">
+          <button
+            type="button"
+            onClick={() => onSelectTemplate("character-stage")}
+            className={`py-2 px-1 rounded-lg text-[10px] font-semibold flex flex-col items-center justify-center gap-1 transition-all ${
+              isCharacterCategory
+                ? "bg-amber-500 text-black shadow-md font-bold"
+                : "text-zinc-400 hover:text-white"
+            }`}
+          >
+            <User className="w-3.5 h-3.5" />
+            <span>Postacie</span>
+          </button>
+
           <button
             type="button"
             onClick={() => onSelectTemplate("joy-division-cassette-morph")}
-            className={`py-2 px-1 rounded-lg text-[11px] font-semibold flex items-center justify-center gap-1.5 transition-all ${
+            className={`py-2 px-1 rounded-lg text-[10px] font-semibold flex flex-col items-center justify-center gap-1 transition-all ${
               isIntroCategory
                 ? "bg-amber-500 text-black shadow-md font-bold"
                 : "text-zinc-400 hover:text-white"
@@ -174,7 +200,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
           <button
             type="button"
             onClick={() => onSelectTemplate("minimal-void-particles")}
-            className={`py-2 px-1 rounded-lg text-[11px] font-semibold flex items-center justify-center gap-1.5 transition-all ${
+            className={`py-2 px-1 rounded-lg text-[10px] font-semibold flex flex-col items-center justify-center gap-1 transition-all ${
               isBackgroundCategory
                 ? "bg-amber-500 text-black shadow-md font-bold"
                 : "text-zinc-400 hover:text-white"
@@ -187,8 +213,8 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
           <button
             type="button"
             onClick={() => onSelectTemplate("documentary-lower-third")}
-            className={`py-2 px-1 rounded-lg text-[11px] font-semibold flex items-center justify-center gap-1.5 transition-all ${
-              !isIntroCategory && !isBackgroundCategory
+            className={`py-2 px-1 rounded-lg text-[10px] font-semibold flex flex-col items-center justify-center gap-1 transition-all ${
+              !isCharacterCategory && !isIntroCategory && !isBackgroundCategory
                 ? "bg-amber-500 text-black shadow-md font-bold"
                 : "text-zinc-400 hover:text-white"
             }`}
@@ -302,7 +328,18 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
       </div>
 
       {/* BODY CONTENT DEPENDING ON TEMPLATE TYPE */}
-      {selectedTemplateId === "joy-division-cassette-morph" ? (
+      {selectedTemplateId === "character-stage" ? (
+        /* ================= 00. STUDIO POSTACI & RELACJI CONTROLS ================= */
+        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          <CharacterStageControls
+            props={characterStageProps}
+            updateProp={updateCharacterStageProp}
+            durationFrames={durationFrames}
+            setDurationFrames={setDurationFrames}
+            fps={fps}
+          />
+        </div>
+      ) : selectedTemplateId === "joy-division-cassette-morph" ? (
         /* ================= 0A. JOY DIVISION 25 KASET MORPH CONTROLS ================= */
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
           <JoyDivisionControls

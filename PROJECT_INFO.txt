@@ -52,6 +52,7 @@ c:\Users\...\Animation_studio\
 │   │       ├── PreviewPlayer.tsx        # Odtwarzacz Remotion Player z suwakiem czasu
 │   │       ├── StudioHeader.tsx         # Rozdzielczość, FPS, Przycisk Renderuj
 │   │       ├── RenderModal.tsx          # Modal z paskiem postępu renderowania
+│   │       ├── CharacterStageControls.tsx# Duży edytor postaci, ruchu A->B i nitek relacji
 │   │       ├── JoyDivisionControls.tsx  # Kontrolki do animacji 25 kaset / Unknown Pleasures
 │   │       ├── CassetteIntroControls.tsx# Kontrolki do intro z retro kasetą i podpisem
 │   │       ├── VoidControls.tsx         # Kontrolki do teł cząsteczkowych (Pitch Black)
@@ -65,6 +66,7 @@ c:\Users\...\Animation_studio\
 │       ├── Root.tsx          # Rejestracja <Composition> z dynamicznym calculateMetadata
 │       └── templates/        # SZABLONY ANIMACJI:
 │           ├── registry.ts   # Rejestr wszystkich dostępnych szablonów w UI
+│           ├── CharacterStage/                 # Studio postaci, ruch A->B, relacje, podpisy
 │           ├── JoyDivisionCassetteMorph/       # 25 kaset -> okładka Unknown Pleasures
 │           ├── RetroCassetteIntro/             # Intro z kasetą i pismem odręcznym
 │           ├── MinimalVoidParticles/           # Lekkie czarne tła z drobinami (3 presety)
@@ -79,6 +81,18 @@ c:\Users\...\Animation_studio\
 --------------------------------------------------------------------------------
 4. KLUCZOWE SZABLONY I ICH LOGIKA (KEY TEMPLATES)
 --------------------------------------------------------------------------------
+
+0. Studio Postaci & Relacji (id: "character-stage")
+   - Koncepcja: Postacie w kółkach z kolorową obwódką (border color, glow), zdjęciem w środku
+     (lub domyślnym avatarem SVG: Świadek, Podejrzany, Detektyw, Polityk, Naukowiec) oraz
+     podpisem poniżej w czarnym zaokrąglonym prostokącie z białą obwódką (nazwisko, rola, tag).
+   - Tryby: 1 postać (single) lub 2 postacie (duo).
+   - Ruch & Wejście: Wjazd od dołu (lub z góry/boków/pop-in spring), przemieszczenie z punktu A do B
+     (startX/startY -> endX/endY) z naturalnym easingiem, subtelne unoszenie (idle bobbing).
+   - Interakcje & Relacje: Czerwona nitka śledcza (lub cyfrowy impuls/strzałka) łącząca postacie
+     z pinezkami i zaokrąglonym podpisem relacji w środku łuku, talking pulse (fale głosu wokół kółka),
+     czerwone przekreślenie X (eliminacja śledcza) oraz pieczęć "ŚCIŚLE TAJNE".
+   - Pliki: CharacterBadge.tsx, ConnectionLine.tsx, default-avatars.ts, schema.ts, index.tsx.
 
 A. Joy Division: 25 Kaset → Unknown Pleasures (id: "joy-division-cassette-morph")
    - Koncepcja: 25 kaset magnetofonowych w minimalistycznym białym outline, które

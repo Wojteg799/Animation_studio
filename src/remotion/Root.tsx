@@ -1,5 +1,10 @@
 import React from "react";
 import { Composition } from "remotion";
+import { CharacterStage } from "./templates/CharacterStage";
+import {
+  CharacterStageProps,
+  defaultCharacterStageProps,
+} from "./templates/CharacterStage/schema";
 import { JoyDivisionCassetteMorph } from "./templates/JoyDivisionCassetteMorph";
 import {
   JoyDivisionCassetteMorphProps,
@@ -34,7 +39,67 @@ import {
 export const RemotionRoot: React.FC = () => {
   return (
     <>
-      {/* 0. SEKCJA: JOY DIVISION 25 KASET -> UNKNOWN PLEASURES */}
+      {/* 0. SEKCJA: STUDIO POSTACI & RELACJI (CHARACTER STAGE) */}
+      <Composition
+        id="CharacterStage"
+        component={CharacterStage}
+        durationInFrames={240} // 8 sekund przy 30fps
+        fps={30}
+        width={1920}
+        height={1080}
+        defaultProps={defaultCharacterStageProps}
+        calculateMetadata={async ({ props }) => {
+          const customProps = props as CharacterStageProps & {
+            videoWidth?: number;
+            videoHeight?: number;
+            customFps?: number;
+            customDuration?: number;
+          };
+          return {
+            width: customProps.videoWidth || 1920,
+            height: customProps.videoHeight || 1080,
+            fps: customProps.customFps || 30,
+            durationInFrames: customProps.customDuration || 240,
+            props: customProps,
+          };
+        }}
+      />
+
+      <Composition
+        id="CharacterStage-4K"
+        component={CharacterStage}
+        durationInFrames={240}
+        fps={30}
+        width={3840}
+        height={2160}
+        defaultProps={{
+          ...defaultCharacterStageProps,
+          c1_circleSize: 320,
+          c2_circleSize: 320,
+        }}
+      />
+
+      <Composition
+        id="CharacterStage-Shorts"
+        component={CharacterStage}
+        durationInFrames={240}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={{
+          ...defaultCharacterStageProps,
+          c1_startX: 50,
+          c1_startY: 35,
+          c1_endX: 50,
+          c1_endY: 30,
+          c2_startX: 50,
+          c2_startY: 65,
+          c2_endX: 50,
+          c2_endY: 70,
+        }}
+      />
+
+      {/* 1. SEKCJA: JOY DIVISION 25 KASET -> UNKNOWN PLEASURES */}
       <Composition
         id="JoyDivisionCassetteMorph"
         component={JoyDivisionCassetteMorph}

@@ -1,3 +1,8 @@
+import { CharacterStage } from "./CharacterStage";
+import {
+  CharacterStageProps,
+  defaultCharacterStageProps,
+} from "./CharacterStage/schema";
 import { DocumentaryLowerThird } from "./DocumentaryLowerThird";
 import {
   DocumentaryLowerThirdProps,
@@ -33,6 +38,7 @@ import {
 } from "./DarkParchmentBackground/schema";
 
 export type TemplateCategory =
+  | "Postacie & Relacje (Characters)"
   | "Czołówki & Intro (Intros)"
   | "Tła (Backgrounds)"
   | "Dolne Belki (Lower Thirds)"
@@ -52,6 +58,19 @@ export interface TemplateDefinition {
 }
 
 export const TEMPLATES: TemplateDefinition[] = [
+  // 0. POSTACIE: KÓŁKA Z OBWÓDKĄ, PODPISY & RELACJE
+  {
+    id: "character-stage",
+    name: "Studio Postaci: Kółka, Podpisy & Relacje",
+    category: "Postacie & Relacje (Characters)",
+    description: "Postacie w kółkach z obwódką w kolorze, zdjęciem/sylwetką, białym podpisem w czarnym zaokrąglonym prostokącie z białą ramką, wjazdem od dołu, ruchem A->B oraz nitkami śledczymi.",
+    component: CharacterStage,
+    defaultProps: defaultCharacterStageProps,
+    defaultDurationInFrames: 240, // 8 seconds at 30fps
+    tags: ["Postacie", "Bohaterowie", "Śledztwo", "Vox Style", "Relacje", "Kółka", "Animacja"],
+    isBackground: false,
+  },
+
   // 1. JOY DIVISION: 25 KASET -> UNKNOWN PLEASURES
   {
     id: "joy-division-cassette-morph",

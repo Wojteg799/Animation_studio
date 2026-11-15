@@ -7,6 +7,10 @@ import { PreviewPlayer } from "../components/studio/PreviewPlayer";
 import { RenderModal } from "../components/studio/RenderModal";
 import { PresetManager } from "../components/studio/PresetManager";
 import {
+  CharacterStageProps,
+  defaultCharacterStageProps,
+} from "../remotion/templates/CharacterStage/schema";
+import {
   JoyDivisionCassetteMorphProps,
   defaultJoyDivisionCassetteMorphProps,
 } from "../remotion/templates/JoyDivisionCassetteMorph/schema";
@@ -45,6 +49,9 @@ export default function StudioPage() {
   const [durationFrames, setDurationFrames] = useState<number>(240); // 8 sekund dla Joy Division morph
 
   // Props for templates
+  const [characterStageProps, setCharacterStageProps] = useState<CharacterStageProps>(
+    defaultCharacterStageProps
+  );
   const [joyDivisionProps, setJoyDivisionProps] = useState<JoyDivisionCassetteMorphProps>(
     defaultJoyDivisionCassetteMorphProps
   );
@@ -81,7 +88,9 @@ export default function StudioPage() {
       templateId === "cinematic-particles-background" ||
       templateId === "dark-parchment-background";
 
-    if (templateId === "joy-division-cassette-morph") {
+    if (templateId === "character-stage") {
+      setDurationFrames(240); // 8 seconds @ 30fps
+    } else if (templateId === "joy-division-cassette-morph") {
       setDurationFrames(240); // 8 seconds @ 30fps
     } else if (templateId === "retro-cassette-intro") {
       setDurationFrames(210); // 7 seconds @ 30fps
@@ -98,6 +107,20 @@ export default function StudioPage() {
       setDurationFrames(180); // 6 seconds for lower thirds
     }
   };
+
+  // Update a single prop for Character Stage
+  const updateCharacterStageProp = useCallback(
+    <K extends keyof CharacterStageProps>(
+      key: K,
+      val: CharacterStageProps[K]
+    ) => {
+      setCharacterStageProps((prev) => ({
+        ...prev,
+        [key]: val,
+      }));
+    },
+    []
+  );
 
   // Update a single prop for Joy Division Cassette Morph
   const updateJoyDivisionProp = useCallback(
@@ -199,7 +222,13 @@ export default function StudioPage() {
       let compositionId = "DocumentaryLowerThird";
       let inputProps: any = lowerThirdProps;
 
-      if (selectedTemplateId === "joy-division-cassette-morph") {
+      if (selectedTemplateId === "character-stage") {
+        compositionId = "CharacterStage";
+        inputProps = {
+          ...defaultCharacterStageProps,
+          ...characterStageProps,
+        };
+      } else if (selectedTemplateId === "joy-division-cassette-morph") {
         compositionId = "JoyDivisionCassetteMorph";
         inputProps = {
           ...defaultJoyDivisionCassetteMorphProps,
@@ -256,7 +285,9 @@ export default function StudioPage() {
     selectedTemplateId === "minimal-void-stardust";
 
   const activeProps =
-    selectedTemplateId === "joy-division-cassette-morph"
+    selectedTemplateId === "character-stage"
+      ? characterStageProps
+      : selectedTemplateId === "joy-division-cassette-morph"
       ? joyDivisionProps
       : selectedTemplateId === "retro-cassette-intro"
       ? cassetteProps
@@ -295,6 +326,8 @@ export default function StudioPage() {
         <LeftSidebar
           selectedTemplateId={selectedTemplateId}
           onSelectTemplate={handleSelectTemplate}
+          characterStageProps={characterStageProps}
+          updateCharacterStageProp={updateCharacterStageProp}
           joyDivisionProps={joyDivisionProps}
           updateJoyDivisionProp={updateJoyDivisionProp}
           cassetteProps={cassetteProps}
