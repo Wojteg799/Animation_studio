@@ -70,7 +70,7 @@ export const RemotionRoot: React.FC = () => {
             width: customProps.videoWidth || 1920,
             height: customProps.videoHeight || 1080,
             fps: customProps.customFps || 30,
-            durationInFrames: customProps.customDuration || 240,
+            durationInFrames: customProps.durationInFrames || customProps.customDuration || 240,
             props: customProps,
           };
         }}
@@ -86,6 +86,19 @@ export const RemotionRoot: React.FC = () => {
         defaultProps={{
           ...defaultMusicForumScrollProps,
           depthPerspective: 2400,
+        }}
+        calculateMetadata={async ({ props }) => {
+          const customProps = props as MusicForumScrollProps & {
+            customFps?: number;
+            customDuration?: number;
+          };
+          return {
+            width: 3840,
+            height: 2160,
+            fps: customProps.customFps || 30,
+            durationInFrames: customProps.durationInFrames || customProps.customDuration || 240,
+            props: customProps,
+          };
         }}
       />
 
@@ -109,7 +122,7 @@ export const RemotionRoot: React.FC = () => {
             width: customProps.videoWidth || 1920,
             height: customProps.videoHeight || 1080,
             fps: customProps.customFps || 30,
-            durationInFrames: customProps.customDuration || 240,
+            durationInFrames: customProps.durationInFrames || customProps.customDuration || 240,
             props: customProps,
           };
         }}
@@ -125,6 +138,19 @@ export const RemotionRoot: React.FC = () => {
         defaultProps={{
           ...defaultMusicForum2007XPProps,
           depthPerspective: 2400,
+        }}
+        calculateMetadata={async ({ props }) => {
+          const customProps = props as MusicForumScrollProps & {
+            customFps?: number;
+            customDuration?: number;
+          };
+          return {
+            width: 3840,
+            height: 2160,
+            fps: customProps.customFps || 30,
+            durationInFrames: customProps.durationInFrames || customProps.customDuration || 240,
+            props: customProps,
+          };
         }}
       />
 
@@ -148,7 +174,7 @@ export const RemotionRoot: React.FC = () => {
             width: customProps.videoWidth || 1920,
             height: customProps.videoHeight || 1080,
             fps: customProps.customFps || 30,
-            durationInFrames: customProps.customDuration || 240,
+            durationInFrames: customProps.durationInFrames || customProps.customDuration || 240,
             props: customProps,
           };
         }}
@@ -208,7 +234,7 @@ export const RemotionRoot: React.FC = () => {
             width: customProps.videoWidth || 1920,
             height: customProps.videoHeight || 1080,
             fps: customProps.customFps || 30,
-            durationInFrames: customProps.customDuration || 240,
+            durationInFrames: customProps.durationInFrames || customProps.customDuration || 240,
             props: customProps,
           };
         }}
@@ -525,7 +551,7 @@ export const RemotionRoot: React.FC = () => {
             width: customProps.videoWidth || 1920,
             height: customProps.videoHeight || 1080,
             fps: customProps.customFps || 30,
-            durationInFrames: customProps.customDuration || 240,
+            durationInFrames: customProps.durationInFrames || customProps.customDuration || 240,
             props: customProps,
           };
         }}

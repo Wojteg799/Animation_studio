@@ -79,12 +79,19 @@ export const MusicForumScrollSchema = z.object({
   post4_audioFile: z.string().default("voice_note.mp3 [0.4 MB]"),
   post4_avatarColor: z.string().default("#10b981"),
 
-  // Scroll & Animation
+  // Scroll & Animation Timing
   enableScroll: z.boolean().default(true),
-  scrollStartFrame: z.number().min(0).max(90).default(20),
-  scrollDuration: z.number().min(30).max(240).default(150),
-  scrollDistance: z.number().min(0).max(800).default(420),
-  highlightPostIndex: z.number().min(0).max(4).default(1),
+  postsToSkip: z.number().min(0).max(3).default(2), // Liczba postów ominiętych przed zatrzymaniem (0, 1, 2, 3)
+  scrollStartFrame: z.number().min(0).max(200).default(15),
+  scrollDuration: z.number().min(20).max(300).default(90),
+  scrollDistance: z.number().min(0).max(1000).default(380),
+  highlightPostIndex: z.number().min(0).max(4).default(3),
+
+  // Initial Entrance Blur & Focus
+  enableInitialBlur: z.boolean().default(true), // Rozmycie na starcie
+  initialBlurStartFrame: z.number().min(0).max(120).default(0), // Klatka, od której zaczyna się wyostrzanie
+  initialBlurDuration: z.number().min(5).max(120).default(25), // Czas trwania wyostrzania w klatkach
+  initialBlurAmount: z.number().min(0).max(30).default(10), // Maksymalna siła rozmycia (px)
 
   // Transparency & Background
   transparentBackground: z.boolean().default(true),
@@ -105,17 +112,26 @@ export const MusicForumScrollSchema = z.object({
   // Focus & Target Post Effect ("CZY KTOŚ WIE KTO TO ŚPIEWA?")
   enablePostFocus: z.boolean().default(true),
   focusPostIndex: z.number().min(1).max(4).default(3), // Domyślnie post 3
-  focusStartFrame: z.number().min(0).max(240).default(110),
-  autoSyncFocusWithScroll: z.boolean().default(true), // Synchronizuj moment focusu z zatrzymaniem scrolla
+  focusStartFrame: z.number().min(0).max(500).default(105), // Klatka rozpoczęcia powiększenia & spotlightu
+  focusDuration: z.number().min(5).max(120).default(22), // Czas trwania powiększania w klatkach
+  autoSyncFocusWithScroll: z.boolean().default(false), // Czy ma automatycznie zsynchronizować się ze scrollem czy ręcznie
   focusScale: z.number().min(1.0).max(1.15).default(1.04), // Powiększenie wyróżnionego postu
   focusGlowColor: z.string().default("#f59e0b"), // Złoty / bursztynowy kolor ramki focusu
   dimOtherPosts: z.boolean().default(true), // Przyciemnienie pozostałych wpisów
-  dimOpacity: z.number().min(0.1).max(0.8).default(0.35),
+  dimOpacity: z.number().min(0.05).max(0.8).default(0.35),
+  dimBlurAmount: z.number().min(0).max(10).default(1.5), // Subtelny blur na niefokusowane posty
+
+  // Question Marker Sweep
   enableTextMarker: z.boolean().default(true), // Animowany żółty zakreślacz tekstu
+  markerStartFrame: z.number().min(0).max(500).default(118), // Klatka, w której zakreślacz zaczyna podkreślać
+  markerDuration: z.number().min(5).max(120).default(26), // Czas trwania pociągnięcia zakreślaczem
   targetQuestionText: z.string().default("CZY KTOŚ WIE KTO TO ŚPIEWA?"), // Nagłówek pytania
 
+  // Raw Static Attachment (Bez ruchomych fal i play button)
+  rawFileAttachment: z.boolean().default(true),
+
   // Video Duration
-  durationInFrames: z.number().min(120).max(600).default(240),
+  durationInFrames: z.number().min(60).max(900).default(240),
 });
 
 export type MusicForumScrollProps = z.infer<typeof MusicForumScrollSchema>;
@@ -164,22 +180,38 @@ export const defaultMusicForumScrollProps: MusicForumScrollProps = {
   post4_avatarColor: "#10b981",
 
   enableScroll: true,
+  postsToSkip: 2,
   scrollStartFrame: 15,
-  scrollDuration: 95,
+  scrollDuration: 90,
   scrollDistance: 380,
   highlightPostIndex: 3,
+
+  // Initial Entrance Blur
+  enableInitialBlur: true,
+  initialBlurStartFrame: 0,
+  initialBlurDuration: 25,
+  initialBlurAmount: 10,
 
   // Focus & Spotlight Effect
   enablePostFocus: true,
   focusPostIndex: 3,
-  focusStartFrame: 110,
-  autoSyncFocusWithScroll: true,
+  focusStartFrame: 105,
+  focusDuration: 22,
+  autoSyncFocusWithScroll: false,
   focusScale: 1.04,
   focusGlowColor: "#f59e0b",
   dimOtherPosts: true,
   dimOpacity: 0.35,
+  dimBlurAmount: 1.5,
+
+  // Question Marker Sweep
   enableTextMarker: true,
+  markerStartFrame: 118,
+  markerDuration: 26,
   targetQuestionText: "CZY KTOŚ WIE KTO TO ŚPIEWA?",
+
+  // Raw Static Attachment
+  rawFileAttachment: true,
 
   transparentBackground: true,
   enable3DTilt: true,

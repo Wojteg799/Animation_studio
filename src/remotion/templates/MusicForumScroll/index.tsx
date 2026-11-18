@@ -51,22 +51,38 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
   post4_avatarColor = "#10b981",
 
   enableScroll = true,
+  postsToSkip = 2,
   scrollStartFrame = 15,
-  scrollDuration = 95,
+  scrollDuration = 90,
   scrollDistance = 380,
   highlightPostIndex = 3,
+
+  // Initial Entrance Blur & Focus
+  enableInitialBlur = true,
+  initialBlurStartFrame = 0,
+  initialBlurDuration = 25,
+  initialBlurAmount = 10,
 
   // Focus & Target Post Effect
   enablePostFocus = true,
   focusPostIndex = 3,
-  focusStartFrame = 110,
-  autoSyncFocusWithScroll = true,
+  focusStartFrame = 105,
+  focusDuration = 22,
+  autoSyncFocusWithScroll = false,
   focusScale = 1.04,
   focusGlowColor = "#f59e0b",
   dimOtherPosts = true,
   dimOpacity = 0.35,
+  dimBlurAmount = 1.5,
+
+  // Question Marker Sweep
   enableTextMarker = true,
+  markerStartFrame = 118,
+  markerDuration = 26,
   targetQuestionText = "CZY KTOŚ WIE KTO TO ŚPIEWA?",
+
+  // Raw Static Attachment
+  rawFileAttachment = true,
 
   transparentBackground = true,
   enable3DTilt = true,
@@ -88,12 +104,22 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
   const { width, height } = useVideoConfig();
   const isXP = forumThemeVariant === "retro-xp-2007";
 
+  // Initial entrance blur calculation
+  const currentInitialBlur = useMemo(() => {
+    if (!enableInitialBlur) return 0;
+    if (frame <= initialBlurStartFrame) return initialBlurAmount;
+    const progress = (frame - initialBlurStartFrame) / Math.max(1, initialBlurDuration);
+    if (progress >= 1) return 0;
+    const eased = 1 - smootherStep(progress);
+    return eased * initialBlurAmount;
+  }, [enableInitialBlur, frame, initialBlurStartFrame, initialBlurDuration, initialBlurAmount]);
+
   // Scroll offset calculation
   const scrollOffset = useMemo(() => {
     if (!enableScroll || frame < scrollStartFrame) {
       return 0;
     }
-    const rawProgress = (frame - scrollStartFrame) / scrollDuration;
+    const rawProgress = (frame - scrollStartFrame) / Math.max(1, scrollDuration);
     const t = smootherStep(rawProgress);
     return t * scrollDistance;
   }, [enableScroll, frame, scrollStartFrame, scrollDuration, scrollDistance]);
@@ -105,13 +131,16 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
 
   const focusProgress =
     enablePostFocus && frame >= actualFocusStart
-      ? smootherStep((frame - actualFocusStart) / 22)
+      ? smootherStep((frame - actualFocusStart) / Math.max(1, focusDuration))
       : 0;
 
-  const markerStart = actualFocusStart + 5;
+  const actualMarkerStart = autoSyncFocusWithScroll
+    ? actualFocusStart + 10
+    : markerStartFrame;
+
   const markerProgress =
-    enablePostFocus && enableTextMarker && frame >= markerStart
-      ? smootherStep((frame - markerStart) / 24)
+    enablePostFocus && enableTextMarker && frame >= actualMarkerStart
+      ? smootherStep((frame - actualMarkerStart) / Math.max(1, markerDuration))
       : 0;
 
   const isTargetPost = (idx: number) => enablePostFocus && focusPostIndex === idx;
@@ -262,6 +291,7 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
           overflow: "hidden",
           position: "relative",
           zIndex: 10,
+          filter: currentInitialBlur > 0.1 ? `blur(${currentInitialBlur.toFixed(1)}px)` : undefined,
         }}
       >
         {/* CRT Scanlines Overlay (Inside window only, does not affect alpha outside!) */}
@@ -569,10 +599,12 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
                   focusProgress={focusProgress}
                   dimmed={isDimmed(1)}
                   dimOpacity={dimOpacity}
+                  dimBlurAmount={dimBlurAmount}
                   targetHeadline={isTargetPost(1) ? targetQuestionText : undefined}
                   markerProgress={markerProgress}
                   glowColor={focusGlowColor}
                   focusScale={focusScale}
+                  rawFileAttachment={rawFileAttachment}
                 />
 
                 {/* 2007 phpBB POST 2 */}
@@ -594,10 +626,12 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
                   focusProgress={focusProgress}
                   dimmed={isDimmed(2)}
                   dimOpacity={dimOpacity}
+                  dimBlurAmount={dimBlurAmount}
                   targetHeadline={isTargetPost(2) ? targetQuestionText : undefined}
                   markerProgress={markerProgress}
                   glowColor={focusGlowColor}
                   focusScale={focusScale}
+                  rawFileAttachment={rawFileAttachment}
                 />
 
                 {/* 2007 phpBB POST 3 (KLUCZOWY WPIS Z PYTANIEM) */}
@@ -617,10 +651,12 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
                   focusProgress={focusProgress}
                   dimmed={isDimmed(3)}
                   dimOpacity={dimOpacity}
+                  dimBlurAmount={dimBlurAmount}
                   targetHeadline={isTargetPost(3) ? targetQuestionText : undefined}
                   markerProgress={markerProgress}
                   glowColor={focusGlowColor}
                   focusScale={focusScale}
+                  rawFileAttachment={rawFileAttachment}
                 />
 
                 {/* 2007 phpBB POST 4 */}
@@ -640,10 +676,12 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
                   focusProgress={focusProgress}
                   dimmed={isDimmed(4)}
                   dimOpacity={dimOpacity}
+                  dimBlurAmount={dimBlurAmount}
                   targetHeadline={isTargetPost(4) ? targetQuestionText : undefined}
                   markerProgress={markerProgress}
                   glowColor={focusGlowColor}
                   focusScale={focusScale}
+                  rawFileAttachment={rawFileAttachment}
                 />
               </>
             ) : (
@@ -664,10 +702,12 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
                   focusProgress={focusProgress}
                   dimmed={isDimmed(1)}
                   dimOpacity={dimOpacity}
+                  dimBlurAmount={dimBlurAmount}
                   targetHeadline={isTargetPost(1) ? targetQuestionText : undefined}
                   markerProgress={markerProgress}
                   glowColor={focusGlowColor}
                   focusScale={focusScale}
+                  rawFileAttachment={rawFileAttachment}
                 />
 
                 {/* MODERN NOIR POST 2 */}
@@ -686,10 +726,12 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
                   focusProgress={focusProgress}
                   dimmed={isDimmed(2)}
                   dimOpacity={dimOpacity}
+                  dimBlurAmount={dimBlurAmount}
                   targetHeadline={isTargetPost(2) ? targetQuestionText : undefined}
                   markerProgress={markerProgress}
                   glowColor={focusGlowColor}
                   focusScale={focusScale}
+                  rawFileAttachment={rawFileAttachment}
                 />
 
                 {/* MODERN NOIR POST 3 (KLUCZOWY WPIS Z PYTANIEM) */}
@@ -708,10 +750,12 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
                   focusProgress={focusProgress}
                   dimmed={isDimmed(3)}
                   dimOpacity={dimOpacity}
+                  dimBlurAmount={dimBlurAmount}
                   targetHeadline={isTargetPost(3) ? targetQuestionText : undefined}
                   markerProgress={markerProgress}
                   glowColor={focusGlowColor}
                   focusScale={focusScale}
+                  rawFileAttachment={rawFileAttachment}
                 />
 
                 {/* MODERN NOIR POST 4 */}
@@ -730,10 +774,12 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
                   focusProgress={focusProgress}
                   dimmed={isDimmed(4)}
                   dimOpacity={dimOpacity}
+                  dimBlurAmount={dimBlurAmount}
                   targetHeadline={isTargetPost(4) ? targetQuestionText : undefined}
                   markerProgress={markerProgress}
                   glowColor={focusGlowColor}
                   focusScale={focusScale}
+                  rawFileAttachment={rawFileAttachment}
                 />
               </>
             )}

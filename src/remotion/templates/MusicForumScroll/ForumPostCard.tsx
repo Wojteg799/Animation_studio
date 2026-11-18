@@ -1,5 +1,5 @@
 import React from "react";
-import { Music, Disc, Volume2, FileAudio, CornerDownRight } from "lucide-react";
+import { Music, Disc, Volume2, FileAudio, CornerDownRight, Paperclip, Download } from "lucide-react";
 
 export interface ForumPostCardProps {
   postNumber: number;
@@ -16,10 +16,12 @@ export interface ForumPostCardProps {
   focusProgress?: number;
   dimmed?: boolean;
   dimOpacity?: number;
+  dimBlurAmount?: number;
   targetHeadline?: string;
   markerProgress?: number;
   glowColor?: string;
   focusScale?: number;
+  rawFileAttachment?: boolean;
 }
 
 export const ForumPostCard: React.FC<ForumPostCardProps> = ({
@@ -37,20 +39,20 @@ export const ForumPostCard: React.FC<ForumPostCardProps> = ({
   focusProgress = 0,
   dimmed = false,
   dimOpacity = 0.35,
+  dimBlurAmount = 1.5,
   targetHeadline,
   markerProgress = 0,
   glowColor = "#f59e0b",
   focusScale = 1.04,
+  rawFileAttachment = true,
 }) => {
   // Low-poly initial / avatar icon generator
   const initials = author.substring(0, 2).toUpperCase();
 
-  // Animated waveform bars for audio attachment
-  const bars = [14, 28, 42, 35, 52, 24, 48, 62, 38, 50, 22, 44, 30, 16];
-
   // Focus & Spotlight calculations
   const currentOpacity = dimmed ? 1 - (1 - dimOpacity) * focusProgress : 1;
   const currentScale = isFocused ? 1 + (focusScale - 1) * focusProgress : 1;
+  const currentBlur = dimmed && dimBlurAmount ? dimBlurAmount * focusProgress : 0;
   const currentZIndex = isFocused ? 40 : 1;
   const activeBorder = isFocused
     ? `2px solid ${glowColor}`
@@ -71,6 +73,7 @@ export const ForumPostCard: React.FC<ForumPostCardProps> = ({
         borderRadius: "12px",
         boxShadow: activeShadow,
         opacity: currentOpacity,
+        filter: currentBlur > 0 ? `blur(${currentBlur.toFixed(1)}px)` : undefined,
         transform: `scale(${currentScale})`,
         zIndex: currentZIndex,
         overflow: "hidden",
@@ -302,80 +305,96 @@ export const ForumPostCard: React.FC<ForumPostCardProps> = ({
             {content}
           </div>
 
-          {/* Audio Snippet Attachment Box (if hasAudio) */}
+          {/* Modern Noir Raw Static File Attachment Box (Statyczny załącznik, bez ruchów i fal) */}
           {hasAudio && (
             <div
               style={{
                 marginTop: "14px",
-                padding: "10px 14px",
-                backgroundColor: "rgba(0, 0, 0, 0.5)",
-                border: "1px solid rgba(56, 189, 248, 0.35)",
-                borderRadius: "8px",
-                display: "flex",
+                padding: "8px 14px",
+                backgroundColor: "rgba(15, 23, 42, 0.75)",
+                border: "1px solid rgba(56, 189, 248, 0.3)",
+                borderRadius: "6px",
+                display: "inline-flex",
                 alignItems: "center",
-                justifyContent: "space-between",
                 gap: "12px",
-                boxShadow: "inset 0 0 15px rgba(56, 189, 248, 0.08)",
+                maxWidth: "100%",
+                boxShadow: "inset 0 0 12px rgba(56, 189, 248, 0.05)",
               }}
             >
-              {/* File details */}
-              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              {/* File Icon */}
+              <div
+                style={{
+                  width: "28px",
+                  height: "28px",
+                  borderRadius: "5px",
+                  backgroundColor: "rgba(56, 189, 248, 0.15)",
+                  border: "1px solid rgba(56, 189, 248, 0.4)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "#38bdf8",
+                  flexShrink: 0,
+                }}
+              >
+                <Paperclip className="w-3.5 h-3.5" />
+              </div>
+
+              <div>
                 <div
                   style={{
-                    width: "30px",
-                    height: "30px",
-                    borderRadius: "6px",
-                    backgroundColor: "rgba(56, 189, 248, 0.15)",
-                    border: "1px solid rgba(56, 189, 248, 0.4)",
+                    fontSize: "11px",
+                    fontFamily: "monospace",
+                    fontWeight: "700",
+                    color: "#f1f5f9",
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "center",
-                    color: "#38bdf8",
+                    gap: "6px",
                   }}
                 >
-                  <FileAudio className="w-4 h-4" />
-                </div>
-                <div>
-                  <div
+                  <span>{audioFile || "radio_rip_ndr_1984.mp3"}</span>
+                  <span
                     style={{
-                      fontSize: "11px",
-                      fontFamily: "monospace",
-                      fontWeight: "700",
-                      color: "#e0f2fe",
+                      fontSize: "9px",
+                      color: "#38bdf8",
+                      backgroundColor: "rgba(56, 189, 248, 0.15)",
+                      padding: "1px 5px",
+                      borderRadius: "3px",
                     }}
                   >
-                    {audioFile || "audio_rip_ndr_1984.mp3"}
-                  </div>
-                  <div style={{ fontSize: "9px", color: "#64748b", fontFamily: "monospace" }}>
-                    Załącznik audio • Pobrane 1,842 razy
-                  </div>
+                    RAW FILE
+                  </span>
+                </div>
+                <div
+                  style={{
+                    fontSize: "9px",
+                    color: "#64748b",
+                    fontFamily: "monospace",
+                    marginTop: "2px",
+                  }}
+                >
+                  Załącznik: 1.42 MB • Pobrano 1,842 razy
                 </div>
               </div>
 
-              {/* Animated waveform indicator */}
+              {/* Static Download Chip */}
               <div
                 style={{
+                  marginLeft: "12px",
+                  padding: "4px 8px",
+                  borderRadius: "4px",
+                  backgroundColor: "rgba(255, 255, 255, 0.06)",
+                  border: "1px solid rgba(255, 255, 255, 0.12)",
+                  fontSize: "9px",
+                  fontWeight: 700,
+                  fontFamily: "monospace",
+                  color: "#cbd5e1",
                   display: "flex",
                   alignItems: "center",
-                  gap: "2px",
-                  height: "22px",
+                  gap: "4px",
                 }}
               >
-                {bars.map((b, idx) => {
-                  const animHeight = 4 + Math.abs(Math.sin((frame * 0.15) + idx * 0.7)) * 16;
-                  return (
-                    <div
-                      key={idx}
-                      style={{
-                        width: "3px",
-                        height: `${animHeight}px`,
-                        backgroundColor: "#38bdf8",
-                        borderRadius: "1px",
-                        opacity: 0.85,
-                      }}
-                    />
-                  );
-                })}
+                <Download className="w-3 h-3 text-cyan-400" />
+                <span>POBIERZ</span>
               </div>
             </div>
           )}

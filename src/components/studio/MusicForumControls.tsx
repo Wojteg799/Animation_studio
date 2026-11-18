@@ -16,6 +16,9 @@ import {
   Tv,
   Target,
   Highlighter,
+  Paperclip,
+  Eye,
+  SlidersHorizontal,
 } from "lucide-react";
 import { MusicForumScrollProps } from "../../remotion/templates/MusicForumScroll/schema";
 
@@ -154,7 +157,7 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
           }`}
         >
           <Clock className="w-3.5 h-3.5" />
-          <span className="text-[10px]">Czas</span>
+          <span className="text-[10px]">Oś Czasu & Blur</span>
         </button>
       </div>
 
@@ -356,12 +359,12 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
               />
             </div>
 
-            {/* Audio Attachment (Dla aktualnie wybranego postu) */}
+            {/* Surowy załącznik pliku (Dla aktualnie wybranego postu) */}
             <div className="pt-2 border-t border-white/5 space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-xs text-zinc-300 font-semibold flex items-center gap-1.5">
-                  <FileAudio className="w-3.5 h-3.5 text-cyan-400" />
-                  Załącznik Audio dla Postu #{selectedPostTab}
+                  <Paperclip className="w-3.5 h-3.5 text-cyan-400" />
+                  Załącznik Pliku dla Postu #{selectedPostTab} (Surowy plik)
                 </span>
                 <button
                   type="button"
@@ -426,7 +429,41 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
 
             {props.enableScroll && (
               <div className="space-y-3 pt-2 border-t border-white/5 animate-in fade-in">
-                {/* Scroll Distance */}
+                {/* Posts to Skip selector */}
+                <div className="space-y-1.5">
+                  <div className="flex justify-between items-center text-[11px] text-zinc-300">
+                    <span>Ile postów ma być pominiętych (scroll):</span>
+                    <span className="font-mono text-amber-400 font-bold">
+                      {props.postsToSkip} {props.postsToSkip === 1 ? "post" : "posty"}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-4 gap-1.5">
+                    {[
+                      { skip: 0, px: 0, label: "0 postów (OP)" },
+                      { skip: 1, px: 190, label: "1 post" },
+                      { skip: 2, px: 380, label: "2 posty (Zalecane)" },
+                      { skip: 3, px: 570, label: "3 posty" },
+                    ].map((s) => (
+                      <button
+                        key={s.skip}
+                        type="button"
+                        onClick={() => {
+                          updateProp("postsToSkip", s.skip);
+                          updateProp("scrollDistance", s.px);
+                        }}
+                        className={`p-2 rounded-lg border text-center transition-all ${
+                          props.postsToSkip === s.skip
+                            ? "bg-amber-500/20 border-amber-500 text-amber-300 font-bold"
+                            : "bg-[#181822] border-white/5 text-zinc-400 hover:text-white"
+                        }`}
+                      >
+                        <span className="text-[10px] block">{s.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Scroll Distance Slider */}
                 <div className="space-y-1.5">
                   <div className="flex justify-between items-center text-[11px] text-zinc-300">
                     <span>Dystans Przewinięcia (Piksele)</span>
@@ -436,21 +473,16 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
                   </div>
                   <input
                     type="range"
-                    min={100}
-                    max={750}
+                    min={0}
+                    max={800}
                     step={10}
                     value={props.scrollDistance}
                     onChange={(e) => updateProp("scrollDistance", Number(e.target.value))}
                     className="w-full h-1.5 bg-zinc-800 rounded-lg cursor-pointer"
                   />
-                  <div className="flex justify-between text-[9px] text-zinc-500 font-mono">
-                    <span>Krótkie (100px)</span>
-                    <span>Standard (420px)</span>
-                    <span>Głębokie (750px)</span>
-                  </div>
                 </div>
 
-                {/* Timing */}
+                {/* Scroll Timing */}
                 <div className="grid grid-cols-2 gap-2 pt-1">
                   <div>
                     <label className="text-[10px] text-zinc-400 block mb-1">
@@ -459,11 +491,14 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
                     <input
                       type="number"
                       min={0}
-                      max={90}
+                      max={200}
                       value={props.scrollStartFrame}
                       onChange={(e) => updateProp("scrollStartFrame", Number(e.target.value))}
                       className="studio-input text-xs font-mono text-center"
                     />
+                    <span className="text-[9px] text-zinc-500 font-mono block mt-0.5 text-center">
+                      {(props.scrollStartFrame / fps).toFixed(2)}s
+                    </span>
                   </div>
 
                   <div>
@@ -472,12 +507,15 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
                     </label>
                     <input
                       type="number"
-                      min={40}
-                      max={220}
+                      min={20}
+                      max={300}
                       value={props.scrollDuration}
                       onChange={(e) => updateProp("scrollDuration", Number(e.target.value))}
                       className="studio-input text-xs font-mono text-center"
                     />
+                    <span className="text-[9px] text-zinc-500 font-mono block mt-0.5 text-center">
+                      {(props.scrollDuration / fps).toFixed(2)}s
+                    </span>
                   </div>
                 </div>
               </div>
@@ -558,17 +596,55 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
                   </div>
 
                   {props.enableTextMarker && (
-                    <div className="space-y-1">
-                      <label className="text-[10px] font-mono text-zinc-400 uppercase block">
-                        Treść Pytania do Zakreślenia:
-                      </label>
-                      <input
-                        type="text"
-                        value={props.targetQuestionText}
-                        onChange={(e) => updateProp("targetQuestionText", e.target.value)}
-                        className="w-full studio-input text-xs font-bold text-yellow-300"
-                        placeholder="np. CZY KTOŚ WIE KTO TO ŚPIEWA?"
-                      />
+                    <div className="space-y-2 pt-1">
+                      <div>
+                        <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1">
+                          Treść Pytania do Zakreślenia:
+                        </label>
+                        <input
+                          type="text"
+                          value={props.targetQuestionText}
+                          onChange={(e) => updateProp("targetQuestionText", e.target.value)}
+                          className="w-full studio-input text-xs font-bold text-yellow-300"
+                          placeholder="np. CZY KTOŚ WIE KTO TO ŚPIEWA?"
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2 pt-1">
+                        <div>
+                          <label className="text-[10px] text-zinc-400 block mb-1">
+                            W której klatce ma się podkreślić:
+                          </label>
+                          <input
+                            type="number"
+                            min={0}
+                            max={500}
+                            value={props.markerStartFrame}
+                            onChange={(e) => updateProp("markerStartFrame", Number(e.target.value))}
+                            className="studio-input text-xs font-mono text-center text-yellow-300 font-bold"
+                          />
+                          <span className="text-[9px] text-zinc-500 font-mono block mt-0.5 text-center">
+                            {(props.markerStartFrame / fps).toFixed(2)}s
+                          </span>
+                        </div>
+
+                        <div>
+                          <label className="text-[10px] text-zinc-400 block mb-1">
+                            Czas trwania podkreślenia (klatki):
+                          </label>
+                          <input
+                            type="number"
+                            min={5}
+                            max={120}
+                            value={props.markerDuration}
+                            onChange={(e) => updateProp("markerDuration", Number(e.target.value))}
+                            className="studio-input text-xs font-mono text-center"
+                          />
+                          <span className="text-[9px] text-zinc-500 font-mono block mt-0.5 text-center">
+                            {(props.markerDuration / fps).toFixed(2)}s
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -611,22 +687,42 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
                   </div>
 
                   {props.dimOtherPosts && (
-                    <div className="space-y-1 pl-2 border-l border-white/10">
-                      <div className="flex justify-between items-center text-[10px] text-zinc-400">
-                        <span>Jasność Tła Pozostałych Postów</span>
-                        <span className="font-mono text-zinc-200">
-                          {Math.round(props.dimOpacity * 100)}%
-                        </span>
+                    <div className="space-y-2 pl-2 border-l border-white/10">
+                      <div className="space-y-1">
+                        <div className="flex justify-between items-center text-[10px] text-zinc-400">
+                          <span>Jasność Tła Pozostałych Postów</span>
+                          <span className="font-mono text-zinc-200">
+                            {Math.round(props.dimOpacity * 100)}%
+                          </span>
+                        </div>
+                        <input
+                          type="range"
+                          min={0.05}
+                          max={0.7}
+                          step={0.05}
+                          value={props.dimOpacity}
+                          onChange={(e) => updateProp("dimOpacity", Number(e.target.value))}
+                          className="w-full h-1.5 bg-zinc-800 rounded-lg cursor-pointer"
+                        />
                       </div>
-                      <input
-                        type="range"
-                        min={0.15}
-                        max={0.7}
-                        step={0.05}
-                        value={props.dimOpacity}
-                        onChange={(e) => updateProp("dimOpacity", Number(e.target.value))}
-                        className="w-full h-1.5 bg-zinc-800 rounded-lg cursor-pointer"
-                      />
+
+                      <div className="space-y-1">
+                        <div className="flex justify-between items-center text-[10px] text-zinc-400">
+                          <span>Rozmycie Tła Pozostałych Postów (Depth Blur)</span>
+                          <span className="font-mono text-amber-400 font-bold">
+                            {props.dimBlurAmount} px
+                          </span>
+                        </div>
+                        <input
+                          type="range"
+                          min={0}
+                          max={6}
+                          step={0.5}
+                          value={props.dimBlurAmount}
+                          onChange={(e) => updateProp("dimBlurAmount", Number(e.target.value))}
+                          className="w-full h-1.5 bg-zinc-800 rounded-lg cursor-pointer"
+                        />
+                      </div>
                     </div>
                   )}
 
@@ -684,18 +780,40 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
                     </div>
 
                     {!props.autoSyncFocusWithScroll && (
-                      <div className="pt-1">
-                        <label className="text-[10px] text-zinc-400 block mb-1">
-                          Klatka Rozpoczęcia Focusu:
-                        </label>
-                        <input
-                          type="number"
-                          min={0}
-                          max={200}
-                          value={props.focusStartFrame}
-                          onChange={(e) => updateProp("focusStartFrame", Number(e.target.value))}
-                          className="studio-input text-xs font-mono text-center"
-                        />
+                      <div className="grid grid-cols-2 gap-2 pt-1">
+                        <div>
+                          <label className="text-[10px] text-zinc-400 block mb-1">
+                            Klatka Startu Focusu:
+                          </label>
+                          <input
+                            type="number"
+                            min={0}
+                            max={500}
+                            value={props.focusStartFrame}
+                            onChange={(e) => updateProp("focusStartFrame", Number(e.target.value))}
+                            className="studio-input text-xs font-mono text-center font-bold text-amber-300"
+                          />
+                          <span className="text-[9px] text-zinc-500 font-mono block mt-0.5 text-center">
+                            {(props.focusStartFrame / fps).toFixed(2)}s
+                          </span>
+                        </div>
+
+                        <div>
+                          <label className="text-[10px] text-zinc-400 block mb-1">
+                            Czas Powiększania (klatki):
+                          </label>
+                          <input
+                            type="number"
+                            min={5}
+                            max={120}
+                            value={props.focusDuration}
+                            onChange={(e) => updateProp("focusDuration", Number(e.target.value))}
+                            className="studio-input text-xs font-mono text-center"
+                          />
+                          <span className="text-[9px] text-zinc-500 font-mono block mt-0.5 text-center">
+                            {(props.focusDuration / fps).toFixed(2)}s
+                          </span>
+                        </div>
                       </div>
                     )}
                   </div>
@@ -903,18 +1021,77 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
         </div>
       )}
 
-      {/* ================= TAB 4: CZAS ================= */}
+      {/* ================= TAB 4: PRECYZYJNA OŚ CZASU & ROZMYCIE ================= */}
       {activeTab === "duration" && (
         <div className="space-y-4 animate-in fade-in">
+          {/* 1. Całkowity Czas Trwania Animacji */}
           <div className="bg-[#12121a] p-3.5 rounded-xl border border-white/5 space-y-3">
-            <label className="text-xs font-semibold text-white block">
-              Długość Animacji:
-            </label>
-            <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <div>
+                <span className="text-xs font-semibold text-white flex items-center gap-1.5">
+                  <Clock className="w-3.5 h-3.5 text-amber-400" />
+                  Całkowita Długość Animacji
+                </span>
+                <span className="text-[10px] text-zinc-400">
+                  Czas trwania całej sceny w klatkach i sekundach
+                </span>
+              </div>
+              <span className="font-mono text-xs text-amber-400 font-bold bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
+                {(props.durationInFrames / fps).toFixed(2)} sek. ({props.durationInFrames} kl.)
+              </span>
+            </div>
+
+            {/* Manual Frame & Seconds Input */}
+            <div className="grid grid-cols-2 gap-2 pt-1">
+              <div>
+                <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1">
+                  Dokładna Liczba Klatek:
+                </label>
+                <input
+                  type="number"
+                  min={60}
+                  max={900}
+                  step={10}
+                  value={props.durationInFrames}
+                  onChange={(e) => {
+                    const frames = Number(e.target.value);
+                    setDurationFrames(frames);
+                    updateProp("durationInFrames", frames);
+                  }}
+                  className="studio-input text-xs font-mono text-center font-bold text-amber-300"
+                />
+              </div>
+
+              <div>
+                <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1">
+                  Czas w Sekundach (@{fps} fps):
+                </label>
+                <input
+                  type="number"
+                  min={2}
+                  max={30}
+                  step={0.5}
+                  value={Number((props.durationInFrames / fps).toFixed(1))}
+                  onChange={(e) => {
+                    const sec = Number(e.target.value);
+                    const frames = Math.round(sec * fps);
+                    setDurationFrames(frames);
+                    updateProp("durationInFrames", frames);
+                  }}
+                  className="studio-input text-xs font-mono text-center"
+                />
+              </div>
+            </div>
+
+            {/* Quick Presets */}
+            <div className="grid grid-cols-3 gap-1.5 pt-1">
               {[
-                { sec: 8, frames: 240, label: "8 sekund (Rekomendowane)", badge: "240 klatek" },
-                { sec: 10, frames: 300, label: "10 sekund (Dłuższe czytanie)", badge: "300 klatek" },
-                { sec: 6, frames: 180, label: "6 sekund (Krótka przebitka)", badge: "180 klatek" },
+                { sec: 5, frames: 150, label: "5s (Krótka)" },
+                { sec: 8, frames: 240, label: "8s (Zalecana)" },
+                { sec: 10, frames: 300, label: "10s (Długa)" },
+                { sec: 12, frames: 360, label: "12s" },
+                { sec: 15, frames: 450, label: "15s" },
+                { sec: 20, frames: 600, label: "20s" },
               ].map((d) => (
                 <button
                   key={d.frames}
@@ -923,21 +1100,272 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
                     setDurationFrames(d.frames);
                     updateProp("durationInFrames", d.frames);
                   }}
-                  className={`w-full p-2.5 rounded-xl border text-left transition-all flex items-center justify-between ${
-                    durationFrames === d.frames
-                      ? "bg-amber-500/20 border-amber-500/80 text-white font-bold"
-                      : "bg-[#161622] border-white/5 text-zinc-400"
+                  className={`py-1.5 px-2 rounded-lg border text-center transition-all ${
+                    props.durationInFrames === d.frames
+                      ? "bg-amber-500/20 border-amber-500 text-amber-300 font-bold"
+                      : "bg-[#181822] border-white/5 text-zinc-400 hover:text-white"
                   }`}
                 >
-                  <div>
-                    <div className="text-xs text-white">{d.label}</div>
-                    <div className="text-[10px] text-zinc-500 font-mono">
-                      @{fps} fps ({d.sec} sek.)
-                    </div>
-                  </div>
-                  <span className="text-[10px] font-mono text-amber-400">{d.badge}</span>
+                  <span className="text-[10px] block font-mono">{d.label}</span>
                 </button>
               ))}
+            </div>
+          </div>
+
+          {/* 2. Wizualna Oś Czasu (Timeline Breakdown) */}
+          <div className="bg-[#12121a] p-3.5 rounded-xl border border-white/5 space-y-2.5">
+            <span className="text-xs font-semibold text-white block">
+              Podgląd Kolejności Zdarzeń na Osi Czasu:
+            </span>
+
+            {/* Visual multi-segment bar */}
+            <div className="w-full h-3 bg-zinc-900 rounded-full overflow-hidden flex border border-white/10">
+              {/* Blur phase */}
+              <div
+                style={{
+                  width: `${Math.min(100, ((props.initialBlurDuration) / props.durationInFrames) * 100)}%`,
+                  backgroundColor: "#38bdf8",
+                }}
+                title={`Rozmycie początkowe: 0-${props.initialBlurDuration} kl.`}
+              />
+              {/* Scroll phase */}
+              <div
+                style={{
+                  width: `${Math.min(100, (props.scrollDuration / props.durationInFrames) * 100)}%`,
+                  backgroundColor: "#f59e0b",
+                }}
+                title={`Przewijanie: ${props.scrollStartFrame}-${props.scrollStartFrame + props.scrollDuration} kl.`}
+              />
+              {/* Marker Sweep */}
+              <div
+                style={{
+                  width: `${Math.min(100, (props.markerDuration / props.durationInFrames) * 100)}%`,
+                  backgroundColor: "#eab308",
+                }}
+                title={`Podkreślenie tekstu: ${props.markerStartFrame}-${props.markerStartFrame + props.markerDuration} kl.`}
+              />
+              {/* Rest: Read / Inspect */}
+              <div
+                style={{ flex: 1, backgroundColor: "#10b981" }}
+                title="Spokojny podgląd / czytanie posta do końca"
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-2 text-[9px] font-mono text-zinc-400 pt-1">
+              <div className="flex items-center gap-1.5">
+                <div className="w-2 h-2 rounded-full bg-[#38bdf8]" />
+                <span>0s - {(props.initialBlurDuration / fps).toFixed(1)}s: Wyostrzenie blur</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <div className="w-2 h-2 rounded-full bg-[#f59e0b]" />
+                <span>{(props.scrollStartFrame / fps).toFixed(1)}s - {((props.scrollStartFrame + props.scrollDuration) / fps).toFixed(1)}s: Scroll</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <div className="w-2 h-2 rounded-full bg-[#eab308]" />
+                <span>{(props.markerStartFrame / fps).toFixed(1)}s: Żółty zakreślacz</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <div className="w-2 h-2 rounded-full bg-[#10b981]" />
+                <span>Do końca: Focus & Pytanie</span>
+              </div>
+            </div>
+          </div>
+
+          {/* 3. Rozmycie na Starcie (Initial Blur) */}
+          <div className="bg-[#12121a] p-3.5 rounded-xl border border-white/5 space-y-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <span className="text-xs font-semibold text-white flex items-center gap-1.5">
+                  <Eye className="w-3.5 h-3.5 text-cyan-400" />
+                  Rozmycie na Początku (Initial Blur)
+                </span>
+                <span className="text-[10px] text-zinc-400">
+                  Animacja startuje rozmyta i płynnie się wyostrza
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => updateProp("enableInitialBlur", !props.enableInitialBlur)}
+                className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold transition-all ${
+                  props.enableInitialBlur ? "bg-cyan-500 text-black" : "bg-zinc-800 text-zinc-400"
+                }`}
+              >
+                {props.enableInitialBlur ? "WŁĄCZONE" : "WYŁĄCZONE"}
+              </button>
+            </div>
+
+            {props.enableInitialBlur && (
+              <div className="space-y-3 pt-2 border-t border-white/5 animate-in fade-in">
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="text-[10px] text-zinc-400 block mb-1">
+                      Klatka Startu Wyostrzania:
+                    </label>
+                    <input
+                      type="number"
+                      min={0}
+                      max={120}
+                      value={props.initialBlurStartFrame}
+                      onChange={(e) => updateProp("initialBlurStartFrame", Number(e.target.value))}
+                      className="studio-input text-xs font-mono text-center"
+                    />
+                    <span className="text-[9px] text-zinc-500 font-mono block mt-0.5 text-center">
+                      {(props.initialBlurStartFrame / fps).toFixed(2)}s
+                    </span>
+                  </div>
+
+                  <div>
+                    <label className="text-[10px] text-zinc-400 block mb-1">
+                      Czas Trwania Rozmycia (klatki):
+                    </label>
+                    <input
+                      type="number"
+                      min={5}
+                      max={120}
+                      value={props.initialBlurDuration}
+                      onChange={(e) => updateProp("initialBlurDuration", Number(e.target.value))}
+                      className="studio-input text-xs font-mono text-center"
+                    />
+                    <span className="text-[9px] text-zinc-500 font-mono block mt-0.5 text-center">
+                      {(props.initialBlurDuration / fps).toFixed(2)}s
+                    </span>
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <div className="flex justify-between items-center text-[10px] text-zinc-400">
+                    <span>Maksymalna Siła Rozmycia (Początek)</span>
+                    <span className="font-mono text-cyan-400 font-bold">{props.initialBlurAmount} px</span>
+                  </div>
+                  <input
+                    type="range"
+                    min={0}
+                    max={25}
+                    step={1}
+                    value={props.initialBlurAmount}
+                    onChange={(e) => updateProp("initialBlurAmount", Number(e.target.value))}
+                    className="w-full h-1.5 bg-zinc-800 rounded-lg cursor-pointer"
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* 4. Precyzyjne Klatki: Omijanie Postów & Podkreślenie */}
+          <div className="bg-[#12121a] p-3.5 rounded-xl border border-white/5 space-y-3">
+            <span className="text-xs font-semibold text-white block">
+              Precyzyjne Punkty Czasowe (Klatka po Klatce):
+            </span>
+
+            <div className="space-y-2.5">
+              {/* Scroll Timing row */}
+              <div className="p-2.5 rounded-lg bg-[#181822] border border-white/5 space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-[11px] font-semibold text-zinc-300">
+                    1. Przewijanie & Omijanie Postów ({props.postsToSkip} {props.postsToSkip === 1 ? "post" : "posty"})
+                  </span>
+                  <span className="text-[10px] font-mono text-amber-400">
+                    klatka {props.scrollStartFrame} → {props.scrollStartFrame + props.scrollDuration}
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="text-[9px] text-zinc-400 block mb-0.5">Start Scrolla (klatka):</label>
+                    <input
+                      type="number"
+                      min={0}
+                      max={200}
+                      value={props.scrollStartFrame}
+                      onChange={(e) => updateProp("scrollStartFrame", Number(e.target.value))}
+                      className="studio-input text-xs font-mono text-center"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[9px] text-zinc-400 block mb-0.5">Czas Scrolla (klatki):</label>
+                    <input
+                      type="number"
+                      min={20}
+                      max={300}
+                      value={props.scrollDuration}
+                      onChange={(e) => updateProp("scrollDuration", Number(e.target.value))}
+                      className="studio-input text-xs font-mono text-center"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Focus Timing row */}
+              <div className="p-2.5 rounded-lg bg-[#181822] border border-white/5 space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-[11px] font-semibold text-zinc-300">
+                    2. Start Focusu & Powiększenie Postu #{props.focusPostIndex}
+                  </span>
+                  <span className="text-[10px] font-mono text-amber-400">
+                    klatka {props.focusStartFrame} ({(props.focusStartFrame / fps).toFixed(2)}s)
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="text-[9px] text-zinc-400 block mb-0.5">Start Focusu (klatka):</label>
+                    <input
+                      type="number"
+                      min={0}
+                      max={500}
+                      value={props.focusStartFrame}
+                      onChange={(e) => updateProp("focusStartFrame", Number(e.target.value))}
+                      className="studio-input text-xs font-mono text-center font-bold text-amber-300"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[9px] text-zinc-400 block mb-0.5">Czas Wchodzenia w Focus:</label>
+                    <input
+                      type="number"
+                      min={5}
+                      max={120}
+                      value={props.focusDuration}
+                      onChange={(e) => updateProp("focusDuration", Number(e.target.value))}
+                      className="studio-input text-xs font-mono text-center"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Marker Timing row */}
+              <div className="p-2.5 rounded-lg bg-[#181822] border border-white/5 space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-[11px] font-semibold text-yellow-300 flex items-center gap-1.5">
+                    <Highlighter className="w-3 h-3 text-yellow-400" />
+                    3. W Której Klatce Ma Się Podkreślić:
+                  </span>
+                  <span className="text-[10px] font-mono text-yellow-400 font-bold">
+                    klatka {props.markerStartFrame} ({(props.markerStartFrame / fps).toFixed(2)}s)
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="text-[9px] text-zinc-400 block mb-0.5">Klatka Podkreślenia:</label>
+                    <input
+                      type="number"
+                      min={0}
+                      max={500}
+                      value={props.markerStartFrame}
+                      onChange={(e) => updateProp("markerStartFrame", Number(e.target.value))}
+                      className="studio-input text-xs font-mono text-center font-bold text-yellow-300"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[9px] text-zinc-400 block mb-0.5">Czas Podkreślania (klatki):</label>
+                    <input
+                      type="number"
+                      min={5}
+                      max={120}
+                      value={props.markerDuration}
+                      onChange={(e) => updateProp("markerDuration", Number(e.target.value))}
+                      className="studio-input text-xs font-mono text-center"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

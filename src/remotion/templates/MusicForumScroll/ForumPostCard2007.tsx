@@ -1,5 +1,5 @@
 import React from "react";
-import { Disc, FileAudio, Play, MessageSquare, Quote, Edit3, Volume2 } from "lucide-react";
+import { Disc, FileAudio, Play, MessageSquare, Quote, Edit3, Volume2, Paperclip, Download } from "lucide-react";
 
 interface ForumPostCard2007Props {
   postNumber: number;
@@ -20,10 +20,12 @@ interface ForumPostCard2007Props {
   focusProgress?: number;
   dimmed?: boolean;
   dimOpacity?: number;
+  dimBlurAmount?: number;
   targetHeadline?: string;
   markerProgress?: number;
   glowColor?: string;
   focusScale?: number;
+  rawFileAttachment?: boolean;
 }
 
 export const ForumPostCard2007: React.FC<ForumPostCard2007Props> = ({
@@ -44,10 +46,12 @@ export const ForumPostCard2007: React.FC<ForumPostCard2007Props> = ({
   focusProgress = 0,
   dimmed = false,
   dimOpacity = 0.35,
+  dimBlurAmount = 1.5,
   targetHeadline,
   markerProgress = 0,
   glowColor = "#f59e0b",
   focusScale = 1.04,
+  rawFileAttachment = true,
 }) => {
   const isOdd = postNumber % 2 !== 0;
   const authorColBg = isOdd ? "#eef2f8" : "#e5ecf5";
@@ -56,6 +60,7 @@ export const ForumPostCard2007: React.FC<ForumPostCard2007Props> = ({
   // Focus & Spotlight calculations
   const currentOpacity = dimmed ? 1 - (1 - dimOpacity) * focusProgress : 1;
   const currentScale = isFocused ? 1 + (focusScale - 1) * focusProgress : 1;
+  const currentBlur = dimmed && dimBlurAmount ? dimBlurAmount * focusProgress : 0;
   const currentZIndex = isFocused ? 40 : 1;
   const activeBorder = isFocused
     ? `2px solid ${glowColor}`
@@ -68,22 +73,6 @@ export const ForumPostCard2007: React.FC<ForumPostCard2007Props> = ({
     ? "0 0 12px rgba(2, 132, 199, 0.25)"
     : "none";
 
-  // Vintage audio waveform equalizer bars
-  const eqHeights = [
-    Math.sin(frame * 0.28) * 10 + 14,
-    Math.cos(frame * 0.32) * 12 + 16,
-    Math.sin(frame * 0.45 + 1) * 14 + 18,
-    Math.cos(frame * 0.22 + 2) * 8 + 12,
-    Math.sin(frame * 0.38 + 3) * 13 + 17,
-    Math.cos(frame * 0.41 + 1) * 11 + 15,
-    Math.sin(frame * 0.31 + 4) * 9 + 13,
-    Math.cos(frame * 0.26 + 2) * 12 + 16,
-    Math.sin(frame * 0.48 + 3) * 15 + 19,
-    Math.cos(frame * 0.34 + 1) * 10 + 14,
-    Math.sin(frame * 0.29 + 2) * 8 + 12,
-    Math.cos(frame * 0.42 + 4) * 14 + 18,
-  ];
-
   return (
     <div
       style={{
@@ -94,6 +83,7 @@ export const ForumPostCard2007: React.FC<ForumPostCard2007Props> = ({
         backgroundColor: bodyColBg,
         boxShadow: activeShadow,
         opacity: currentOpacity,
+        filter: currentBlur > 0 ? `blur(${currentBlur.toFixed(1)}px)` : undefined,
         transform: `scale(${currentScale})`,
         zIndex: currentZIndex,
         fontFamily: "Verdana, Tahoma, Arial, sans-serif",
@@ -414,125 +404,72 @@ export const ForumPostCard2007: React.FC<ForumPostCard2007Props> = ({
             {content}
           </p>
 
-          {/* Audio Attachment Box (phpBB 2007 attachment style) */}
+          {/* phpBB 2007 Raw Static File Attachment Box (Statyczny załącznik, bez ruchów i play) */}
           {hasAudio && (
             <div
               style={{
-                backgroundColor: "#f0f7ff",
-                border: "1px solid #93c5fd",
+                backgroundColor: "#f4f8fc",
+                border: "1px dashed #7ea8cf",
                 borderRadius: "3px",
-                padding: "10px 14px",
-                marginTop: "10px",
-                boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
+                padding: "8px 12px",
+                marginTop: "12px",
+                boxShadow: "0 1px 2px rgba(0,0,0,0.03)",
+                display: "inline-block",
+                maxWidth: "100%",
               }}
             >
               <div
                 style={{
                   fontSize: "11px",
                   fontWeight: 700,
-                  color: "#0055aa",
+                  color: "#004488",
                   display: "flex",
                   alignItems: "center",
                   gap: "6px",
-                  marginBottom: "6px",
+                  marginBottom: "4px",
+                  fontFamily: "Verdana, Tahoma, sans-serif",
                 }}
               >
-                <FileAudio className="w-4 h-4 text-[#0055aa]" />
-                <span>Załącznik do posta:</span>
+                <Paperclip className="w-3.5 h-3.5 text-[#0055aa]" />
+                <span>Załącznik:</span>
                 <span
                   style={{
-                    backgroundColor: "#dbeafe",
-                    padding: "1px 6px",
-                    borderRadius: "2px",
-                    fontSize: "10px",
-                    fontFamily: "monospace",
-                    color: "#1e40af",
+                    color: "#0055aa",
+                    textDecoration: "underline",
+                    cursor: "pointer",
+                    fontWeight: 700,
+                    fontFamily: "Tahoma, Verdana, sans-serif",
                   }}
                 >
                   {audioFile}
                 </span>
-                <span style={{ fontSize: "10px", color: "#64748b", fontWeight: 400 }}>
-                  (pobrano 842 razy)
-                </span>
               </div>
 
-              {/* 2007 Mini Player with Equalizer */}
               <div
                 style={{
-                  backgroundColor: "#1e293b",
-                  borderRadius: "3px",
-                  padding: "6px 12px",
+                  fontSize: "10px",
+                  color: "#475569",
+                  fontFamily: "Tahoma, Verdana, sans-serif",
                   display: "flex",
                   alignItems: "center",
-                  gap: "12px",
-                  border: "1px solid #0f172a",
+                  gap: "10px",
+                  paddingLeft: "20px",
                 }}
               >
-                {/* Play Button */}
-                <div
+                <span>Rozmiar: 1.42 MB</span>
+                <span>•</span>
+                <span>Pobrano: 842 razy</span>
+                <span>•</span>
+                <span
                   style={{
-                    width: "24px",
-                    height: "24px",
-                    borderRadius: "50%",
-                    background: "linear-gradient(180deg, #22c55e 0%, #15803d 100%)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    boxShadow: "0 1px 2px rgba(0,0,0,0.4)",
-                    flexShrink: 0,
+                    color: "#0055aa",
+                    fontWeight: 700,
+                    cursor: "pointer",
+                    textDecoration: "underline",
                   }}
                 >
-                  <Play className="w-3 h-3 text-white fill-white ml-0.5" />
-                </div>
-
-                {/* Progress bar */}
-                <div style={{ flex: 1 }}>
-                  <div
-                    style={{
-                      height: "6px",
-                      backgroundColor: "#334155",
-                      borderRadius: "3px",
-                      overflow: "hidden",
-                      position: "relative",
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: `${Math.min(100, (frame % 240) * 0.42)}%`,
-                        height: "100%",
-                        backgroundColor: "#38bdf8",
-                      }}
-                    />
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      fontSize: "9px",
-                      fontFamily: "monospace",
-                      color: "#94a3b8",
-                      marginTop: "3px",
-                    }}
-                  >
-                    <span>0:14</span>
-                    <span>1:28 (128 kbps stereo)</span>
-                  </div>
-                </div>
-
-                {/* Animated Equalizer Waveform */}
-                <div style={{ display: "flex", alignItems: "flex-end", gap: "2px", height: "20px" }}>
-                  {eqHeights.map((h, i) => (
-                    <div
-                      key={`eq-${i}`}
-                      style={{
-                        width: "3px",
-                        height: `${h}px`,
-                        backgroundColor: i % 2 === 0 ? "#38bdf8" : "#818cf8",
-                        borderRadius: "1px",
-                      }}
-                    />
-                  ))}
-                </div>
+                  [ Pobierz załącznik ]
+                </span>
               </div>
             </div>
           )}
