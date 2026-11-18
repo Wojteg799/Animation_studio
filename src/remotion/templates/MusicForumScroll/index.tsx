@@ -31,6 +31,7 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
   post2_date = "15 paź 2007, 00:15",
   post2_content = "Syntezator w tle to klasyczny Yamaha DX7. Brzmienie perkusji wskazuje na LinnDrum. Styl post-punk / new wave z Europy Środkowej.",
   post2_hasAudio = false,
+  post2_audioFile = "sample_snippet.mp3 [0.6 MB]",
   post2_avatarColor = "#eab308",
 
   post3_author = "vinyl_hunter_99",
@@ -38,6 +39,7 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
   post3_date = "15 paź 2007, 10:22",
   post3_content = "Sprawdziłem niemieckie archiwa GEMA i katalogi wytwórni ZYX. Żadnych oficjalnych wydań. To musiało być nagranie demo nadesłane bezpośrednio do stacji.",
   post3_hasAudio = false,
+  post3_audioFile = "radio_rip_ndr_1984.mp3 [1.4 MB]",
   post3_avatarColor = "#ef4444",
 
   post4_author = "lostwave_mod",
@@ -45,13 +47,26 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
   post4_date = "16 paź 2007, 18:05",
   post4_content = "Podbijam temat. Przesłuchujemy audycje 'Musik für junge Leute'. Otwieramy oficjalny arkusz z poszlakami i wykluczonymi zespołami.",
   post4_hasAudio = false,
+  post4_audioFile = "voice_note.mp3 [0.4 MB]",
   post4_avatarColor = "#10b981",
 
   enableScroll = true,
-  scrollStartFrame = 20,
-  scrollDuration = 150,
-  scrollDistance = 420,
-  highlightPostIndex = 1,
+  scrollStartFrame = 15,
+  scrollDuration = 95,
+  scrollDistance = 380,
+  highlightPostIndex = 3,
+
+  // Focus & Target Post Effect
+  enablePostFocus = true,
+  focusPostIndex = 3,
+  focusStartFrame = 110,
+  autoSyncFocusWithScroll = true,
+  focusScale = 1.04,
+  focusGlowColor = "#f59e0b",
+  dimOtherPosts = true,
+  dimOpacity = 0.35,
+  enableTextMarker = true,
+  targetQuestionText = "CZY KTOŚ WIE KTO TO ŚPIEWA?",
 
   transparentBackground = true,
   enable3DTilt = true,
@@ -82,6 +97,25 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
     const t = smootherStep(rawProgress);
     return t * scrollDistance;
   }, [enableScroll, frame, scrollStartFrame, scrollDuration, scrollDistance]);
+
+  // Focus & Spotlight calculations
+  const actualFocusStart = autoSyncFocusWithScroll
+    ? scrollStartFrame + scrollDuration
+    : focusStartFrame;
+
+  const focusProgress =
+    enablePostFocus && frame >= actualFocusStart
+      ? smootherStep((frame - actualFocusStart) / 22)
+      : 0;
+
+  const markerStart = actualFocusStart + 5;
+  const markerProgress =
+    enablePostFocus && enableTextMarker && frame >= markerStart
+      ? smootherStep((frame - markerStart) / 24)
+      : 0;
+
+  const isTargetPost = (idx: number) => enablePostFocus && focusPostIndex === idx;
+  const isDimmed = (idx: number) => enablePostFocus && dimOtherPosts && focusPostIndex !== idx;
 
   // Low-poly background mesh (computed only if opaque and enabled)
   const meshTriangles = useMemo(() => {
@@ -531,6 +565,14 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
                   signature={signatureText}
                   isHighlighted={highlightPostIndex === 1}
                   frame={frame}
+                  isFocused={isTargetPost(1)}
+                  focusProgress={focusProgress}
+                  dimmed={isDimmed(1)}
+                  dimOpacity={dimOpacity}
+                  targetHeadline={isTargetPost(1) ? targetQuestionText : undefined}
+                  markerProgress={markerProgress}
+                  glowColor={focusGlowColor}
+                  focusScale={focusScale}
                 />
 
                 {/* 2007 phpBB POST 2 */}
@@ -541,15 +583,24 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
                   date={post2_date}
                   content={post2_content}
                   hasAudio={post2_hasAudio}
+                  audioFile={post2_audioFile}
                   avatarColor={post2_avatarColor}
                   quoteAuthor={post1_author}
-                  quoteContent="Znalazłem starą kasetę z nagraniem z niemieckiego radia NDR (ok. 1984)..."
-                  signature='synth_seeker | "Yamaha DX7 to król lat 80."'
+                  quoteContent="Przeglądam stare nagrania radiowe z lat 80..."
+                  signature='tape_collector | "Stilon Gorzów to klasyka."'
                   isHighlighted={highlightPostIndex === 2}
                   frame={frame}
+                  isFocused={isTargetPost(2)}
+                  focusProgress={focusProgress}
+                  dimmed={isDimmed(2)}
+                  dimOpacity={dimOpacity}
+                  targetHeadline={isTargetPost(2) ? targetQuestionText : undefined}
+                  markerProgress={markerProgress}
+                  glowColor={focusGlowColor}
+                  focusScale={focusScale}
                 />
 
-                {/* 2007 phpBB POST 3 */}
+                {/* 2007 phpBB POST 3 (KLUCZOWY WPIS Z PYTANIEM) */}
                 <ForumPostCard2007
                   postNumber={3}
                   author={post3_author}
@@ -557,10 +608,19 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
                   date={post3_date}
                   content={post3_content}
                   hasAudio={post3_hasAudio}
+                  audioFile={post3_audioFile}
                   avatarColor={post3_avatarColor}
-                  signature='vinyl_hunter_99 | "Winyle nigdy nie umierają."'
+                  signature='bl4nk_tape | "Taśmy z radia nigdy nie kłamią."'
                   isHighlighted={highlightPostIndex === 3}
                   frame={frame}
+                  isFocused={isTargetPost(3)}
+                  focusProgress={focusProgress}
+                  dimmed={isDimmed(3)}
+                  dimOpacity={dimOpacity}
+                  targetHeadline={isTargetPost(3) ? targetQuestionText : undefined}
+                  markerProgress={markerProgress}
+                  glowColor={focusGlowColor}
+                  focusScale={focusScale}
                 />
 
                 {/* 2007 phpBB POST 4 */}
@@ -571,10 +631,19 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
                   date={post4_date}
                   content={post4_content}
                   hasAudio={post4_hasAudio}
+                  audioFile={post4_audioFile}
                   avatarColor={post4_avatarColor}
-                  signature="[!] Moderator Forum :: Regulamin obowiązuje każdego użytkownika."
+                  signature='synth_seeker | "Yamaha DX7 to król lat 80."'
                   isHighlighted={highlightPostIndex === 4}
                   frame={frame}
+                  isFocused={isTargetPost(4)}
+                  focusProgress={focusProgress}
+                  dimmed={isDimmed(4)}
+                  dimOpacity={dimOpacity}
+                  targetHeadline={isTargetPost(4) ? targetQuestionText : undefined}
+                  markerProgress={markerProgress}
+                  glowColor={focusGlowColor}
+                  focusScale={focusScale}
                 />
               </>
             ) : (
@@ -591,6 +660,14 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
                   avatarColor={post1_avatarColor}
                   isHighlighted={highlightPostIndex === 1}
                   frame={frame}
+                  isFocused={isTargetPost(1)}
+                  focusProgress={focusProgress}
+                  dimmed={isDimmed(1)}
+                  dimOpacity={dimOpacity}
+                  targetHeadline={isTargetPost(1) ? targetQuestionText : undefined}
+                  markerProgress={markerProgress}
+                  glowColor={focusGlowColor}
+                  focusScale={focusScale}
                 />
 
                 {/* MODERN NOIR POST 2 */}
@@ -601,12 +678,21 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
                   date={post2_date}
                   content={post2_content}
                   hasAudio={post2_hasAudio}
+                  audioFile={post2_audioFile}
                   avatarColor={post2_avatarColor}
                   isHighlighted={highlightPostIndex === 2}
                   frame={frame}
+                  isFocused={isTargetPost(2)}
+                  focusProgress={focusProgress}
+                  dimmed={isDimmed(2)}
+                  dimOpacity={dimOpacity}
+                  targetHeadline={isTargetPost(2) ? targetQuestionText : undefined}
+                  markerProgress={markerProgress}
+                  glowColor={focusGlowColor}
+                  focusScale={focusScale}
                 />
 
-                {/* MODERN NOIR POST 3 */}
+                {/* MODERN NOIR POST 3 (KLUCZOWY WPIS Z PYTANIEM) */}
                 <ForumPostCard
                   postNumber={3}
                   author={post3_author}
@@ -614,9 +700,18 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
                   date={post3_date}
                   content={post3_content}
                   hasAudio={post3_hasAudio}
+                  audioFile={post3_audioFile}
                   avatarColor={post3_avatarColor}
                   isHighlighted={highlightPostIndex === 3}
                   frame={frame}
+                  isFocused={isTargetPost(3)}
+                  focusProgress={focusProgress}
+                  dimmed={isDimmed(3)}
+                  dimOpacity={dimOpacity}
+                  targetHeadline={isTargetPost(3) ? targetQuestionText : undefined}
+                  markerProgress={markerProgress}
+                  glowColor={focusGlowColor}
+                  focusScale={focusScale}
                 />
 
                 {/* MODERN NOIR POST 4 */}
@@ -627,9 +722,18 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
                   date={post4_date}
                   content={post4_content}
                   hasAudio={post4_hasAudio}
+                  audioFile={post4_audioFile}
                   avatarColor={post4_avatarColor}
                   isHighlighted={highlightPostIndex === 4}
                   frame={frame}
+                  isFocused={isTargetPost(4)}
+                  focusProgress={focusProgress}
+                  dimmed={isDimmed(4)}
+                  dimOpacity={dimOpacity}
+                  targetHeadline={isTargetPost(4) ? targetQuestionText : undefined}
+                  markerProgress={markerProgress}
+                  glowColor={focusGlowColor}
+                  focusScale={focusScale}
                 />
               </>
             )}

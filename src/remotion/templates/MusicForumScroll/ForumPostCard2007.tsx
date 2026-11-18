@@ -15,6 +15,15 @@ interface ForumPostCard2007Props {
   signature?: string;
   frame: number;
   isHighlighted?: boolean;
+  // Focus & Spotlight Effect
+  isFocused?: boolean;
+  focusProgress?: number;
+  dimmed?: boolean;
+  dimOpacity?: number;
+  targetHeadline?: string;
+  markerProgress?: number;
+  glowColor?: string;
+  focusScale?: number;
 }
 
 export const ForumPostCard2007: React.FC<ForumPostCard2007Props> = ({
@@ -31,10 +40,33 @@ export const ForumPostCard2007: React.FC<ForumPostCard2007Props> = ({
   signature = 'Lostwave Archivist 2007 | "Taśmy z radia nigdy nie kłamią" // Yamaha DX7',
   frame,
   isHighlighted = false,
+  isFocused = false,
+  focusProgress = 0,
+  dimmed = false,
+  dimOpacity = 0.35,
+  targetHeadline,
+  markerProgress = 0,
+  glowColor = "#f59e0b",
+  focusScale = 1.04,
 }) => {
   const isOdd = postNumber % 2 !== 0;
   const authorColBg = isOdd ? "#eef2f8" : "#e5ecf5";
   const bodyColBg = isOdd ? "#ffffff" : "#f8fafd";
+
+  // Focus & Spotlight calculations
+  const currentOpacity = dimmed ? 1 - (1 - dimOpacity) * focusProgress : 1;
+  const currentScale = isFocused ? 1 + (focusScale - 1) * focusProgress : 1;
+  const currentZIndex = isFocused ? 40 : 1;
+  const activeBorder = isFocused
+    ? `2px solid ${glowColor}`
+    : isHighlighted
+    ? "2px solid #0284c7"
+    : "1px solid #b0c4de";
+  const activeShadow = isFocused
+    ? `0 0 ${25 * focusProgress}px rgba(245, 158, 11, 0.45), 0 12px 30px rgba(0, 0, 0, 0.35)`
+    : isHighlighted
+    ? "0 0 12px rgba(2, 132, 199, 0.25)"
+    : "none";
 
   // Vintage audio waveform equalizer bars
   const eqHeights = [
@@ -56,12 +88,16 @@ export const ForumPostCard2007: React.FC<ForumPostCard2007Props> = ({
     <div
       style={{
         display: "flex",
-        border: isHighlighted ? "2px solid #0284c7" : "1px solid #b0c4de",
+        border: activeBorder,
         borderRadius: "2px",
         overflow: "hidden",
         backgroundColor: bodyColBg,
-        boxShadow: isHighlighted ? "0 0 12px rgba(2, 132, 199, 0.25)" : "none",
+        boxShadow: activeShadow,
+        opacity: currentOpacity,
+        transform: `scale(${currentScale})`,
+        zIndex: currentZIndex,
         fontFamily: "Verdana, Tahoma, Arial, sans-serif",
+        transformOrigin: "center center",
       }}
     >
       {/* ================= LEFT AUTHOR COLUMN ================= */}
@@ -286,6 +322,50 @@ export const ForumPostCard2007: React.FC<ForumPostCard2007Props> = ({
             </div>
           </div>
 
+          {/* 2007 Target Question Headline with Fluorescent Yellow Highlighter */}
+          {targetHeadline && isFocused && (
+            <div style={{ marginBottom: "12px", position: "relative" }}>
+              <div
+                style={{
+                  display: "inline-block",
+                  position: "relative",
+                  padding: "4px 8px",
+                  borderRadius: "2px",
+                }}
+              >
+                {/* 2007 Fluorescent Yellow Highlighter Sweep */}
+                <div
+                  style={{
+                    position: "absolute",
+                    left: 0,
+                    top: "10%",
+                    bottom: "8%",
+                    width: `${Math.min(100, Math.max(0, markerProgress * 100))}%`,
+                    backgroundColor: "rgba(254, 240, 138, 0.9)",
+                    borderLeft:
+                      markerProgress > 0 && markerProgress < 1 ? "3px solid #ca8a04" : "none",
+                    borderRadius: "2px",
+                    zIndex: 0,
+                  }}
+                />
+                <span
+                  style={{
+                    position: "relative",
+                    zIndex: 1,
+                    fontFamily: "Verdana, Tahoma, sans-serif",
+                    fontSize: "13px",
+                    fontWeight: 900,
+                    color: "#92400e",
+                    letterSpacing: "0.4px",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  🔍 {targetHeadline}
+                </span>
+              </div>
+            </div>
+          )}
+
           {/* Quote Box (for replies) */}
           {quoteAuthor && quoteContent && (
             <div
@@ -478,3 +558,4 @@ export const ForumPostCard2007: React.FC<ForumPostCard2007Props> = ({
     </div>
   );
 };
+

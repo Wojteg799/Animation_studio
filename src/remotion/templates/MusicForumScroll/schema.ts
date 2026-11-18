@@ -50,6 +50,7 @@ export const MusicForumScrollSchema = z.object({
       "Syntezator w tle to klasyczny Yamaha DX7. Brzmienie perkusji wskazuje na LinnDrum. Styl post-punk / new wave z Europy Środkowej."
     ),
   post2_hasAudio: z.boolean().default(false),
+  post2_audioFile: z.string().default("sample_snippet.mp3 [0.6 MB]"),
   post2_avatarColor: z.string().default("#eab308"),
 
   // Post 3
@@ -62,6 +63,7 @@ export const MusicForumScrollSchema = z.object({
       "Sprawdziłem niemieckie archiwa GEMA i katalogi wytwórni ZYX. Żadnych oficjalnych wydań. To musiało być nagranie demo nadesłane bezpośrednio do stacji."
     ),
   post3_hasAudio: z.boolean().default(false),
+  post3_audioFile: z.string().default("radio_rip_ndr_1984.mp3 [1.4 MB]"),
   post3_avatarColor: z.string().default("#ef4444"),
 
   // Post 4
@@ -74,6 +76,7 @@ export const MusicForumScrollSchema = z.object({
       "Podbijam temat. Przesłuchujemy audycje 'Musik für junge Leute'. Otwieramy oficjalny arkusz z poszlakami i wykluczonymi zespołami."
     ),
   post4_hasAudio: z.boolean().default(false),
+  post4_audioFile: z.string().default("voice_note.mp3 [0.4 MB]"),
   post4_avatarColor: z.string().default("#10b981"),
 
   // Scroll & Animation
@@ -99,6 +102,18 @@ export const MusicForumScrollSchema = z.object({
     .default("dark-graphite"),
   showScanlines: z.boolean().default(false),
 
+  // Focus & Target Post Effect ("CZY KTOŚ WIE KTO TO ŚPIEWA?")
+  enablePostFocus: z.boolean().default(true),
+  focusPostIndex: z.number().min(1).max(4).default(3), // Domyślnie post 3
+  focusStartFrame: z.number().min(0).max(240).default(110),
+  autoSyncFocusWithScroll: z.boolean().default(true), // Synchronizuj moment focusu z zatrzymaniem scrolla
+  focusScale: z.number().min(1.0).max(1.15).default(1.04), // Powiększenie wyróżnionego postu
+  focusGlowColor: z.string().default("#f59e0b"), // Złoty / bursztynowy kolor ramki focusu
+  dimOtherPosts: z.boolean().default(true), // Przyciemnienie pozostałych wpisów
+  dimOpacity: z.number().min(0.1).max(0.8).default(0.35),
+  enableTextMarker: z.boolean().default(true), // Animowany żółty zakreślacz tekstu
+  targetQuestionText: z.string().default("CZY KTOŚ WIE KTO TO ŚPIEWA?"), // Nagłówek pytania
+
   // Video Duration
   durationInFrames: z.number().min(120).max(600).default(240),
 });
@@ -111,44 +126,60 @@ export const defaultMusicForumScrollProps: MusicForumScrollProps = {
   threadCategory: "GŁÓWNA DYSKUSJA / IDENTYFIKACJA UTWORÓW",
   threadDate: "Wątek założony: 14.10.2007 • 142 odpowiedzi",
 
-  post1_author: "bl4nk_tape",
-  post1_role: "Archiwista Kaset",
-  post1_date: "14 paź 2007, 21:40",
+  post1_author: "analog_master84",
+  post1_role: "Kolekcjoner Taśm",
+  post1_date: "14 paź 2007, 18:20",
   post1_content:
-    "Znalazłem starą kasetę z nagraniem z niemieckiego radia NDR (ok. 1984). Ktoś rozpoznaje ten wokal i syntezator? Załączam zgrany fragment.",
-  post1_hasAudio: true,
-  post1_audioFile: "radio_rip_ndr_1984.mp3 [1.4 MB]",
-  post1_avatarColor: "#38bdf8",
+    "Przeglądam stare nagrania radiowe z lat 80. Czy ktoś ma jeszcze zgrane audycje z niemieckiego radia NDR z tego okresu? Szukam ciekawych autorskich audycji.",
+  post1_hasAudio: false,
+  post1_audioFile: "intro_tape.mp3 [0.8 MB]",
+  post1_avatarColor: "#64748b",
 
-  post2_author: "synth_seeker",
-  post2_role: "Ekspert Sprzętu 80s",
-  post2_date: "15 paź 2007, 00:15",
+  post2_author: "tape_collector",
+  post2_role: "Kolekcjoner Kaset",
+  post2_date: "14 paź 2007, 19:45",
   post2_content:
-    "Syntezator w tle to klasyczny Yamaha DX7. Brzmienie perkusji wskazuje na LinnDrum. Styl post-punk / new wave z Europy Środkowej.",
+    "Mam kilkanaście kaset Stilon i BASF nagranych z radia w latach 1982-1986. Głównie new wave i synth-pop, ale jest też parę rzeczy zupełnie bez opisu.",
   post2_hasAudio: false,
-  post2_avatarColor: "#eab308",
+  post2_audioFile: "sample_snippet.mp3 [0.6 MB]",
+  post2_avatarColor: "#ef4444",
 
-  post3_author: "vinyl_hunter_99",
-  post3_role: "Poszukiwacz Winyli",
-  post3_date: "15 paź 2007, 10:22",
+  // POST 3: KLUCZOWY WPIS Z PYTANIEM (TARGET POST)
+  post3_author: "bl4nk_tape",
+  post3_role: "Archiwista Kaset",
+  post3_date: "14 paź 2007, 21:40",
   post3_content:
-    "Sprawdziłem niemieckie archiwa GEMA i katalogi wytwórni ZYX. Żadnych oficjalnych wydań. To musiało być nagranie demo nadesłane bezpośrednio do stacji.",
-  post3_hasAudio: false,
-  post3_avatarColor: "#ef4444",
+    "Znalazłem na kasecie z radia NDR (ok. 1984) ten niesamowity utwór. Przeszukałem całe archiwa i nikt ze znajomych nie kojarzy zespołu ani tytułu. Załączam zgrany fragment mp3!",
+  post3_hasAudio: true,
+  post3_audioFile: "radio_rip_ndr_1984.mp3 [1.4 MB]",
+  post3_avatarColor: "#38bdf8",
 
-  post4_author: "lostwave_mod",
-  post4_role: "Moderator Forum",
-  post4_date: "16 paź 2007, 18:05",
+  post4_author: "synth_seeker",
+  post4_role: "Ekspert Sprzętu 80s",
+  post4_date: "14 paź 2007, 22:15",
   post4_content:
-    "Podbijam temat. Przesłuchujemy audycje 'Musik für junge Leute'. Otwieramy oficjalny arkusz z poszlakami i wykluczonymi zespołami.",
+    "Syntezator w tle to klasyczny Yamaha DX7. Brzmienie perkusji wskazuje na LinnDrum. Stylistyka post-punk / new wave z Europy Środkowej.",
   post4_hasAudio: false,
+  post4_audioFile: "voice_note.mp3 [0.4 MB]",
   post4_avatarColor: "#10b981",
 
   enableScroll: true,
-  scrollStartFrame: 20,
-  scrollDuration: 150,
-  scrollDistance: 420,
-  highlightPostIndex: 1,
+  scrollStartFrame: 15,
+  scrollDuration: 95,
+  scrollDistance: 380,
+  highlightPostIndex: 3,
+
+  // Focus & Spotlight Effect
+  enablePostFocus: true,
+  focusPostIndex: 3,
+  focusStartFrame: 110,
+  autoSyncFocusWithScroll: true,
+  focusScale: 1.04,
+  focusGlowColor: "#f59e0b",
+  dimOtherPosts: true,
+  dimOpacity: 0.35,
+  enableTextMarker: true,
+  targetQuestionText: "CZY KTOŚ WIE KTO TO ŚPIEWA?",
 
   transparentBackground: true,
   enable3DTilt: true,

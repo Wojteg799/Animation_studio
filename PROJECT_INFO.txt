@@ -89,23 +89,30 @@ c:\Users\...\Animation_studio\
      zawieszony w przestrzeni jako eleganckie, ciemne okno ("kwadrat") z opcjonalnym kątem 3D (rotateX/rotateY).
    - Przezroczyste Tło (Alpha Channel): Domyślnie 100% przezroczyste tło wokół okna forum, bez rozpraszających figur/wielokątów,
      zaprojektowane do bezpośredniego nałożenia na film w DaVinci / Premiere Pro (eksport ProRes 4444 Alpha).
-   - Elementy Okna: Pasek nawigacyjny okna z przyciskami, nagłówek wątku, posty dyskusyjne (autor, ranga, avatary, data),
-     załącznik audio z animowanym analizatorem widma (waveform bars) dla pliku z taśmy radiowej.
-   - Płynny Scroll: Kontrolowany dystans, start i czas trwania przewijania symulujący czytanie wątku.
+   - Płynny Scroll & Storytelling Focus: Na początku wideo forum płynnie przewija pierwsze wpisy dyskusji,
+     po czym wyhamowuje i zatrzymuje się na kluczowym poście (np. Post #3 z pytaniem).
+   - Efekt Focus & Spotlight & Zakreślacz Tekstu:
+     - Po zatrzymaniu scrolla (lub w wybranej klatce) celowany post delikatnie powiększa się (zoom 1.04x).
+     - Złota/bursztynowa poświata ramki (glow).
+     - Pozostałe posty wyciemniają się (spotlight dimming do 35% przezroczystości), skupiając uwagę widza.
+     - Animowany neonowo-żółty zakreślacz (marker swipe) przesuwa się po nagłówku pytania ("CZY KTOŚ WIE KTO TO ŚPIEWA?").
+     - Post posiada zintegrowany odtwarzacz audio z animowanym analizatorem widma i nazwą pliku.
    - Pliki: ForumPostCard.tsx, lowpoly-mesh.ts, schema.ts, index.tsx, MusicForumControls.tsx.
 
 0A-2. Muzyczne Forum 2007: Windows XP & phpBB (id: "music-forum-2007-xp")
-   - Koncepcja: Wersja "2007 rok core" bazująca na mechanice i płynnym przewijaniu wersji Noir, ale w estetyce
+   - Koncepcja: Wersja "2007 rok core" bazująca na mechanice, przewijaniu i efekcie focusu wersji Noir, ale w estetyce
      oryginalnego okna Windows XP (Luna Blue) oraz legendarnego skryptu forum phpBB (phpBB by Przemo).
    - Pasek Okna Windows XP: Pasek tytułowy Luna Blue z gradientem, ikona Internet Explorer "e", tytuł strony,
      trzy ikoniczne przyciski (minimalizuj, maksymalizuj, czerwony beveled przycisk zamknięcia X).
-   - Pasek Menu & Adresu: Menu Windows XP (Plik, Edycja, Widok...), pasek URL (http://forum.lostwave.pl/...)
+   - Pasek Menu & Adresu: Menu Windows XP (Plik, Edycja, Widok...), pasek URL (http://forum.lostwave-archive.pl/...)
      z zielonym przyciskiem "Przejdź" (Go) i ikonką flagi XP.
    - Struktura phpBB 2007:
      - Lewa kolumna autora: nick na niebiesko, ranga, złote gwiazdki (pipsy), ramka awatara 80x80px,
        licznik postów, data rejestracji, status [Online].
      - Prawa kolumna wiadomości: nagłówek z przyciskami [CYTUJ] / [PW], treść posta, ramka cytatu,
        załącznik mp3 w stylu phpBB z animowanym mini-korektorem, linia sygnatury użytkownika (podpis).
+   - Focus & Zatrzymanie z Zakreślaczem: Pełna obsługa mechaniki storytellingowej - zatrzymanie przewijania na poście #3,
+     zoom 1.04x, wyciemnienie tła innych postów i żółty zakreślacz 2007 phpBB nad tekstem pytania.
    - 100% przezroczyste tło wokół okna Windows XP (eksport ProRes 4444 do DaVinci/Premiere).
    - Pliki: WindowsXPChrome.tsx, ForumPostCard2007.tsx, schema.ts, index.tsx, MusicForumControls.tsx.
 

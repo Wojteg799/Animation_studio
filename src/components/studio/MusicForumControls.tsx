@@ -14,6 +14,8 @@ import {
   Sliders,
   Palette,
   Tv,
+  Target,
+  Highlighter,
 } from "lucide-react";
 import { MusicForumScrollProps } from "../../remotion/templates/MusicForumScroll/schema";
 
@@ -126,7 +128,7 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
           }`}
         >
           <Move className="w-3.5 h-3.5" />
-          <span className="text-[10px]">Przewijanie</span>
+          <span className="text-[10px]">Scroll & Focus</span>
         </button>
 
         <button
@@ -354,40 +356,46 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
               />
             </div>
 
-            {/* Audio Attachment (For Post 1) */}
-            {selectedPostTab === 1 && (
-              <div className="pt-2 border-t border-white/5 space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs text-zinc-300 font-semibold flex items-center gap-1.5">
-                    <FileAudio className="w-3.5 h-3.5 text-cyan-400" />
-                    Załącznik Audio (Odtwarzacz z falą)
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => updateProp("post1_hasAudio", !props.post1_hasAudio)}
-                    className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${
-                      props.post1_hasAudio ? "bg-cyan-500 text-black" : "bg-zinc-800 text-zinc-400"
-                    }`}
-                  >
-                    {props.post1_hasAudio ? "WŁĄCZONY" : "WYŁĄCZONY"}
-                  </button>
-                </div>
-
-                {props.post1_hasAudio && (
-                  <div>
-                    <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1">
-                      Nazwa Pliku Audio:
-                    </label>
-                    <input
-                      type="text"
-                      value={props.post1_audioFile}
-                      onChange={(e) => updateProp("post1_audioFile", e.target.value)}
-                      className="w-full studio-input text-xs font-mono"
-                    />
-                  </div>
-                )}
+            {/* Audio Attachment (Dla aktualnie wybranego postu) */}
+            <div className="pt-2 border-t border-white/5 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-zinc-300 font-semibold flex items-center gap-1.5">
+                  <FileAudio className="w-3.5 h-3.5 text-cyan-400" />
+                  Załącznik Audio dla Postu #{selectedPostTab}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const propKey = `post${selectedPostTab}_hasAudio` as keyof MusicForumScrollProps;
+                    updateProp(propKey, !(props as any)[propKey]);
+                  }}
+                  className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold transition-all ${
+                    Boolean((props as any)[`post${selectedPostTab}_hasAudio`])
+                      ? "bg-cyan-500 text-black shadow-sm shadow-cyan-500/20"
+                      : "bg-zinc-800 text-zinc-400"
+                  }`}
+                >
+                  {Boolean((props as any)[`post${selectedPostTab}_hasAudio`]) ? "WŁĄCZONY" : "WYŁĄCZONY"}
+                </button>
               </div>
-            )}
+
+              {Boolean((props as any)[`post${selectedPostTab}_hasAudio`]) && (
+                <div className="animate-in fade-in space-y-1">
+                  <label className="text-[10px] font-mono text-zinc-400 uppercase block">
+                    Nazwa Pliku Audio:
+                  </label>
+                  <input
+                    type="text"
+                    value={((props as any)[`post${selectedPostTab}_audioFile`] as string) || ""}
+                    onChange={(e) =>
+                      updateProp(`post${selectedPostTab}_audioFile` as any, e.target.value)
+                    }
+                    className="w-full studio-input text-xs font-mono"
+                    placeholder="np. radio_rip_ndr_1984.mp3 [1.4 MB]"
+                  />
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}
@@ -476,33 +484,224 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
             )}
           </div>
 
-          {/* Highlight Spotlight Post */}
+          {/* Focus, Spotlight & Animated Marker Feature */}
           <div className="bg-[#12121a] p-3.5 rounded-xl border border-white/5 space-y-3">
-            <span className="text-xs font-semibold text-white block">
-              Podświetlenie Kluczowego Postu:
-            </span>
-            <div className="grid grid-cols-3 gap-1.5">
-              {[
-                { id: 0, label: "Brak podświetlenia" },
-                { id: 1, label: "Post #1 (OP / Zagadka)" },
-                { id: 2, label: "Post #2 (Odpowiedź)" },
-                { id: 3, label: "Post #3" },
-                { id: 4, label: "Post #4" },
-              ].map((h) => (
-                <button
-                  key={h.id}
-                  type="button"
-                  onClick={() => updateProp("highlightPostIndex", h.id)}
-                  className={`p-2 rounded-lg border text-left transition-all ${
-                    props.highlightPostIndex === h.id
-                      ? "bg-amber-500/20 border-amber-500 text-amber-300 font-bold"
-                      : "bg-[#181822] border-white/5 text-zinc-400"
-                  }`}
-                >
-                  <span className="text-[10px]">{h.label}</span>
-                </button>
-              ))}
+            <div className="flex items-center justify-between">
+              <div>
+                <span className="text-xs font-semibold text-white flex items-center gap-1.5">
+                  <Target className="w-3.5 h-3.5 text-amber-400" />
+                  Focus & Zatrzymanie na Kluczowym Pytaniu
+                </span>
+                <span className="text-[10px] text-zinc-400">
+                  Przewija wątek, zatrzymuje się na poście, powiększa go i nakłada zakreślacz
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => updateProp("enablePostFocus", !props.enablePostFocus)}
+                className={`px-2.5 py-1 rounded text-xs font-mono font-bold transition-all ${
+                  props.enablePostFocus
+                    ? "bg-amber-500 text-black shadow-md shadow-amber-500/20"
+                    : "bg-zinc-800 text-zinc-400"
+                }`}
+              >
+                {props.enablePostFocus ? "WŁĄCZONY" : "WYŁĄCZONY"}
+              </button>
             </div>
+
+            {props.enablePostFocus && (
+              <div className="space-y-3 pt-2 border-t border-white/5 animate-in fade-in">
+                {/* Target Post Selection */}
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-mono text-zinc-400 uppercase block">
+                    Post Docelowy (Zatrzymanie Scrolla & Focus):
+                  </label>
+                  <div className="grid grid-cols-4 gap-1.5">
+                    {[
+                      { idx: 1, label: "Post #1" },
+                      { idx: 2, label: "Post #2" },
+                      { idx: 3, label: "Post #3 (Kluczowy)" },
+                      { idx: 4, label: "Post #4" },
+                    ].map((p) => (
+                      <button
+                        key={p.idx}
+                        type="button"
+                        onClick={() => updateProp("focusPostIndex", p.idx)}
+                        className={`p-2 rounded-lg border text-center transition-all ${
+                          props.focusPostIndex === p.idx
+                            ? "bg-amber-500/20 border-amber-500 text-amber-300 font-bold"
+                            : "bg-[#181822] border-white/5 text-zinc-400 hover:text-white"
+                        }`}
+                      >
+                        <span className="text-[10px] block">{p.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Animated Text Highlighter & Headline */}
+                <div className="p-2.5 rounded-lg bg-black/30 border border-white/5 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-zinc-200 font-semibold flex items-center gap-1.5">
+                      <Highlighter className="w-3.5 h-3.5 text-yellow-400" />
+                      Animowany Żółty Zakreślacz Tekstu
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => updateProp("enableTextMarker", !props.enableTextMarker)}
+                      className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${
+                        props.enableTextMarker ? "bg-yellow-400 text-black" : "bg-zinc-800 text-zinc-400"
+                      }`}
+                    >
+                      {props.enableTextMarker ? "WŁĄCZONY" : "WYŁĄCZONY"}
+                    </button>
+                  </div>
+
+                  {props.enableTextMarker && (
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-mono text-zinc-400 uppercase block">
+                        Treść Pytania do Zakreślenia:
+                      </label>
+                      <input
+                        type="text"
+                        value={props.targetQuestionText}
+                        onChange={(e) => updateProp("targetQuestionText", e.target.value)}
+                        className="w-full studio-input text-xs font-bold text-yellow-300"
+                        placeholder="np. CZY KTOŚ WIE KTO TO ŚPIEWA?"
+                      />
+                    </div>
+                  )}
+                </div>
+
+                {/* Scaling & Dimming Sliders */}
+                <div className="space-y-2.5 pt-1">
+                  {/* Focus Scale */}
+                  <div className="space-y-1">
+                    <div className="flex justify-between items-center text-[11px] text-zinc-300">
+                      <span>Powiększenie Postu w Focusie (Zoom)</span>
+                      <span className="font-mono text-amber-400 font-bold">
+                        {props.focusScale}x
+                      </span>
+                    </div>
+                    <input
+                      type="range"
+                      min={1.0}
+                      max={1.12}
+                      step={0.01}
+                      value={props.focusScale}
+                      onChange={(e) => updateProp("focusScale", Number(e.target.value))}
+                      className="w-full h-1.5 bg-zinc-800 rounded-lg cursor-pointer"
+                    />
+                  </div>
+
+                  {/* Spotlight Dimming */}
+                  <div className="flex items-center justify-between pt-1">
+                    <span className="text-[11px] text-zinc-300">
+                      Wyciemnij Pozostałe Posty (Spotlight)
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => updateProp("dimOtherPosts", !props.dimOtherPosts)}
+                      className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${
+                        props.dimOtherPosts ? "bg-white/20 text-white" : "bg-zinc-800 text-zinc-400"
+                      }`}
+                    >
+                      {props.dimOtherPosts ? "WŁ" : "WYŁ"}
+                    </button>
+                  </div>
+
+                  {props.dimOtherPosts && (
+                    <div className="space-y-1 pl-2 border-l border-white/10">
+                      <div className="flex justify-between items-center text-[10px] text-zinc-400">
+                        <span>Jasność Tła Pozostałych Postów</span>
+                        <span className="font-mono text-zinc-200">
+                          {Math.round(props.dimOpacity * 100)}%
+                        </span>
+                      </div>
+                      <input
+                        type="range"
+                        min={0.15}
+                        max={0.7}
+                        step={0.05}
+                        value={props.dimOpacity}
+                        onChange={(e) => updateProp("dimOpacity", Number(e.target.value))}
+                        className="w-full h-1.5 bg-zinc-800 rounded-lg cursor-pointer"
+                      />
+                    </div>
+                  )}
+
+                  {/* Glow Color Presets */}
+                  <div className="space-y-1.5 pt-1">
+                    <label className="text-[10px] font-mono text-zinc-400 uppercase block">
+                      Kolor Poświaty Ramki (Glow):
+                    </label>
+                    <div className="flex items-center gap-2">
+                      {[
+                        { color: "#f59e0b", label: "Bursztyn" },
+                        { color: "#38bdf8", label: "Błękit" },
+                        { color: "#ef4444", label: "Czerwień" },
+                        { color: "#10b981", label: "Zieleń" },
+                        { color: "#a855f7", label: "Fiolet" },
+                      ].map((c) => (
+                        <button
+                          key={c.color}
+                          type="button"
+                          onClick={() => updateProp("focusGlowColor", c.color)}
+                          className={`w-7 h-7 rounded-full border-2 transition-all ${
+                            props.focusGlowColor === c.color
+                              ? "scale-110 border-white shadow-md"
+                              : "border-transparent opacity-60 hover:opacity-100"
+                          }`}
+                          style={{ backgroundColor: c.color }}
+                          title={c.label}
+                        />
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Timing & Synchronization */}
+                  <div className="p-2.5 rounded-lg bg-[#181822] border border-white/5 space-y-2 mt-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] text-zinc-300">
+                        Auto-synchronizacja z Zatrzymaniem Scrolla
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          updateProp(
+                            "autoSyncFocusWithScroll",
+                            !props.autoSyncFocusWithScroll
+                          )
+                        }
+                        className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${
+                          props.autoSyncFocusWithScroll
+                            ? "bg-emerald-500 text-black"
+                            : "bg-zinc-800 text-zinc-400"
+                        }`}
+                      >
+                        {props.autoSyncFocusWithScroll ? "AUTO (ZALECANE)" : "RĘCZNA KLATKA"}
+                      </button>
+                    </div>
+
+                    {!props.autoSyncFocusWithScroll && (
+                      <div className="pt-1">
+                        <label className="text-[10px] text-zinc-400 block mb-1">
+                          Klatka Rozpoczęcia Focusu:
+                        </label>
+                        <input
+                          type="number"
+                          min={0}
+                          max={200}
+                          value={props.focusStartFrame}
+                          onChange={(e) => updateProp("focusStartFrame", Number(e.target.value))}
+                          className="studio-input text-xs font-mono text-center"
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}

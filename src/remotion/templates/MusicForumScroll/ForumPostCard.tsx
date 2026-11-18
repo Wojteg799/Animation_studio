@@ -12,6 +12,14 @@ export interface ForumPostCardProps {
   avatarColor: string;
   isHighlighted?: boolean;
   frame: number;
+  isFocused?: boolean;
+  focusProgress?: number;
+  dimmed?: boolean;
+  dimOpacity?: number;
+  targetHeadline?: string;
+  markerProgress?: number;
+  glowColor?: string;
+  focusScale?: number;
 }
 
 export const ForumPostCard: React.FC<ForumPostCardProps> = ({
@@ -25,6 +33,14 @@ export const ForumPostCard: React.FC<ForumPostCardProps> = ({
   avatarColor,
   isHighlighted = false,
   frame,
+  isFocused = false,
+  focusProgress = 0,
+  dimmed = false,
+  dimOpacity = 0.35,
+  targetHeadline,
+  markerProgress = 0,
+  glowColor = "#f59e0b",
+  focusScale = 1.04,
 }) => {
   // Low-poly initial / avatar icon generator
   const initials = author.substring(0, 2).toUpperCase();
@@ -32,26 +48,41 @@ export const ForumPostCard: React.FC<ForumPostCardProps> = ({
   // Animated waveform bars for audio attachment
   const bars = [14, 28, 42, 35, 52, 24, 48, 62, 38, 50, 22, 44, 30, 16];
 
+  // Focus & Spotlight calculations
+  const currentOpacity = dimmed ? 1 - (1 - dimOpacity) * focusProgress : 1;
+  const currentScale = isFocused ? 1 + (focusScale - 1) * focusProgress : 1;
+  const currentZIndex = isFocused ? 40 : 1;
+  const activeBorder = isFocused
+    ? `2px solid ${glowColor}`
+    : isHighlighted
+    ? `2px solid ${avatarColor}`
+    : "1px solid rgba(255, 255, 255, 0.08)";
+  const activeShadow = isFocused
+    ? `0 0 ${30 * focusProgress}px ${glowColor}66, 0 15px 40px rgba(0, 0, 0, 0.95)`
+    : isHighlighted
+    ? `0 0 25px ${avatarColor}33, 0 10px 30px rgba(0, 0, 0, 0.8)`
+    : "0 6px 20px rgba(0, 0, 0, 0.5)";
+
   return (
     <div
       style={{
         backgroundColor: isHighlighted ? "rgba(22, 25, 38, 0.95)" : "rgba(15, 17, 26, 0.92)",
-        border: isHighlighted
-          ? `2px solid ${avatarColor}`
-          : "1px solid rgba(255, 255, 255, 0.08)",
+        border: activeBorder,
         borderRadius: "12px",
-        boxShadow: isHighlighted
-          ? `0 0 25px ${avatarColor}33, 0 10px 30px rgba(0, 0, 0, 0.8)`
-          : "0 6px 20px rgba(0, 0, 0, 0.5)",
+        boxShadow: activeShadow,
+        opacity: currentOpacity,
+        transform: `scale(${currentScale})`,
+        zIndex: currentZIndex,
         overflow: "hidden",
         display: "flex",
         flexDirection: "row",
         position: "relative",
         backdropFilter: "blur(8px)",
+        transformOrigin: "center center",
       }}
     >
       {/* Highlight glow ribbon */}
-      {isHighlighted && (
+      {(isHighlighted || isFocused) && (
         <div
           style={{
             position: "absolute",
@@ -59,8 +90,8 @@ export const ForumPostCard: React.FC<ForumPostCardProps> = ({
             left: 0,
             bottom: 0,
             width: "4px",
-            backgroundColor: avatarColor,
-            boxShadow: `0 0 10px ${avatarColor}`,
+            backgroundColor: isFocused ? glowColor : avatarColor,
+            boxShadow: `0 0 10px ${isFocused ? glowColor : avatarColor}`,
           }}
         />
       )}
@@ -206,13 +237,57 @@ export const ForumPostCard: React.FC<ForumPostCardProps> = ({
               style={{
                 fontSize: "11px",
                 fontFamily: "monospace",
-                color: avatarColor,
+                color: isFocused ? glowColor : avatarColor,
                 fontWeight: "700",
               }}
             >
               #{postNumber}
             </div>
           </div>
+
+          {/* Target Question Headline with Animated Marker */}
+          {targetHeadline && isFocused && (
+            <div style={{ marginBottom: "12px", position: "relative" }}>
+              <div
+                style={{
+                  display: "inline-block",
+                  position: "relative",
+                  padding: "4px 10px",
+                  borderRadius: "4px",
+                }}
+              >
+                {/* Yellow / Amber Marker Sweep */}
+                <div
+                  style={{
+                    position: "absolute",
+                    left: 0,
+                    top: "10%",
+                    bottom: "10%",
+                    width: `${Math.min(100, Math.max(0, markerProgress * 100))}%`,
+                    backgroundColor: "rgba(245, 158, 11, 0.45)",
+                    borderLeft:
+                      markerProgress > 0 && markerProgress < 1 ? "3px solid #f59e0b" : "none",
+                    borderRadius: "3px",
+                    zIndex: 0,
+                  }}
+                />
+                <span
+                  style={{
+                    position: "relative",
+                    zIndex: 1,
+                    fontSize: "14px",
+                    fontWeight: 900,
+                    color: "#fbbf24",
+                    letterSpacing: "0.5px",
+                    textTransform: "uppercase",
+                    textShadow: "0 1px 3px rgba(0,0,0,0.8)",
+                  }}
+                >
+                  🔍 {targetHeadline}
+                </span>
+              </div>
+            </div>
+          )}
 
           {/* Post Text Content */}
           <div
