@@ -52,6 +52,7 @@ c:\Users\...\Animation_studio\
 │   │       ├── PreviewPlayer.tsx        # Odtwarzacz Remotion Player z suwakiem czasu
 │   │       ├── StudioHeader.tsx         # Rozdzielczość, FPS, Przycisk Renderuj
 │   │       ├── RenderModal.tsx          # Modal z paskiem postępu renderowania
+│   │       ├── MusicForumControls.tsx   # Kontrolki forum muzycznego, przewijania i kąta 3D
 │   │       ├── CharacterStageControls.tsx# Duży edytor postaci, ruchu A->B i nitek relacji
 │   │       ├── JoyDivisionControls.tsx  # Kontrolki do animacji 25 kaset / Unknown Pleasures
 │   │       ├── CassetteIntroControls.tsx# Kontrolki do intro z retro kasetą i podpisem
@@ -66,6 +67,7 @@ c:\Users\...\Animation_studio\
 │       ├── Root.tsx          # Rejestracja <Composition> z dynamicznym calculateMetadata
 │       └── templates/        # SZABLONY ANIMACJI:
 │           ├── registry.ts   # Rejestr wszystkich dostępnych szablonów w UI
+│           ├── MusicForumScroll/               # Muzyczne forum dyskusyjne, scroll, kąt 3D low-poly
 │           ├── CharacterStage/                 # Studio postaci, ruch A->B, relacje, podpisy
 │           ├── JoyDivisionCassetteMorph/       # 25 kaset -> okładka Unknown Pleasures
 │           ├── RetroCassetteIntro/             # Intro z kasetą i pismem odręcznym
@@ -82,7 +84,17 @@ c:\Users\...\Animation_studio\
 4. KLUCZOWE SZABLONY I ICH LOGIKA (KEY TEMPLATES)
 --------------------------------------------------------------------------------
 
-0. Studio Postaci & Relacji (id: "character-stage")
+0A. Muzyczne Forum 3D Low-Poly (id: "music-forum-scroll")
+   - Koncepcja: Płynnie przewijany wątek muzycznego forum dyskusyjnego (retro/lostwave)
+     zawieszony w trójwymiarowej przestrzeni low-poly z kątem perspektywy (rotateX/rotateY).
+   - Elementy: Nagłówek okna, posty dyskusyjne (autor, ranga, faceted avatary low-poly, data),
+     załącznik audio z animowanym analizatorem widma (waveform bars) dla pliku z radiowej taśmy.
+   - Płynny Scroll: Kontrolowany dystans, start i czas trwania przewijania symulujący czytanie wątku.
+   - Estetyka Low-Poly: Wektorowa siatka triangulacyjna w tle, unoszące się obracające wielokąty (kryształy/diamenty),
+     opcjonalne linie skanowania CRT i winieta noir.
+   - Pliki: ForumPostCard.tsx, lowpoly-mesh.ts, schema.ts, index.tsx, MusicForumControls.tsx.
+
+0B. Studio Postaci & Relacji (id: "character-stage")
    - Koncepcja: Postacie w kółkach z kolorową obwódką (border color, glow), zdjęciem w środku
      (lub domyślnym avatarem SVG: Świadek, Podejrzany, Detektyw, Polityk, Naukowiec) oraz
      podpisem poniżej w czarnym zaokrąglonym prostokącie z białą obwódką (nazwisko, rola, tag).

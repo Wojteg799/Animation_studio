@@ -1,0 +1,442 @@
+import React, { useMemo } from "react";
+import { useCurrentFrame, useVideoConfig } from "remotion";
+import { MusicForumScrollProps } from "./schema";
+import { ForumPostCard } from "./ForumPostCard";
+import { generateLowPolyMesh, generateFloatingPolygons } from "./lowpoly-mesh";
+import { MessageSquare, Disc, Radio, Search, ChevronRight, Hash } from "lucide-react";
+
+function smootherStep(t: number): number {
+  const clamped = Math.max(0, Math.min(1, t));
+  return clamped * clamped * clamped * (clamped * (clamped * 6 - 15) + 10);
+}
+
+export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
+  forumTitle = "LOSTWAVE.ARCHIVE // MUZYCZNE FORUM DYSKUSYJNE",
+  threadTitle = "Tajemnicza piosenka z radia NDR (1984) - poszukiwanie wykonawcy",
+  threadCategory = "GŁÓWNA DYSKUSJA / IDENTYFIKACJA UTWORÓW",
+  threadDate = "Wątek założony: 14.10.2007 • 142 odpowiedzi",
+
+  post1_author = "bl4nk_tape",
+  post1_role = "Archiwista Kaset",
+  post1_date = "14 paź 2007, 21:40",
+  post1_content = "Znalazłem starą kasetę z nagraniem z niemieckiego radia NDR (ok. 1984). Ktoś rozpoznaje ten wokal i syntezator? Załączam zgrany fragment.",
+  post1_hasAudio = true,
+  post1_audioFile = "radio_rip_ndr_1984.mp3 [1.4 MB]",
+  post1_avatarColor = "#38bdf8",
+
+  post2_author = "synth_seeker",
+  post2_role = "Ekspert Sprzętu 80s",
+  post2_date = "15 paź 2007, 00:15",
+  post2_content = "Syntezator w tle to klasyczny Yamaha DX7. Brzmienie perkusji wskazuje na LinnDrum. Styl post-punk / new wave z Europy Środkowej.",
+  post2_hasAudio = false,
+  post2_avatarColor = "#eab308",
+
+  post3_author = "vinyl_hunter_99",
+  post3_role = "Poszukiwacz Winyli",
+  post3_date = "15 paź 2007, 10:22",
+  post3_content = "Sprawdziłem niemieckie archiwa GEMA i katalogi wytwórni ZYX. Żadnych oficjalnych wydań. To musiało być nagranie demo nadesłane bezpośrednio do stacji.",
+  post3_hasAudio = false,
+  post3_avatarColor = "#ef4444",
+
+  post4_author = "lostwave_mod",
+  post4_role = "Moderator Forum",
+  post4_date = "16 paź 2007, 18:05",
+  post4_content = "Podbijam temat. Przesłuchujemy audycje 'Musik für junge Leute'. Otwieramy oficjalny arkusz z poszlakami i wykluczonymi zespołami.",
+  post4_hasAudio = false,
+  post4_avatarColor = "#10b981",
+
+  enableScroll = true,
+  scrollStartFrame = 20,
+  scrollDuration = 150,
+  scrollDistance = 420,
+  highlightPostIndex = 1,
+
+  enable3DTilt = true,
+  tiltAngleX = 11,
+  tiltAngleY = -7,
+  tiltAngleZ = 1,
+  depthPerspective = 1300,
+  lowPolyMeshIntensity = 0.7,
+  showFloatingPolygons = true,
+  colorTheme = "dark-graphite",
+  showScanlines = true,
+}) => {
+  const frame = useCurrentFrame();
+  const { width, height } = useVideoConfig();
+
+  // Scroll offset calculation
+  const scrollOffset = useMemo(() => {
+    if (!enableScroll || frame < scrollStartFrame) {
+      return 0;
+    }
+    const rawProgress = (frame - scrollStartFrame) / scrollDuration;
+    const t = smootherStep(rawProgress);
+    return t * scrollDistance;
+  }, [enableScroll, frame, scrollStartFrame, scrollDuration, scrollDistance]);
+
+  // Low-poly background mesh
+  const meshTriangles = useMemo(() => {
+    return generateLowPolyMesh(width, height, 7, 9, "#38bdf8");
+  }, [width, height]);
+
+  // Floating polygon facets
+  const floatingPolys = useMemo(() => {
+    return generateFloatingPolygons(16);
+  }, []);
+
+  // Theme colors
+  const themeColors = useMemo(() => {
+    if (colorTheme === "cyber-amber") {
+      return {
+        bg: "#0c0a06",
+        accent: "#f59e0b",
+        glow: "rgba(245, 158, 11, 0.25)",
+        headerBg: "rgba(24, 20, 14, 0.95)",
+      };
+    } else if (colorTheme === "classic-blue") {
+      return {
+        bg: "#060a14",
+        accent: "#38bdf8",
+        glow: "rgba(56, 189, 248, 0.25)",
+        headerBg: "rgba(10, 18, 32, 0.95)",
+      };
+    } else if (colorTheme === "vaporwave") {
+      return {
+        bg: "#0f0717",
+        accent: "#d946ef",
+        glow: "rgba(217, 70, 239, 0.25)",
+        headerBg: "rgba(25, 12, 38, 0.95)",
+      };
+    }
+    // "dark-graphite" default
+    return {
+      bg: "#08090d",
+      accent: "#38bdf8",
+      glow: "rgba(56, 189, 248, 0.18)",
+      headerBg: "rgba(13, 15, 24, 0.95)",
+    };
+  }, [colorTheme]);
+
+  // Subtle natural camera sway in 3D
+  const cameraSwayX = enable3DTilt ? Math.sin(frame * 0.03) * 1.5 : 0;
+  const cameraSwayY = enable3DTilt ? Math.cos(frame * 0.025) * 1.2 : 0;
+
+  // Window transform
+  const windowTransform = enable3DTilt
+    ? `perspective(${depthPerspective}px) rotateX(${tiltAngleX + cameraSwayX}deg) rotateY(${tiltAngleY + cameraSwayY}deg) rotateZ(${tiltAngleZ}deg)`
+    : "none";
+
+  return (
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        position: "relative",
+        overflow: "hidden",
+        backgroundColor: themeColors.bg,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      {/* 1. LOW-POLY BACKGROUND MESH */}
+      {lowPolyMeshIntensity > 0 && (
+        <svg
+          width={width}
+          height={height}
+          viewBox={`0 0 ${width} ${height}`}
+          style={{
+            position: "absolute",
+            inset: 0,
+            opacity: lowPolyMeshIntensity * 0.75,
+            pointerEvents: "none",
+          }}
+        >
+          {meshTriangles.map((tri, i) => (
+            <polygon
+              key={`mesh-tri-${i}`}
+              points={`${tri.p1.x},${tri.p1.y} ${tri.p2.x},${tri.p2.y} ${tri.p3.x},${tri.p3.y}`}
+              fill={tri.color}
+              stroke={tri.stroke}
+              strokeWidth="0.8"
+            />
+          ))}
+        </svg>
+      )}
+
+      {/* 2. FLOATING LOW-POLY GEOMETRIC POLYGONS */}
+      {showFloatingPolygons && (
+        <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
+          {floatingPolys.map((poly) => {
+            const curY = (poly.y - (frame * poly.driftSpeedY * 0.4) + 120) % 120 - 10;
+            const rot = frame * poly.rotSpeed * 2;
+            return (
+              <div
+                key={`poly-${poly.id}`}
+                style={{
+                  position: "absolute",
+                  left: `${poly.x}%`,
+                  top: `${curY}%`,
+                  width: `${poly.size}px`,
+                  height: `${poly.size}px`,
+                  transform: `rotate(${rot}deg)`,
+                  opacity: poly.opacity,
+                  filter: `drop-shadow(0 0 8px ${poly.color}66)`,
+                }}
+              >
+                <svg viewBox="0 0 40 40" width="100%" height="100%">
+                  {poly.sides === 3 ? (
+                    <polygon points="20,2 38,36 2,36" fill="none" stroke={poly.color} strokeWidth="1.5" />
+                  ) : poly.sides === 4 ? (
+                    <polygon points="20,2 38,20 20,38 2,20" fill="none" stroke={poly.color} strokeWidth="1.5" />
+                  ) : (
+                    <polygon points="20,2 37,14 30,36 10,36 3,14" fill="none" stroke={poly.color} strokeWidth="1.5" />
+                  )}
+                </svg>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* 3. MAIN FORUM WINDOW (3D LOW-POLY TILTED PLANE) */}
+      <div
+        style={{
+          width: "1160px",
+          height: "760px",
+          transform: windowTransform,
+          transformStyle: "preserve-3d",
+          borderRadius: "14px",
+          border: `1.5px solid rgba(255, 255, 255, 0.12)`,
+          boxShadow: `0 25px 60px rgba(0, 0, 0, 0.9), 0 0 40px ${themeColors.glow}`,
+          backgroundColor: "rgba(10, 12, 18, 0.9)",
+          backdropFilter: "blur(12px)",
+          display: "flex",
+          flexDirection: "column",
+          overflow: "hidden",
+          position: "relative",
+          zIndex: 10,
+        }}
+      >
+        {/* Forum Window Top Navigation Bar */}
+        <div
+          style={{
+            height: "44px",
+            backgroundColor: themeColors.headerBg,
+            borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
+            padding: "0 18px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexShrink: 0,
+            zIndex: 20,
+          }}
+        >
+          {/* Low-poly Window Controls (dots) */}
+          <div style={{ display: "flex", alignItems: "center", gap: "7px" }}>
+            <div style={{ width: "10px", height: "10px", borderRadius: "2px", backgroundColor: "#ef4444" }} />
+            <div style={{ width: "10px", height: "10px", borderRadius: "2px", backgroundColor: "#eab308" }} />
+            <div style={{ width: "10px", height: "10px", borderRadius: "2px", backgroundColor: "#10b981" }} />
+            <span
+              style={{
+                marginLeft: "12px",
+                fontSize: "11px",
+                fontFamily: "monospace",
+                fontWeight: "700",
+                color: "#e2e8f0",
+                letterSpacing: "0.5px",
+              }}
+            >
+              {forumTitle}
+            </span>
+          </div>
+
+          {/* Breadcrumb path */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "6px",
+              fontSize: "10px",
+              fontFamily: "monospace",
+              color: "#64748b",
+            }}
+          >
+            <span>FORA</span>
+            <ChevronRight className="w-3 h-3" />
+            <span style={{ color: themeColors.accent }}>LOSTWAVE</span>
+            <ChevronRight className="w-3 h-3" />
+            <span style={{ color: "#94a3b8" }}>ID: #8492</span>
+          </div>
+        </div>
+
+        {/* Thread Header Banner */}
+        <div
+          style={{
+            padding: "16px 24px",
+            backgroundColor: "rgba(15, 18, 28, 0.8)",
+            borderBottom: "1px solid rgba(255, 255, 255, 0.06)",
+            flexShrink: 0,
+            zIndex: 15,
+          }}
+        >
+          <div
+            style={{
+              fontSize: "10px",
+              fontFamily: "monospace",
+              fontWeight: "700",
+              color: themeColors.accent,
+              textTransform: "uppercase",
+              letterSpacing: "1px",
+              marginBottom: "4px",
+              display: "flex",
+              alignItems: "center",
+              gap: "6px",
+            }}
+          >
+            <Hash className="w-3 h-3" />
+            <span>{threadCategory}</span>
+          </div>
+
+          <h1
+            style={{
+              fontSize: "18px",
+              fontWeight: "800",
+              fontFamily: "system-ui, -apple-system, sans-serif",
+              color: "#ffffff",
+              margin: 0,
+              lineHeight: 1.3,
+            }}
+          >
+            {threadTitle}
+          </h1>
+
+          <div
+            style={{
+              marginTop: "6px",
+              fontSize: "11px",
+              color: "#64748b",
+              fontFamily: "monospace",
+            }}
+          >
+            {threadDate}
+          </div>
+        </div>
+
+        {/* SCROLLING POSTS CONTAINER */}
+        <div
+          style={{
+            flex: 1,
+            position: "relative",
+            overflow: "hidden",
+            padding: "20px 24px 80px",
+          }}
+        >
+          {/* Inner animated scroll plane */}
+          <div
+            style={{
+              transform: `translateY(-${scrollOffset}px)`,
+              display: "flex",
+              flexDirection: "column",
+              gap: "16px",
+              willChange: "transform",
+            }}
+          >
+            {/* POST 1 (OP) */}
+            <ForumPostCard
+              postNumber={1}
+              author={post1_author}
+              role={post1_role}
+              date={post1_date}
+              content={post1_content}
+              hasAudio={post1_hasAudio}
+              audioFile={post1_audioFile}
+              avatarColor={post1_avatarColor}
+              isHighlighted={highlightPostIndex === 1}
+              frame={frame}
+            />
+
+            {/* POST 2 */}
+            <ForumPostCard
+              postNumber={2}
+              author={post2_author}
+              role={post2_role}
+              date={post2_date}
+              content={post2_content}
+              hasAudio={post2_hasAudio}
+              avatarColor={post2_avatarColor}
+              isHighlighted={highlightPostIndex === 2}
+              frame={frame}
+            />
+
+            {/* POST 3 */}
+            <ForumPostCard
+              postNumber={3}
+              author={post3_author}
+              role={post3_role}
+              date={post3_date}
+              content={post3_content}
+              hasAudio={post3_hasAudio}
+              avatarColor={post3_avatarColor}
+              isHighlighted={highlightPostIndex === 3}
+              frame={frame}
+            />
+
+            {/* POST 4 */}
+            <ForumPostCard
+              postNumber={4}
+              author={post4_author}
+              role={post4_role}
+              date={post4_date}
+              content={post4_content}
+              hasAudio={post4_hasAudio}
+              avatarColor={post4_avatarColor}
+              isHighlighted={highlightPostIndex === 4}
+              frame={frame}
+            />
+          </div>
+
+          {/* Bottom fade shadow for smooth edge scrolling */}
+          <div
+            style={{
+              position: "absolute",
+              bottom: 0,
+              left: 0,
+              right: 0,
+              height: "70px",
+              background: "linear-gradient(to top, rgba(10, 12, 18, 0.95), transparent)",
+              pointerEvents: "none",
+            }}
+          />
+        </div>
+      </div>
+
+      {/* 4. CRT SCANLINES OVERLAY */}
+      {showScanlines && (
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            backgroundImage:
+              "linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%)",
+            backgroundSize: "100% 4px",
+            pointerEvents: "none",
+            opacity: 0.35,
+            zIndex: 30,
+          }}
+        />
+      )}
+
+      {/* 5. VIGNETTE */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          boxShadow: "inset 0 0 100px rgba(0, 0, 0, 0.8)",
+          pointerEvents: "none",
+          zIndex: 31,
+        }}
+      />
+    </div>
+  );
+};

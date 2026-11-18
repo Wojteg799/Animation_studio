@@ -17,9 +17,12 @@ import {
   Sun,
   Shield,
   Disc,
+  MessageSquare,
 } from "lucide-react";
 import { CharacterStageProps } from "../../remotion/templates/CharacterStage/schema";
 import { CharacterStageControls } from "./CharacterStageControls";
+import { MusicForumScrollProps } from "../../remotion/templates/MusicForumScroll/schema";
+import { MusicForumControls } from "./MusicForumControls";
 import { JoyDivisionCassetteMorphProps } from "../../remotion/templates/JoyDivisionCassetteMorph/schema";
 import { RetroCassetteIntroProps } from "../../remotion/templates/RetroCassetteIntro/schema";
 import { DocumentaryLowerThirdProps } from "../../remotion/templates/DocumentaryLowerThird/schema";
@@ -38,6 +41,11 @@ import { ParchmentControls } from "./ParchmentControls";
 interface LeftSidebarProps {
   selectedTemplateId: string;
   onSelectTemplate: (templateId: string) => void;
+  musicForumProps: MusicForumScrollProps;
+  updateMusicForumProp: <K extends keyof MusicForumScrollProps>(
+    key: K,
+    val: MusicForumScrollProps[K]
+  ) => void;
   characterStageProps: CharacterStageProps;
   updateCharacterStageProp: <K extends keyof CharacterStageProps>(
     key: K,
@@ -84,6 +92,8 @@ type OverlayTabType = "content" | "themes" | "physics";
 export const LeftSidebar: React.FC<LeftSidebarProps> = ({
   selectedTemplateId,
   onSelectTemplate,
+  musicForumProps,
+  updateMusicForumProp,
   characterStageProps,
   updateCharacterStageProp,
   joyDivisionProps,
@@ -106,6 +116,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
   const [activeOverlayTab, setActiveOverlayTab] = useState<OverlayTabType>("content");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const isForumCategory = selectedTemplateId === "music-forum-scroll";
   const isCharacterCategory = selectedTemplateId === "character-stage";
 
   const isIntroCategory =
@@ -159,7 +170,9 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
             Wybór Sekcji & Szablonu
           </label>
           <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-amber-500/10 text-amber-300 border border-amber-500/30">
-            {isCharacterCategory
+            {isForumCategory
+              ? "SEKCJA: FORUM"
+              : isCharacterCategory
               ? "SEKCJA: POSTACIE"
               : isIntroCategory
                 ? "SEKCJA: INTRO"
@@ -169,26 +182,42 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
           </span>
         </div>
 
-          {/* Category switcher pills (4 Sekcje: Postacie, Intro, Tła, Nakładki) */}
-          <div className="grid grid-cols-4 gap-1 p-1 bg-[#0c0c12] rounded-xl border border-white/5">
-            <button
-              type="button"
-              onClick={() => onSelectTemplate("character-stage")}
-              className={`py-2 px-1 rounded-lg text-[10px] font-semibold flex flex-col items-center justify-center gap-1 transition-all ${isCharacterCategory
-                  ? "bg-amber-500 text-black shadow-md font-bold"
-                  : "text-zinc-400 hover:text-white"
-                }`}
-            >
-              <User className="w-3.5 h-3.5" />
-              <span>Postacie</span>
-            </button>
+        {/* Category switcher pills (5 Sekcji: Forum, Postacie, Intro, Tła, Nakładki) */}
+        <div className="grid grid-cols-5 gap-1 p-1 bg-[#0c0c12] rounded-xl border border-white/5">
+          <button
+            type="button"
+            onClick={() => onSelectTemplate("music-forum-scroll")}
+            className={`py-2 px-0.5 rounded-lg text-[9px] font-semibold flex flex-col items-center justify-center gap-1 transition-all ${
+              isForumCategory
+                ? "bg-amber-500 text-black shadow-md font-bold"
+                : "text-zinc-400 hover:text-white"
+            }`}
+          >
+            <MessageSquare className="w-3.5 h-3.5" />
+            <span>Forum</span>
+          </button>
 
-            <button
-              type="button"
-              onClick={() => onSelectTemplate("joy-division-cassette-morph")}
-                    ? "bg-amber-500 text-black shadow-md font-bold"
-                    : "text-zinc-400 hover:text-white"
-                  }`}
+          <button
+            type="button"
+            onClick={() => onSelectTemplate("character-stage")}
+            className={`py-2 px-0.5 rounded-lg text-[9px] font-semibold flex flex-col items-center justify-center gap-1 transition-all ${
+              isCharacterCategory
+                ? "bg-amber-500 text-black shadow-md font-bold"
+                : "text-zinc-400 hover:text-white"
+            }`}
+          >
+            <User className="w-3.5 h-3.5" />
+            <span>Postacie</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => onSelectTemplate("joy-division-cassette-morph")}
+            className={`py-2 px-0.5 rounded-lg text-[9px] font-semibold flex flex-col items-center justify-center gap-1 transition-all ${
+              isIntroCategory
+                ? "bg-amber-500 text-black shadow-md font-bold"
+                : "text-zinc-400 hover:text-white"
+            }`}
           >
             <Disc className="w-3.5 h-3.5" />
             <span>Intro</span>
@@ -197,10 +226,11 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
           <button
             type="button"
             onClick={() => onSelectTemplate("minimal-void-particles")}
-              className = {`py-2 px-1 rounded-lg text-[10px] font-semibold flex flex-col items-center justify-center gap-1 transition-all ${isBackgroundCategory
-                  ? "bg-amber-500 text-black shadow-md font-bold"
-                  : "text-zinc-400 hover:text-white"
-                }`}
+            className={`py-2 px-0.5 rounded-lg text-[9px] font-semibold flex flex-col items-center justify-center gap-1 transition-all ${
+              isBackgroundCategory
+                ? "bg-amber-500 text-black shadow-md font-bold"
+                : "text-zinc-400 hover:text-white"
+            }`}
           >
             <Moon className="w-3.5 h-3.5" />
             <span>Tła</span>
@@ -209,10 +239,11 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
           <button
             type="button"
             onClick={() => onSelectTemplate("documentary-lower-third")}
-            className={`py-2 px-1 rounded-lg text-[10px] font-semibold flex flex-col items-center justify-center gap-1 transition-all ${!isCharacterCategory && !isIntroCategory && !isBackgroundCategory
+            className={`py-2 px-0.5 rounded-lg text-[9px] font-semibold flex flex-col items-center justify-center gap-1 transition-all ${
+              !isForumCategory && !isCharacterCategory && !isIntroCategory && !isBackgroundCategory
                 ? "bg-amber-500 text-black shadow-md font-bold"
                 : "text-zinc-400 hover:text-white"
-              }`}
+            }`}
           >
             <Layers className="w-3.5 h-3.5" />
             <span>Nakładki</span>
@@ -318,7 +349,18 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
       </div>
 
       {/* BODY CONTENT DEPENDING ON TEMPLATE TYPE */}
-        { selectedTemplateId === "character-stage" ? (
+      {selectedTemplateId === "music-forum-scroll" ? (
+        /* ================= 000. MUZYCZNE FORUM 3D LOW-POLY CONTROLS ================= */
+        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          <MusicForumControls
+            props={musicForumProps}
+            updateProp={updateMusicForumProp}
+            durationFrames={durationFrames}
+            setDurationFrames={setDurationFrames}
+            fps={fps}
+          />
+        </div>
+      ) : selectedTemplateId === "character-stage" ? (
           /* ================= 00. STUDIO POSTACI & RELACJI CONTROLS ================= */
           <div className="flex-1 overflow-y-auto p-4 space-y-4">
             <CharacterStageControls

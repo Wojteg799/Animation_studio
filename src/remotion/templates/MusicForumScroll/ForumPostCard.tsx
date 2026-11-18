@@ -1,0 +1,332 @@
+import React from "react";
+import { Music, Disc, Volume2, FileAudio, CornerDownRight } from "lucide-react";
+
+export interface ForumPostCardProps {
+  postNumber: number;
+  author: string;
+  role: string;
+  date: string;
+  content: string;
+  hasAudio?: boolean;
+  audioFile?: string;
+  avatarColor: string;
+  isHighlighted?: boolean;
+  frame: number;
+}
+
+export const ForumPostCard: React.FC<ForumPostCardProps> = ({
+  postNumber,
+  author,
+  role,
+  date,
+  content,
+  hasAudio,
+  audioFile,
+  avatarColor,
+  isHighlighted = false,
+  frame,
+}) => {
+  // Low-poly initial / avatar icon generator
+  const initials = author.substring(0, 2).toUpperCase();
+
+  // Animated waveform bars for audio attachment
+  const bars = [14, 28, 42, 35, 52, 24, 48, 62, 38, 50, 22, 44, 30, 16];
+
+  return (
+    <div
+      style={{
+        backgroundColor: isHighlighted ? "rgba(22, 25, 38, 0.95)" : "rgba(15, 17, 26, 0.92)",
+        border: isHighlighted
+          ? `2px solid ${avatarColor}`
+          : "1px solid rgba(255, 255, 255, 0.08)",
+        borderRadius: "12px",
+        boxShadow: isHighlighted
+          ? `0 0 25px ${avatarColor}33, 0 10px 30px rgba(0, 0, 0, 0.8)`
+          : "0 6px 20px rgba(0, 0, 0, 0.5)",
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "row",
+        position: "relative",
+        backdropFilter: "blur(8px)",
+      }}
+    >
+      {/* Highlight glow ribbon */}
+      {isHighlighted && (
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            bottom: 0,
+            width: "4px",
+            backgroundColor: avatarColor,
+            boxShadow: `0 0 10px ${avatarColor}`,
+          }}
+        />
+      )}
+
+      {/* LEFT COLUMN: User Profile & Low-Poly Avatar */}
+      <div
+        style={{
+          width: "160px",
+          padding: "16px 14px",
+          backgroundColor: "rgba(10, 11, 18, 0.7)",
+          borderRight: "1px solid rgba(255, 255, 255, 0.06)",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          textAlign: "center",
+          flexShrink: 0,
+        }}
+      >
+        {/* Low-Poly Faceted Avatar SVG */}
+        <div
+          style={{
+            width: "56px",
+            height: "56px",
+            position: "relative",
+            marginBottom: "8px",
+          }}
+        >
+          <svg
+            viewBox="0 0 60 60"
+            width="56"
+            height="56"
+            style={{
+              filter: `drop-shadow(0 2px 6px ${avatarColor}44)`,
+            }}
+          >
+            {/* Low-poly geometric facets */}
+            <polygon points="30,2 58,18 48,52 12,52 2,18" fill="rgba(255,255,255,0.06)" stroke={avatarColor} strokeWidth="1.5" />
+            <polygon points="30,2 58,18 30,30" fill={avatarColor} fillOpacity="0.4" />
+            <polygon points="58,18 48,52 30,30" fill={avatarColor} fillOpacity="0.25" />
+            <polygon points="48,52 12,52 30,30" fill={avatarColor} fillOpacity="0.15" />
+            <polygon points="12,52 2,18 30,30" fill={avatarColor} fillOpacity="0.3" />
+            <polygon points="2,18 30,2 30,30" fill={avatarColor} fillOpacity="0.5" />
+            <text
+              x="30"
+              y="35"
+              fill="#ffffff"
+              fontFamily="monospace"
+              fontSize="14"
+              fontWeight="900"
+              textAnchor="middle"
+              letterSpacing="1"
+            >
+              {initials}
+            </text>
+          </svg>
+        </div>
+
+        {/* Username */}
+        <div
+          style={{
+            color: avatarColor,
+            fontSize: "13px",
+            fontWeight: "800",
+            fontFamily: "monospace",
+            letterSpacing: "0.5px",
+            lineHeight: 1.2,
+            wordBreak: "break-all",
+          }}
+        >
+          {author}
+        </div>
+
+        {/* User Role Badge */}
+        <div
+          style={{
+            marginTop: "4px",
+            fontSize: "9px",
+            fontFamily: "sans-serif",
+            fontWeight: "700",
+            color: "#94a3b8",
+            backgroundColor: "rgba(255, 255, 255, 0.05)",
+            padding: "2px 6px",
+            borderRadius: "4px",
+            border: "1px solid rgba(255, 255, 255, 0.08)",
+            textTransform: "uppercase",
+            letterSpacing: "0.5px",
+          }}
+        >
+          {role}
+        </div>
+
+        {/* User stats */}
+        <div
+          style={{
+            marginTop: "10px",
+            fontSize: "9px",
+            color: "#64748b",
+            fontFamily: "monospace",
+            lineHeight: 1.4,
+          }}
+        >
+          <div>Dołączył: 2006</div>
+          <div>Posty: {120 + postNumber * 37}</div>
+        </div>
+      </div>
+
+      {/* RIGHT COLUMN: Post Body */}
+      <div
+        style={{
+          flex: 1,
+          padding: "16px 20px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+        }}
+      >
+        <div>
+          {/* Post Header Bar */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              borderBottom: "1px solid rgba(255, 255, 255, 0.06)",
+              paddingBottom: "8px",
+              marginBottom: "12px",
+            }}
+          >
+            <div
+              style={{
+                fontSize: "11px",
+                color: "#94a3b8",
+                fontFamily: "monospace",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+              }}
+            >
+              <span style={{ color: "#e2e8f0" }}>Wysłano: {date}</span>
+            </div>
+
+            <div
+              style={{
+                fontSize: "11px",
+                fontFamily: "monospace",
+                color: avatarColor,
+                fontWeight: "700",
+              }}
+            >
+              #{postNumber}
+            </div>
+          </div>
+
+          {/* Post Text Content */}
+          <div
+            style={{
+              fontSize: "13px",
+              color: "#f1f5f9",
+              lineHeight: 1.6,
+              fontFamily: "system-ui, -apple-system, sans-serif",
+              letterSpacing: "0.2px",
+            }}
+          >
+            {content}
+          </div>
+
+          {/* Audio Snippet Attachment Box (if hasAudio) */}
+          {hasAudio && (
+            <div
+              style={{
+                marginTop: "14px",
+                padding: "10px 14px",
+                backgroundColor: "rgba(0, 0, 0, 0.5)",
+                border: "1px solid rgba(56, 189, 248, 0.35)",
+                borderRadius: "8px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: "12px",
+                boxShadow: "inset 0 0 15px rgba(56, 189, 248, 0.08)",
+              }}
+            >
+              {/* File details */}
+              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <div
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    borderRadius: "6px",
+                    backgroundColor: "rgba(56, 189, 248, 0.15)",
+                    border: "1px solid rgba(56, 189, 248, 0.4)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "#38bdf8",
+                  }}
+                >
+                  <FileAudio className="w-4 h-4" />
+                </div>
+                <div>
+                  <div
+                    style={{
+                      fontSize: "11px",
+                      fontFamily: "monospace",
+                      fontWeight: "700",
+                      color: "#e0f2fe",
+                    }}
+                  >
+                    {audioFile || "audio_rip_ndr_1984.mp3"}
+                  </div>
+                  <div style={{ fontSize: "9px", color: "#64748b", fontFamily: "monospace" }}>
+                    Załącznik audio • Pobrane 1,842 razy
+                  </div>
+                </div>
+              </div>
+
+              {/* Animated waveform indicator */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "2px",
+                  height: "22px",
+                }}
+              >
+                {bars.map((b, idx) => {
+                  const animHeight = 4 + Math.abs(Math.sin((frame * 0.15) + idx * 0.7)) * 16;
+                  return (
+                    <div
+                      key={idx}
+                      style={{
+                        width: "3px",
+                        height: `${animHeight}px`,
+                        backgroundColor: "#38bdf8",
+                        borderRadius: "1px",
+                        opacity: 0.85,
+                      }}
+                    />
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Footer info bar */}
+        <div
+          style={{
+            marginTop: "12px",
+            paddingTop: "6px",
+            borderTop: "1px solid rgba(255, 255, 255, 0.04)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            fontSize: "10px",
+            color: "#475569",
+            fontFamily: "monospace",
+          }}
+        >
+          <span>IP: 84.112.**.**</span>
+          <div style={{ display: "flex", gap: "10px" }}>
+            <span style={{ color: "#64748b" }}>[Cytuj]</span>
+            <span style={{ color: "#64748b" }}>[Zgłoś]</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};

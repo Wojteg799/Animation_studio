@@ -11,6 +11,10 @@ import {
   defaultCharacterStageProps,
 } from "../remotion/templates/CharacterStage/schema";
 import {
+  MusicForumScrollProps,
+  defaultMusicForumScrollProps,
+} from "../remotion/templates/MusicForumScroll/schema";
+import {
   JoyDivisionCassetteMorphProps,
   defaultJoyDivisionCassetteMorphProps,
 } from "../remotion/templates/JoyDivisionCassetteMorph/schema";
@@ -52,6 +56,9 @@ export default function StudioPage() {
   const [characterStageProps, setCharacterStageProps] = useState<CharacterStageProps>(
     defaultCharacterStageProps
   );
+  const [musicForumProps, setMusicForumProps] = useState<MusicForumScrollProps>(
+    defaultMusicForumScrollProps
+  );
   const [joyDivisionProps, setJoyDivisionProps] = useState<JoyDivisionCassetteMorphProps>(
     defaultJoyDivisionCassetteMorphProps
   );
@@ -88,7 +95,9 @@ export default function StudioPage() {
       templateId === "cinematic-particles-background" ||
       templateId === "dark-parchment-background";
 
-      if (templateId === "character-stage") {
+      if (templateId === "music-forum-scroll") {
+        setDurationFrames(240); // 8 seconds @ 30fps
+      } else if (templateId === "character-stage") {
         setDurationFrames(240); // 8 seconds @ 30fps
       } else if (templateId === "joy-division-cassette-morph") {
         setDurationFrames(240); // 8 seconds @ 30fps
@@ -108,7 +117,21 @@ export default function StudioPage() {
       }
     };
 
-    // Update a single prop for Character Stage
+    // Update a single prop for Music Forum Scroll
+  const updateMusicForumProp = useCallback(
+    <K extends keyof MusicForumScrollProps>(
+      key: K,
+      val: MusicForumScrollProps[K]
+    ) => {
+      setMusicForumProps((prev) => ({
+        ...prev,
+        [key]: val,
+      }));
+    },
+    []
+  );
+
+  // Update a single prop for Character Stage
     const updateCharacterStageProp = useCallback(
       <K extends keyof CharacterStageProps>(
         key: K,
@@ -222,7 +245,13 @@ export default function StudioPage() {
         let compositionId = "DocumentaryLowerThird";
         let inputProps: any = lowerThirdProps;
 
-          if (selectedTemplateId === "character-stage") {
+        if (selectedTemplateId === "music-forum-scroll") {
+          compositionId = "MusicForumScroll";
+          inputProps = {
+            ...defaultMusicForumScrollProps,
+            ...musicForumProps,
+          };
+        } else if (selectedTemplateId === "character-stage") {
             compositionId = "CharacterStage";
             inputProps = {
               ...defaultCharacterStageProps,
@@ -285,7 +314,9 @@ export default function StudioPage() {
         selectedTemplateId === "minimal-void-stardust";
 
       const activeProps =
-      selectedTemplateId === "character-stage"
+      selectedTemplateId === "music-forum-scroll"
+        ? musicForumProps
+        : selectedTemplateId === "character-stage"
         ? characterStageProps
         : selectedTemplateId === "joy-division-cassette-morph"
           ? joyDivisionProps
@@ -326,6 +357,8 @@ export default function StudioPage() {
             <LeftSidebar
               selectedTemplateId={selectedTemplateId}
               onSelectTemplate={handleSelectTemplate}
+              musicForumProps={musicForumProps}
+              updateMusicForumProp={updateMusicForumProp}
               characterStageProps={characterStageProps}
               updateCharacterStageProp={updateCharacterStageProp}
               joyDivisionProps={joyDivisionProps}

@@ -5,6 +5,11 @@ import {
   CharacterStageProps,
   defaultCharacterStageProps,
 } from "./templates/CharacterStage/schema";
+import { MusicForumScroll } from "./templates/MusicForumScroll";
+import {
+  MusicForumScrollProps,
+  defaultMusicForumScrollProps,
+} from "./templates/MusicForumScroll/schema";
 import { JoyDivisionCassetteMorph } from "./templates/JoyDivisionCassetteMorph";
 import {
   JoyDivisionCassetteMorphProps,
@@ -39,7 +44,46 @@ import {
 export const RemotionRoot: React.FC = () => {
   return (
     <>
-      {/* 0. SEKCJA: STUDIO POSTACI & RELACJI (CHARACTER STAGE) */}
+      {/* 0A. SEKCJA: MUZYCZNE FORUM 3D LOW-POLY SCROLL */}
+      <Composition
+        id="MusicForumScroll"
+        component={MusicForumScroll}
+        durationInFrames={240} // 8 sekund przy 30fps
+        fps={30}
+        width={1920}
+        height={1080}
+        defaultProps={defaultMusicForumScrollProps}
+        calculateMetadata={async ({ props }) => {
+          const customProps = props as MusicForumScrollProps & {
+            videoWidth?: number;
+            videoHeight?: number;
+            customFps?: number;
+            customDuration?: number;
+          };
+          return {
+            width: customProps.videoWidth || 1920,
+            height: customProps.videoHeight || 1080,
+            fps: customProps.customFps || 30,
+            durationInFrames: customProps.customDuration || 240,
+            props: customProps,
+          };
+        }}
+      />
+
+      <Composition
+        id="MusicForumScroll-4K"
+        component={MusicForumScroll}
+        durationInFrames={240}
+        fps={30}
+        width={3840}
+        height={2160}
+        defaultProps={{
+          ...defaultMusicForumScrollProps,
+          depthPerspective: 2400,
+        }}
+      />
+
+      {/* 0B. SEKCJA: STUDIO POSTACI & RELACJI (CHARACTER STAGE) */}
       <Composition
         id="CharacterStage"
         component={CharacterStage}

@@ -3,6 +3,11 @@ import {
   CharacterStageProps,
   defaultCharacterStageProps,
 } from "./CharacterStage/schema";
+import { MusicForumScroll } from "./MusicForumScroll";
+import {
+  MusicForumScrollProps,
+  defaultMusicForumScrollProps,
+} from "./MusicForumScroll/schema";
 import { DocumentaryLowerThird } from "./DocumentaryLowerThird";
 import {
   DocumentaryLowerThirdProps,
@@ -38,6 +43,7 @@ import {
 } from "./DarkParchmentBackground/schema";
 
 export type TemplateCategory =
+  | "Archiwa & Fora (Forums)"
   | "Postacie & Relacje (Characters)"
   | "Czołówki & Intro (Intros)"
   | "Tła (Backgrounds)"
@@ -58,7 +64,20 @@ export interface TemplateDefinition {
 }
 
 export const TEMPLATES: TemplateDefinition[] = [
-  // 0. POSTACIE: KÓŁKA Z OBWÓDKĄ, PODPISY & RELACJE
+  // 0A. MUZYCZNE FORUM: PRZEWIJANIE 3D LOW-POLY
+  {
+    id: "music-forum-scroll",
+    name: "Muzyczne Forum: Przewijanie 3D Low-Poly",
+    category: "Archiwa & Fora (Forums)",
+    description: "Klimatyczne muzyczne forum internetowe w stylu retro/lostwave z płynnym przewijaniem postów, kątem 3D low-poly, siatką wektorową w tle i załącznikami audio.",
+    component: MusicForumScroll,
+    defaultProps: defaultMusicForumScrollProps,
+    defaultDurationInFrames: 240, // 8 seconds at 30fps
+    tags: ["Forum", "Muzyka", "Lostwave", "Low Poly", "3D", "Przewijanie", "Dyskusja", "Tajemnica"],
+    isBackground: false,
+  },
+
+  // 0B. POSTACIE: KÓŁKA Z OBWÓDKĄ, PODPISY & RELACJE
   {
     id: "character-stage",
     name: "Studio Postaci: Kółka, Podpisy & Relacje",
