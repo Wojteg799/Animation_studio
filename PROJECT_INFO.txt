@@ -130,6 +130,18 @@ C. Minimal Void Particles & Backgrounds (id: "minimal-void-particles" / "minimal
    - Zaprojektowane do renderowania jako lekki plik MP4 (H.264 CRF 17), dzięki czemu
      2-minutowe tło waży kilka-kilkanaście MB zamiast 500MB+ w bezstratnym ProResie.
 
+D. Kinowa Biała Ramka na Zdjęcia / Obrazy (id: "animated-photo-frame")
+   - Koncepcja: Dynamiczna, elegancka biała ramka (#ffffff) na wyświetlające się zdjęcia, dokumenty i materiały archiwalne w filmach dokumentalnych.
+   - Dynamiczny ruch (nie jest statyczna ani nudna):
+     1. Biegający promień światła (laser beam pulse) krążący bezustannie po obwodzie białej ramki.
+     2. Kinowy błysk światła (glass sheen / glint sweep) przesuwający się po szkle zdjęcia w regularnych odstępach czasu.
+     3. Organiczne pływanie 3D (3D float & tilt) - delikatne unoszenie i kołysanie w osiach X, Y, Z (rotateX, rotateY).
+     4. Mikro-zoom Ken Burns wewnątrz ramki - powolny, filmowy najazd na kadr bez utraty ostrości.
+     5. Narożniki celownika / viewfindera `[ ]` oraz precyzyjne krzyżyki `+` z organicznym pulsowaniem oddechu.
+   - Podpis dokumentalny: Tytuł i sygnatura archiwalna (pasek na dole, u góry lub plakietka w rogu).
+   - Elastyczność: Obsługa proporcji 16:9, 4:3, 1:1, 9:16 (Shorts), wgranie własnego zdjęcia lub wybór z 3 wbudowanych presetów archiwalnych.
+   - Pliki: FrameCorners.tsx, default-images.ts, schema.ts, index.tsx, PhotoFrameControls.tsx.
+
 --------------------------------------------------------------------------------
 5. JAK DZIAŁA SILNIK RENDEROWANIA (RENDER ENGINE MECHANICS)
 --------------------------------------------------------------------------------

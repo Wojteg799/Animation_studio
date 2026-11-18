@@ -19,6 +19,8 @@ import {
   Disc,
   MessageSquare,
 } from "lucide-react";
+import { AnimatedPhotoFrameProps } from "../../remotion/templates/AnimatedPhotoFrame/schema";
+import { PhotoFrameControls } from "./PhotoFrameControls";
 import { CharacterStageProps } from "../../remotion/templates/CharacterStage/schema";
 import { CharacterStageControls } from "./CharacterStageControls";
 import { MusicForumScrollProps } from "../../remotion/templates/MusicForumScroll/schema";
@@ -41,6 +43,11 @@ import { ParchmentControls } from "./ParchmentControls";
 interface LeftSidebarProps {
   selectedTemplateId: string;
   onSelectTemplate: (templateId: string) => void;
+  photoFrameProps: AnimatedPhotoFrameProps;
+  updatePhotoFrameProp: <K extends keyof AnimatedPhotoFrameProps>(
+    key: K,
+    val: AnimatedPhotoFrameProps[K]
+  ) => void;
   musicForumProps: MusicForumScrollProps;
   updateMusicForumProp: <K extends keyof MusicForumScrollProps>(
     key: K,
@@ -92,6 +99,8 @@ type OverlayTabType = "content" | "themes" | "physics";
 export const LeftSidebar: React.FC<LeftSidebarProps> = ({
   selectedTemplateId,
   onSelectTemplate,
+  photoFrameProps,
+  updatePhotoFrameProp,
   musicForumProps,
   updateMusicForumProp,
   characterStageProps,
@@ -129,6 +138,10 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
     selectedTemplateId === "minimal-void-stardust" ||
     selectedTemplateId === "cinematic-particles-background" ||
     selectedTemplateId === "dark-parchment-background";
+
+  const isOverlayCategory =
+    selectedTemplateId === "animated-photo-frame" ||
+    selectedTemplateId === "documentary-lower-third";
 
   const isVoidCategory =
     selectedTemplateId === "minimal-void-particles" ||
@@ -178,7 +191,9 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
                 ? "SEKCJA: INTRO"
                 : isBackgroundCategory
                   ? "SEKCJA: TŁO"
-                  : "SEKCJA: NAKŁADKA"}
+                  : selectedTemplateId === "animated-photo-frame"
+                    ? "SEKCJA: BIAŁA RAMKA"
+                    : "SEKCJA: NAKŁADKA"}
           </span>
         </div>
 
@@ -238,9 +253,9 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
 
           <button
             type="button"
-            onClick={() => onSelectTemplate("documentary-lower-third")}
+            onClick={() => onSelectTemplate("animated-photo-frame")}
             className={`py-2 px-0.5 rounded-lg text-[9px] font-semibold flex flex-col items-center justify-center gap-1 transition-all ${
-              !isForumCategory && !isCharacterCategory && !isIntroCategory && !isBackgroundCategory
+              isOverlayCategory
                 ? "bg-amber-500 text-black shadow-md font-bold"
                 : "text-zinc-400 hover:text-white"
             }`}
@@ -346,6 +361,49 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
             </div>
           </div>
         )}
+
+        {/* When in Overlay / Nakładki Category: 2-way template selector */}
+        {isOverlayCategory && (
+          <div className="space-y-1.5 pt-1">
+            <div className="text-[10px] font-mono text-zinc-400 uppercase flex items-center justify-between">
+              <span>Wybór Nakładki:</span>
+              <span className="text-amber-400 font-bold">2 Szablony</span>
+            </div>
+            <div className="grid grid-cols-2 gap-1.5">
+              {/* Option 1: Animated Photo Frame (Biała Ramka) */}
+              <button
+                type="button"
+                onClick={() => onSelectTemplate("animated-photo-frame")}
+                className={`p-2 rounded-lg border text-center transition-all flex flex-col items-center gap-0.5 ${
+                  selectedTemplateId === "animated-photo-frame"
+                    ? "bg-amber-500/20 border-amber-500/70 shadow text-amber-300 font-bold"
+                    : "bg-[#181822] hover:bg-[#20202e] border-white/5 text-zinc-400 hover:text-white"
+                }`}
+                title="Kinowa biała ramka na zdjęcia z obwodowym laserem, błyskiem szkła i pływaniem 3D"
+              >
+                <ImageIcon className="w-3.5 h-3.5 text-amber-400" />
+                <span className="text-[10px] leading-tight font-bold">Biała Ramka</span>
+                <span className="text-[8px] font-mono text-zinc-400">Laser & Błysk</span>
+              </button>
+
+              {/* Option 2: Documentary Lower Third */}
+              <button
+                type="button"
+                onClick={() => onSelectTemplate("documentary-lower-third")}
+                className={`p-2 rounded-lg border text-center transition-all flex flex-col items-center gap-0.5 ${
+                  selectedTemplateId === "documentary-lower-third"
+                    ? "bg-amber-500/20 border-amber-500/70 shadow text-amber-300 font-bold"
+                    : "bg-[#181822] hover:bg-[#20202e] border-white/5 text-zinc-400 hover:text-white"
+                }`}
+                title="Dokumentalna dolna belka z informacjami, stemplami i portretem"
+              >
+                <Tag className="w-3.5 h-3.5 text-amber-400" />
+                <span className="text-[10px] leading-tight font-bold">Dolna Belka</span>
+                <span className="text-[8px] font-mono text-zinc-400">Lower Third</span>
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* BODY CONTENT DEPENDING ON TEMPLATE TYPE */}
@@ -427,8 +485,19 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
               fps={fps}
             />
           </div>
+        ) : selectedTemplateId === "animated-photo-frame" ? (
+          /* ================= 4A. BIAŁA RAMKA NA ZDJĘCIA (ANIMATED PHOTO FRAME) CONTROLS ================= */
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <PhotoFrameControls
+              props={photoFrameProps}
+              updateProp={updatePhotoFrameProp}
+              durationFrames={durationFrames}
+              setDurationFrames={setDurationFrames}
+              fps={fps}
+            />
+          </div>
         ) : (
-          /* ================= 4. OVERLAY LOWER THIRD CONTROLS ================= */
+          /* ================= 4B. OVERLAY LOWER THIRD CONTROLS ================= */
           <>
             {/* Overlay Navigation Tabs */}
             <div className="flex items-center border-b border-white/10 bg-[#0e0e14] px-2 pt-2">

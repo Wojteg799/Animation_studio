@@ -7,6 +7,10 @@ import { PreviewPlayer } from "../components/studio/PreviewPlayer";
 import { RenderModal } from "../components/studio/RenderModal";
 import { PresetManager } from "../components/studio/PresetManager";
 import {
+  AnimatedPhotoFrameProps,
+  defaultAnimatedPhotoFrameProps,
+} from "../remotion/templates/AnimatedPhotoFrame/schema";
+import {
   CharacterStageProps,
   defaultCharacterStageProps,
 } from "../remotion/templates/CharacterStage/schema";
@@ -53,6 +57,9 @@ export default function StudioPage() {
   const [durationFrames, setDurationFrames] = useState<number>(240); // 8 sekund dla Joy Division morph
 
   // Props for templates
+  const [photoFrameProps, setPhotoFrameProps] = useState<AnimatedPhotoFrameProps>(
+    defaultAnimatedPhotoFrameProps
+  );
   const [characterStageProps, setCharacterStageProps] = useState<CharacterStageProps>(
     defaultCharacterStageProps
   );
@@ -95,7 +102,9 @@ export default function StudioPage() {
       templateId === "cinematic-particles-background" ||
       templateId === "dark-parchment-background";
 
-      if (templateId === "music-forum-scroll") {
+      if (templateId === "animated-photo-frame") {
+        setDurationFrames(240); // 8 seconds @ 30fps
+      } else if (templateId === "music-forum-scroll") {
         setDurationFrames(240); // 8 seconds @ 30fps
       } else if (templateId === "character-stage") {
         setDurationFrames(240); // 8 seconds @ 30fps
@@ -117,7 +126,21 @@ export default function StudioPage() {
       }
     };
 
-    // Update a single prop for Music Forum Scroll
+    // Update a single prop for Animated Photo Frame
+  const updatePhotoFrameProp = useCallback(
+    <K extends keyof AnimatedPhotoFrameProps>(
+      key: K,
+      val: AnimatedPhotoFrameProps[K]
+    ) => {
+      setPhotoFrameProps((prev) => ({
+        ...prev,
+        [key]: val,
+      }));
+    },
+    []
+  );
+
+  // Update a single prop for Music Forum Scroll
   const updateMusicForumProp = useCallback(
     <K extends keyof MusicForumScrollProps>(
       key: K,
@@ -245,7 +268,13 @@ export default function StudioPage() {
         let compositionId = "DocumentaryLowerThird";
         let inputProps: any = lowerThirdProps;
 
-        if (selectedTemplateId === "music-forum-scroll") {
+        if (selectedTemplateId === "animated-photo-frame") {
+          compositionId = "AnimatedPhotoFrame";
+          inputProps = {
+            ...defaultAnimatedPhotoFrameProps,
+            ...photoFrameProps,
+          };
+        } else if (selectedTemplateId === "music-forum-scroll") {
           compositionId = "MusicForumScroll";
           inputProps = {
             ...defaultMusicForumScrollProps,
@@ -314,8 +343,10 @@ export default function StudioPage() {
         selectedTemplateId === "minimal-void-stardust";
 
       const activeProps =
-      selectedTemplateId === "music-forum-scroll"
-        ? musicForumProps
+        selectedTemplateId === "animated-photo-frame"
+          ? photoFrameProps
+          : selectedTemplateId === "music-forum-scroll"
+          ? musicForumProps
         : selectedTemplateId === "character-stage"
         ? characterStageProps
         : selectedTemplateId === "joy-division-cassette-morph"
@@ -357,6 +388,8 @@ export default function StudioPage() {
             <LeftSidebar
               selectedTemplateId={selectedTemplateId}
               onSelectTemplate={handleSelectTemplate}
+              photoFrameProps={photoFrameProps}
+              updatePhotoFrameProp={updatePhotoFrameProp}
               musicForumProps={musicForumProps}
               updateMusicForumProp={updateMusicForumProp}
               characterStageProps={characterStageProps}

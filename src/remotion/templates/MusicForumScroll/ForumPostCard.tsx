@@ -330,3 +330,4 @@ export const ForumPostCard: React.FC<ForumPostCardProps> = ({
     </div>
   );
 };
+

@@ -145,3 +145,4 @@ export const defaultMusicForumScrollProps: MusicForumScrollProps = {
 
   durationInFrames: 240, // 8s at 30fps
 };
+

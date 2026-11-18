@@ -8,6 +8,11 @@ import {
   MusicForumScrollProps,
   defaultMusicForumScrollProps,
 } from "./MusicForumScroll/schema";
+import { AnimatedPhotoFrame } from "./AnimatedPhotoFrame";
+import {
+  AnimatedPhotoFrameProps,
+  defaultAnimatedPhotoFrameProps,
+} from "./AnimatedPhotoFrame/schema";
 import { DocumentaryLowerThird } from "./DocumentaryLowerThird";
 import {
   DocumentaryLowerThirdProps,
@@ -180,6 +185,17 @@ export const TEMPLATES: TemplateDefinition[] = [
   },
 
   // Nakładki
+  {
+    id: "animated-photo-frame",
+    name: "Kinowa Biała Ramka na Zdjęcia / Obrazy",
+    category: "Dolne Belki (Lower Thirds)",
+    description: "Dynamiczna biała ramka na zdjęcia i dokumenty z biegającym światłem po obwodzie, błyskiem po szkle, pływaniem 3D, narożnikami HUD i podpisem.",
+    component: AnimatedPhotoFrame,
+    defaultProps: defaultAnimatedPhotoFrameProps,
+    defaultDurationInFrames: 240, // 8 seconds at 30fps
+    tags: ["Ramka", "Zdjęcie", "Biała Ramka", "Światło", "Ken Burns", "Archiwum", "3D Float"],
+    isBackground: false,
+  },
   {
     id: "documentary-lower-third",
     name: "Archival Dossier / Lower Third",

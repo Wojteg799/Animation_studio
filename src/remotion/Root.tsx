@@ -1,5 +1,10 @@
 import React from "react";
 import { Composition } from "remotion";
+import { AnimatedPhotoFrame } from "./templates/AnimatedPhotoFrame";
+import {
+  AnimatedPhotoFrameProps,
+  defaultAnimatedPhotoFrameProps,
+} from "./templates/AnimatedPhotoFrame/schema";
 import { CharacterStage } from "./templates/CharacterStage";
 import {
   CharacterStageProps,
@@ -457,6 +462,56 @@ export const RemotionRoot: React.FC = () => {
           scale: 0.85,
           offsetX: 60,
           offsetY: 1300,
+        }}
+      />
+
+      {/* 6. SEKCJA NAKŁADKI: Dynamiczna Biała Ramka na Zdjęcia (AnimatedPhotoFrame) */}
+      <Composition
+        id="AnimatedPhotoFrame"
+        component={AnimatedPhotoFrame}
+        durationInFrames={240}
+        fps={30}
+        width={1920}
+        height={1080}
+        defaultProps={defaultAnimatedPhotoFrameProps}
+        calculateMetadata={async ({ props }) => {
+          const customProps = props as AnimatedPhotoFrameProps & {
+            videoWidth?: number;
+            videoHeight?: number;
+            customFps?: number;
+            customDuration?: number;
+          };
+          return {
+            width: customProps.videoWidth || 1920,
+            height: customProps.videoHeight || 1080,
+            fps: customProps.customFps || 30,
+            durationInFrames: customProps.customDuration || 240,
+            props: customProps,
+          };
+        }}
+      />
+
+      <Composition
+        id="AnimatedPhotoFrame-4K"
+        component={AnimatedPhotoFrame}
+        durationInFrames={240}
+        fps={30}
+        width={3840}
+        height={2160}
+        defaultProps={defaultAnimatedPhotoFrameProps}
+      />
+
+      <Composition
+        id="AnimatedPhotoFrame-Shorts"
+        component={AnimatedPhotoFrame}
+        durationInFrames={240}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={{
+          ...defaultAnimatedPhotoFrameProps,
+          frameWidth: 720,
+          aspectRatio: "4:3",
         }}
       />
     </>
