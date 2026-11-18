@@ -129,3 +129,4 @@ export const SAMPLE_PRESETS: SampleImagePreset[] = [
     url: SAMPLE_VINYL_NOIR,
   },
 ];
+

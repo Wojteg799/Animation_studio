@@ -85,7 +85,7 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
           }`}
         >
           <Box className="w-3.5 h-3.5" />
-          <span className="text-[10px]">3D Low-Poly</span>
+          <span className="text-[10px]">3D & Tło</span>
         </button>
 
         <button
@@ -413,12 +413,44 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
       {/* ================= TAB 3: 3D LOW-POLY & STYL ================= */}
       {activeTab === "lowpoly" && (
         <div className="space-y-4 animate-in fade-in">
+          {/* Transparency & Background Mode */}
+          <div className="bg-[#12121a] p-3.5 rounded-xl border border-white/5 space-y-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <span className="text-xs font-semibold text-white block">
+                  Przezroczyste Tło (Alpha Channel)
+                </span>
+                <span className="text-[10px] text-zinc-400">
+                  {props.transparentBackground
+                    ? "Tylko okno forum (kwadrat), 100% przezroczyste tło na wideo"
+                    : "Ciemne, pełnoekranowe tło dossier"}
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => updateProp("transparentBackground", !props.transparentBackground)}
+                className={`px-3 py-1 rounded text-xs font-mono font-bold transition-all ${
+                  props.transparentBackground
+                    ? "bg-emerald-500 text-black shadow-md shadow-emerald-500/20"
+                    : "bg-zinc-800 text-zinc-400"
+                }`}
+              >
+                {props.transparentBackground ? "ALPHA (ON)" : "CIEMNE TŁO"}
+              </button>
+            </div>
+            {props.transparentBackground && (
+              <p className="text-[10px] text-emerald-400/90 font-mono bg-emerald-500/10 p-2 rounded-lg border border-emerald-500/20">
+                ✓ Wyeksportuj w formacie ProRes 4444, aby nałożyć samo okno forum na film w montażu.
+              </p>
+            )}
+          </div>
+
           {/* 3D Tilt toggle */}
           <div className="bg-[#12121a] p-3.5 rounded-xl border border-white/5 space-y-3">
             <div className="flex items-center justify-between">
               <div>
                 <span className="text-xs font-semibold text-white block">
-                  Kąt 3D Low-Poly (Nachylenie Okna)
+                  Kąt 3D (Nachylenie Okna Forum)
                 </span>
                 <span className="text-[10px] text-zinc-400">
                   Perspektywa 3D w stylu ujęć dokumentalnych
@@ -476,39 +508,20 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
             )}
           </div>
 
-          {/* Low-Poly Mesh Background */}
+          {/* Optional Background Effects & Figures */}
           <div className="bg-[#12121a] p-3.5 rounded-xl border border-white/5 space-y-3">
             <span className="text-xs font-semibold text-white block">
-              Efekty Tła Low-Poly:
+              Dodatkowe Elementy & Figury:
             </span>
 
-            {/* Mesh intensity */}
-            <div className="space-y-1.5">
-              <div className="flex justify-between items-center text-[11px] text-zinc-300">
-                <span>Intensywność Siatki Wektorowej</span>
-                <span className="font-mono text-amber-400 font-bold">
-                  {(props.lowPolyMeshIntensity * 100).toFixed(0)}%
-                </span>
-              </div>
-              <input
-                type="range"
-                min={0}
-                max={1}
-                step={0.05}
-                value={props.lowPolyMeshIntensity}
-                onChange={(e) => updateProp("lowPolyMeshIntensity", Number(e.target.value))}
-                className="w-full h-1.5 bg-zinc-800 rounded-lg cursor-pointer"
-              />
-            </div>
-
-            {/* Floating polygons toggle */}
-            <div className="pt-2 border-t border-white/5 flex items-center justify-between">
+            {/* Floating figures toggle */}
+            <div className="flex items-center justify-between">
               <div>
                 <span className="text-xs text-white font-medium block">
-                  Pływające Wielokąty (Low-Poly Dust)
+                  Pływające Figury (Wielokąty / Kryształy)
                 </span>
                 <span className="text-[10px] text-zinc-500">
-                  Geometryczne drobiny unoszące się w tle
+                  Geometryczne drobiny za oknem (domyślnie wyłączone)
                 </span>
               </div>
               <button
@@ -522,14 +535,35 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
               </button>
             </div>
 
-            {/* Scanlines CRT */}
+            {/* Mesh intensity */}
+            {!props.transparentBackground && (
+              <div className="space-y-1.5 pt-2 border-t border-white/5">
+                <div className="flex justify-between items-center text-[11px] text-zinc-300">
+                  <span>Intensywność Siatki Wektorowej</span>
+                  <span className="font-mono text-amber-400 font-bold">
+                    {(props.lowPolyMeshIntensity * 100).toFixed(0)}%
+                  </span>
+                </div>
+                <input
+                  type="range"
+                  min={0}
+                  max={1}
+                  step={0.05}
+                  value={props.lowPolyMeshIntensity}
+                  onChange={(e) => updateProp("lowPolyMeshIntensity", Number(e.target.value))}
+                  className="w-full h-1.5 bg-zinc-800 rounded-lg cursor-pointer"
+                />
+              </div>
+            )}
+
+            {/* Scanlines CRT (Inside window) */}
             <div className="pt-2 border-t border-white/5 flex items-center justify-between">
               <div>
                 <span className="text-xs text-white font-medium block">
-                  Linie Skanowania CRT (Scanlines)
+                  Linie Skanowania CRT (Wewnątrz Okna)
                 </span>
                 <span className="text-[10px] text-zinc-500">
-                  Analogowa tekstura monitora retro
+                  Analogowa tekstura monitora na postach
                 </span>
               </div>
               <button

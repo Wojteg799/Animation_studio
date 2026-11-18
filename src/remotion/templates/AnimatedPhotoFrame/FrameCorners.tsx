@@ -117,3 +117,4 @@ export const FrameCorners: React.FC<FrameCornersProps> = ({
     </div>
   );
 };
+

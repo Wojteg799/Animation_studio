@@ -79,3 +79,4 @@ export const defaultAnimatedPhotoFrameProps: AnimatedPhotoFrameProps = {
   backgroundType: "transparent",
   durationInFrames: 240, // 8s @ 30fps
 };
+

@@ -407,3 +407,4 @@ export const AnimatedPhotoFrame: React.FC<AnimatedPhotoFrameProps> = ({
     </div>
   );
 };
+

@@ -51,15 +51,16 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
   scrollDistance = 420,
   highlightPostIndex = 1,
 
+  transparentBackground = true,
   enable3DTilt = true,
   tiltAngleX = 11,
   tiltAngleY = -7,
   tiltAngleZ = 1,
   depthPerspective = 1300,
-  lowPolyMeshIntensity = 0.7,
-  showFloatingPolygons = true,
+  lowPolyMeshIntensity = 0,
+  showFloatingPolygons = false,
   colorTheme = "dark-graphite",
-  showScanlines = true,
+  showScanlines = false,
 }) => {
   const frame = useCurrentFrame();
   const { width, height } = useVideoConfig();
@@ -74,15 +75,17 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
     return t * scrollDistance;
   }, [enableScroll, frame, scrollStartFrame, scrollDuration, scrollDistance]);
 
-  // Low-poly background mesh
+  // Low-poly background mesh (computed only if opaque and enabled)
   const meshTriangles = useMemo(() => {
+    if (transparentBackground || lowPolyMeshIntensity <= 0) return [];
     return generateLowPolyMesh(width, height, 7, 9, "#38bdf8");
-  }, [width, height]);
+  }, [transparentBackground, lowPolyMeshIntensity, width, height]);
 
-  // Floating polygon facets
+  // Floating polygon facets (computed only if enabled)
   const floatingPolys = useMemo(() => {
+    if (!showFloatingPolygons) return [];
     return generateFloatingPolygons(16);
-  }, []);
+  }, [showFloatingPolygons]);
 
   // Theme colors
   const themeColors = useMemo(() => {
@@ -133,14 +136,14 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
         height: "100%",
         position: "relative",
         overflow: "hidden",
-        backgroundColor: themeColors.bg,
+        backgroundColor: transparentBackground ? "transparent" : themeColors.bg,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
       }}
     >
-      {/* 1. LOW-POLY BACKGROUND MESH */}
-      {lowPolyMeshIntensity > 0 && (
+      {/* 1. LOW-POLY BACKGROUND MESH (Only when opaque background and mesh intensity > 0) */}
+      {!transparentBackground && lowPolyMeshIntensity > 0 && meshTriangles.length > 0 && (
         <svg
           width={width}
           height={height}
@@ -165,7 +168,7 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
       )}
 
       {/* 2. FLOATING LOW-POLY GEOMETRIC POLYGONS */}
-      {showFloatingPolygons && (
+      {showFloatingPolygons && floatingPolys.length > 0 && (
         <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
           {floatingPolys.map((poly) => {
             const curY = (poly.y - (frame * poly.driftSpeedY * 0.4) + 120) % 120 - 10;
@@ -199,7 +202,7 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
         </div>
       )}
 
-      {/* 3. MAIN FORUM WINDOW (3D LOW-POLY TILTED PLANE) */}
+      {/* 3. MAIN FORUM WINDOW (3D LOW-POLY TILTED PLANE / KWADRAT FORUM) */}
       <div
         style={{
           width: "1160px",
@@ -207,9 +210,9 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
           transform: windowTransform,
           transformStyle: "preserve-3d",
           borderRadius: "14px",
-          border: `1.5px solid rgba(255, 255, 255, 0.12)`,
-          boxShadow: `0 25px 60px rgba(0, 0, 0, 0.9), 0 0 40px ${themeColors.glow}`,
-          backgroundColor: "rgba(10, 12, 18, 0.9)",
+          border: `1.5px solid rgba(255, 255, 255, 0.15)`,
+          boxShadow: `0 25px 65px rgba(0, 0, 0, 0.92), 0 0 35px ${themeColors.glow}`,
+          backgroundColor: "rgba(10, 12, 18, 0.96)",
           backdropFilter: "blur(12px)",
           display: "flex",
           flexDirection: "column",
@@ -218,6 +221,21 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
           zIndex: 10,
         }}
       >
+        {/* CRT Scanlines Overlay (Inside window only, does not affect alpha outside!) */}
+        {showScanlines && (
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              backgroundImage:
+                "linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%)",
+              backgroundSize: "100% 4px",
+              pointerEvents: "none",
+              opacity: 0.35,
+              zIndex: 30,
+            }}
+          />
+        )}
         {/* Forum Window Top Navigation Bar */}
         <div
           style={{
@@ -411,32 +429,18 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
         </div>
       </div>
 
-      {/* 4. CRT SCANLINES OVERLAY */}
-      {showScanlines && (
+      {/* 4. VIGNETTE (Only when opaque background is enabled) */}
+      {!transparentBackground && (
         <div
           style={{
             position: "absolute",
             inset: 0,
-            backgroundImage:
-              "linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%)",
-            backgroundSize: "100% 4px",
+            boxShadow: "inset 0 0 100px rgba(0, 0, 0, 0.8)",
             pointerEvents: "none",
-            opacity: 0.35,
-            zIndex: 30,
+            zIndex: 31,
           }}
         />
       )}
-
-      {/* 5. VIGNETTE */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          boxShadow: "inset 0 0 100px rgba(0, 0, 0, 0.8)",
-          pointerEvents: "none",
-          zIndex: 31,
-        }}
-      />
     </div>
   );
 };

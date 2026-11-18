@@ -69,18 +69,21 @@ export const MusicForumScrollSchema = z.object({
   scrollDistance: z.number().min(0).max(800).default(420),
   highlightPostIndex: z.number().min(0).max(4).default(1),
 
+  // Transparency & Background
+  transparentBackground: z.boolean().default(true),
+
   // Low Poly & 3D Perspective
   enable3DTilt: z.boolean().default(true),
   tiltAngleX: z.number().min(-25).max(25).default(11),
   tiltAngleY: z.number().min(-25).max(25).default(-7),
   tiltAngleZ: z.number().min(-10).max(10).default(1),
   depthPerspective: z.number().min(600).max(2400).default(1300),
-  lowPolyMeshIntensity: z.number().min(0).max(1).default(0.7),
-  showFloatingPolygons: z.boolean().default(true),
+  lowPolyMeshIntensity: z.number().min(0).max(1).default(0),
+  showFloatingPolygons: z.boolean().default(false),
   colorTheme: z
     .enum(["dark-graphite", "cyber-amber", "classic-blue", "vaporwave"])
     .default("dark-graphite"),
-  showScanlines: z.boolean().default(true),
+  showScanlines: z.boolean().default(false),
 
   // Video Duration
   durationInFrames: z.number().min(120).max(600).default(240),
@@ -133,15 +136,16 @@ export const defaultMusicForumScrollProps: MusicForumScrollProps = {
   scrollDistance: 420,
   highlightPostIndex: 1,
 
+  transparentBackground: true,
   enable3DTilt: true,
   tiltAngleX: 11,
   tiltAngleY: -7,
   tiltAngleZ: 1,
   depthPerspective: 1300,
-  lowPolyMeshIntensity: 0.7,
-  showFloatingPolygons: true,
+  lowPolyMeshIntensity: 0,
+  showFloatingPolygons: false,
   colorTheme: "dark-graphite",
-  showScanlines: true,
+  showScanlines: false,
 
   durationInFrames: 240, // 8s at 30fps
 };

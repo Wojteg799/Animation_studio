@@ -84,14 +84,14 @@ c:\Users\...\Animation_studio\
 4. KLUCZOWE SZABLONY I ICH LOGIKA (KEY TEMPLATES)
 --------------------------------------------------------------------------------
 
-0A. Muzyczne Forum 3D Low-Poly (id: "music-forum-scroll")
+0A. Muzyczne Forum 3D (id: "music-forum-scroll")
    - Koncepcja: Płynnie przewijany wątek muzycznego forum dyskusyjnego (retro/lostwave)
-     zawieszony w trójwymiarowej przestrzeni low-poly z kątem perspektywy (rotateX/rotateY).
-   - Elementy: Nagłówek okna, posty dyskusyjne (autor, ranga, faceted avatary low-poly, data),
-     załącznik audio z animowanym analizatorem widma (waveform bars) dla pliku z radiowej taśmy.
+     zawieszony w przestrzeni jako eleganckie, ciemne okno ("kwadrat") z opcjonalnym kątem 3D (rotateX/rotateY).
+   - Przezroczyste Tło (Alpha Channel): Domyślnie 100% przezroczyste tło wokół okna forum, bez rozpraszających figur/wielokątów,
+     zaprojektowane do bezpośredniego nałożenia na film w DaVinci / Premiere Pro (eksport ProRes 4444 Alpha).
+   - Elementy Okna: Pasek nawigacyjny okna z przyciskami, nagłówek wątku, posty dyskusyjne (autor, ranga, avatary, data),
+     załącznik audio z animowanym analizatorem widma (waveform bars) dla pliku z taśmy radiowej.
    - Płynny Scroll: Kontrolowany dystans, start i czas trwania przewijania symulujący czytanie wątku.
-   - Estetyka Low-Poly: Wektorowa siatka triangulacyjna w tle, unoszące się obracające wielokąty (kryształy/diamenty),
-     opcjonalne linie skanowania CRT i winieta noir.
    - Pliki: ForumPostCard.tsx, lowpoly-mesh.ts, schema.ts, index.tsx, MusicForumControls.tsx.
 
 0B. Studio Postaci & Relacji (id: "character-stage")

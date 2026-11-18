@@ -653,3 +653,4 @@ export const PhotoFrameControls: React.FC<PhotoFrameControlsProps> = ({
     </div>
   );
 };
+
