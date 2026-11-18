@@ -17,6 +17,7 @@ import {
 import {
   MusicForumScrollProps,
   defaultMusicForumScrollProps,
+  defaultMusicForum2007XPProps,
 } from "../remotion/templates/MusicForumScroll/schema";
 import {
   JoyDivisionCassetteMorphProps,
@@ -106,6 +107,10 @@ export default function StudioPage() {
         setDurationFrames(240); // 8 seconds @ 30fps
       } else if (templateId === "music-forum-scroll") {
         setDurationFrames(240); // 8 seconds @ 30fps
+        setMusicForumProps((prev) => ({ ...prev, forumThemeVariant: "modern-dark" }));
+      } else if (templateId === "music-forum-2007-xp") {
+        setDurationFrames(240); // 8 seconds @ 30fps
+        setMusicForumProps((prev) => ({ ...prev, forumThemeVariant: "retro-xp-2007" }));
       } else if (templateId === "character-stage") {
         setDurationFrames(240); // 8 seconds @ 30fps
       } else if (templateId === "joy-division-cassette-morph") {
@@ -274,6 +279,13 @@ export default function StudioPage() {
             ...defaultAnimatedPhotoFrameProps,
             ...photoFrameProps,
           };
+        } else if (selectedTemplateId === "music-forum-2007-xp") {
+          compositionId = "MusicForum2007XP";
+          inputProps = {
+            ...defaultMusicForum2007XPProps,
+            ...musicForumProps,
+            forumThemeVariant: "retro-xp-2007",
+          };
         } else if (selectedTemplateId === "music-forum-scroll") {
           compositionId = "MusicForumScroll";
           inputProps = {
@@ -345,9 +357,10 @@ export default function StudioPage() {
       const activeProps =
         selectedTemplateId === "animated-photo-frame"
           ? photoFrameProps
-          : selectedTemplateId === "music-forum-scroll"
+          : selectedTemplateId === "music-forum-scroll" ||
+            selectedTemplateId === "music-forum-2007-xp"
           ? musicForumProps
-        : selectedTemplateId === "character-stage"
+          : selectedTemplateId === "character-stage"
         ? characterStageProps
         : selectedTemplateId === "joy-division-cassette-morph"
           ? joyDivisionProps

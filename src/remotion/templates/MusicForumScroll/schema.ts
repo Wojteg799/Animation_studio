@@ -1,6 +1,20 @@
 import { z } from "zod";
 
 export const MusicForumScrollSchema = z.object({
+  // Forum Style Variant (Modern Dark vs Retro 2007 Windows XP)
+  forumThemeVariant: z
+    .enum(["modern-dark", "retro-xp-2007"])
+    .default("modern-dark"),
+  xpWindowTitle: z
+    .string()
+    .default("LOSTWAVE.ARCHIVE - Forum Muzyczne 1984 - Microsoft Internet Explorer"),
+  xpUrl: z
+    .string()
+    .default("http://forum.lostwave-archive.pl/viewtopic.php?t=1984"),
+  signatureText: z
+    .string()
+    .default('Lostwave Archivist 2007 | "Taśmy z radia nigdy nie kłamią" // Yamaha DX7'),
+
   // Forum Header Information
   forumTitle: z.string().default("LOSTWAVE.ARCHIVE // MUZYCZNE FORUM DYSKUSYJNE"),
   threadTitle: z
@@ -147,6 +161,36 @@ export const defaultMusicForumScrollProps: MusicForumScrollProps = {
   colorTheme: "dark-graphite",
   showScanlines: false,
 
+  forumThemeVariant: "modern-dark",
+  xpWindowTitle:
+    "LOSTWAVE.ARCHIVE - Forum Muzyczne 1984 - Microsoft Internet Explorer",
+  xpUrl: "http://forum.lostwave-archive.pl/viewtopic.php?t=1984",
+  signatureText:
+    'Lostwave Archivist 2007 | "Taśmy z radia nigdy nie kłamią" // Yamaha DX7',
+
   durationInFrames: 240, // 8s at 30fps
+};
+
+export const defaultMusicForum2007XPProps: MusicForumScrollProps = {
+  ...defaultMusicForumScrollProps,
+  forumThemeVariant: "retro-xp-2007",
+  forumTitle: "LOSTWAVE-FORUM.PL // POLSKIE ARCHIWUM KASETOWE",
+  threadTitle: "Tajemnicza piosenka z radia NDR (1984) - poszukiwanie wykonawcy",
+  threadCategory: "GŁÓWNA DYSKUSJA / IDENTYFIKACJA UTWORÓW Z LAT 80.",
+  threadDate: "Wysłany: Niedziela, 14 Paź 2007, 21:40 • 142 odpowiedzi",
+  xpWindowTitle:
+    "LOSTWAVE.ARCHIVE - Forum Muzyczne 1984 - Microsoft Internet Explorer",
+  xpUrl: "http://forum.lostwave-archive.pl/viewtopic.php?t=1984",
+  signatureText:
+    'Lostwave Archivist 2007 | "Taśmy z radia nigdy nie kłamią" // Yamaha DX7',
+  transparentBackground: true,
+  enable3DTilt: true,
+  tiltAngleX: 7,
+  tiltAngleY: -5,
+  tiltAngleZ: 0.5,
+  depthPerspective: 1350,
+  lowPolyMeshIntensity: 0,
+  showFloatingPolygons: false,
+  showScanlines: false,
 };
 

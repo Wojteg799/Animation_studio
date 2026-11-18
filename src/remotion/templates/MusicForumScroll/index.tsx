@@ -2,6 +2,8 @@ import React, { useMemo } from "react";
 import { useCurrentFrame, useVideoConfig } from "remotion";
 import { MusicForumScrollProps } from "./schema";
 import { ForumPostCard } from "./ForumPostCard";
+import { ForumPostCard2007 } from "./ForumPostCard2007";
+import { WindowsXPChrome } from "./WindowsXPChrome";
 import { generateLowPolyMesh, generateFloatingPolygons } from "./lowpoly-mesh";
 import { MessageSquare, Disc, Radio, Search, ChevronRight, Hash } from "lucide-react";
 
@@ -61,9 +63,15 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
   showFloatingPolygons = false,
   colorTheme = "dark-graphite",
   showScanlines = false,
+
+  forumThemeVariant = "modern-dark",
+  xpWindowTitle = "LOSTWAVE.ARCHIVE - Forum Muzyczne 1984 - Microsoft Internet Explorer",
+  xpUrl = "http://forum.lostwave-archive.pl/viewtopic.php?t=1984",
+  signatureText = 'Lostwave Archivist 2007 | "Taśmy z radia nigdy nie kłamią" // Yamaha DX7',
 }) => {
   const frame = useCurrentFrame();
   const { width, height } = useVideoConfig();
+  const isXP = forumThemeVariant === "retro-xp-2007";
 
   // Scroll offset calculation
   const scrollOffset = useMemo(() => {
@@ -209,11 +217,12 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
           height: "760px",
           transform: windowTransform,
           transformStyle: "preserve-3d",
-          borderRadius: "14px",
-          border: `1.5px solid rgba(255, 255, 255, 0.15)`,
-          boxShadow: `0 25px 65px rgba(0, 0, 0, 0.92), 0 0 35px ${themeColors.glow}`,
-          backgroundColor: "rgba(10, 12, 18, 0.96)",
-          backdropFilter: "blur(12px)",
+          borderRadius: isXP ? "8px" : "14px",
+          border: isXP ? "3px solid #0055ea" : "1.5px solid rgba(255, 255, 255, 0.15)",
+          boxShadow: isXP
+            ? "0 25px 70px rgba(0, 0, 0, 0.85), 0 0 35px rgba(0, 85, 234, 0.25)"
+            : `0 25px 65px rgba(0, 0, 0, 0.92), 0 0 35px ${themeColors.glow}`,
+          backgroundColor: isXP ? "#ffffff" : "rgba(10, 12, 18, 0.96)",
           display: "flex",
           flexDirection: "column",
           overflow: "hidden",
@@ -236,110 +245,256 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
             }}
           />
         )}
-        {/* Forum Window Top Navigation Bar */}
-        <div
-          style={{
-            height: "44px",
-            backgroundColor: themeColors.headerBg,
-            borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
-            padding: "0 18px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            flexShrink: 0,
-            zIndex: 20,
-          }}
-        >
-          {/* Low-poly Window Controls (dots) */}
-          <div style={{ display: "flex", alignItems: "center", gap: "7px" }}>
-            <div style={{ width: "10px", height: "10px", borderRadius: "2px", backgroundColor: "#ef4444" }} />
-            <div style={{ width: "10px", height: "10px", borderRadius: "2px", backgroundColor: "#eab308" }} />
-            <div style={{ width: "10px", height: "10px", borderRadius: "2px", backgroundColor: "#10b981" }} />
-            <span
+
+        {isXP ? (
+          /* ================= WINDOWS XP CHROME & 2007 phpBB HEADER ================= */
+          <>
+            <WindowsXPChrome title={xpWindowTitle} url={xpUrl} />
+
+            {/* phpBB 2007 Top Header Banner */}
+            <div
               style={{
-                marginLeft: "12px",
-                fontSize: "11px",
-                fontFamily: "monospace",
-                fontWeight: "700",
-                color: "#e2e8f0",
-                letterSpacing: "0.5px",
+                background: "linear-gradient(180deg, #0284c7 0%, #0369a1 100%)",
+                padding: "8px 16px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                borderBottom: "1px solid #075985",
+                flexShrink: 0,
               }}
             >
-              {forumTitle}
-            </span>
-          </div>
+              <div>
+                <span
+                  style={{
+                    fontFamily: "Verdana, Tahoma, sans-serif",
+                    fontSize: "13px",
+                    fontWeight: 800,
+                    color: "#ffffff",
+                    letterSpacing: "0.5px",
+                    textShadow: "1px 1px 2px rgba(0,0,0,0.6)",
+                  }}
+                >
+                  {forumTitle}
+                </span>
+                <span
+                  style={{
+                    display: "block",
+                    fontFamily: "Tahoma, sans-serif",
+                    fontSize: "9px",
+                    color: "#e0f2fe",
+                    marginTop: "1px",
+                  }}
+                >
+                  Największe polskie archiwum zagadek radiowych i kasetowych z lat 80.
+                </span>
+              </div>
 
-          {/* Breadcrumb path */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "6px",
-              fontSize: "10px",
-              fontFamily: "monospace",
-              color: "#64748b",
-            }}
-          >
-            <span>FORA</span>
-            <ChevronRight className="w-3 h-3" />
-            <span style={{ color: themeColors.accent }}>LOSTWAVE</span>
-            <ChevronRight className="w-3 h-3" />
-            <span style={{ color: "#94a3b8" }}>ID: #8492</span>
-          </div>
-        </div>
+              {/* phpBB Nav Links */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+                  fontFamily: "Tahoma, sans-serif",
+                  fontSize: "10px",
+                  color: "#ffffff",
+                }}
+              >
+                <span style={{ textDecoration: "underline", cursor: "pointer" }}>[FAQ]</span>
+                <span style={{ textDecoration: "underline", cursor: "pointer" }}>[Szukaj]</span>
+                <span style={{ textDecoration: "underline", cursor: "pointer" }}>[Użytkownicy]</span>
+                <span style={{ textDecoration: "underline", cursor: "pointer" }}>[Grupy]</span>
+                <span style={{ textDecoration: "underline", cursor: "pointer" }}>[Zaloguj]</span>
+              </div>
+            </div>
 
-        {/* Thread Header Banner */}
-        <div
-          style={{
-            padding: "16px 24px",
-            backgroundColor: "rgba(15, 18, 28, 0.8)",
-            borderBottom: "1px solid rgba(255, 255, 255, 0.06)",
-            flexShrink: 0,
-            zIndex: 15,
-          }}
-        >
-          <div
-            style={{
-              fontSize: "10px",
-              fontFamily: "monospace",
-              fontWeight: "700",
-              color: themeColors.accent,
-              textTransform: "uppercase",
-              letterSpacing: "1px",
-              marginBottom: "4px",
-              display: "flex",
-              alignItems: "center",
-              gap: "6px",
-            }}
-          >
-            <Hash className="w-3 h-3" />
-            <span>{threadCategory}</span>
-          </div>
+            {/* Thread Navigation & Action Bar */}
+            <div
+              style={{
+                backgroundColor: "#eef2f8",
+                borderBottom: "1px solid #b0c4de",
+                padding: "6px 16px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                flexShrink: 0,
+              }}
+            >
+              <div
+                style={{
+                  fontFamily: "Tahoma, sans-serif",
+                  fontSize: "10px",
+                  color: "#475569",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "4px",
+                }}
+              >
+                <span style={{ color: "#0055aa", fontWeight: 600 }}>Strona Główna</span>
+                <span>»</span>
+                <span>{threadCategory}</span>
+              </div>
 
-          <h1
-            style={{
-              fontSize: "18px",
-              fontWeight: "800",
-              fontFamily: "system-ui, -apple-system, sans-serif",
-              color: "#ffffff",
-              margin: 0,
-              lineHeight: 1.3,
-            }}
-          >
-            {threadTitle}
-          </h1>
+              {/* Action buttons */}
+              <div style={{ display: "flex", gap: "6px" }}>
+                <div
+                  style={{
+                    background: "linear-gradient(180deg, #38bdf8 0%, #0284c7 100%)",
+                    border: "1px solid #0369a1",
+                    borderRadius: "3px",
+                    padding: "2px 8px",
+                    fontSize: "9px",
+                    fontWeight: 700,
+                    color: "#ffffff",
+                    textShadow: "0 1px 1px rgba(0,0,0,0.4)",
+                  }}
+                >
+                  + NOWY TEMAT
+                </div>
+                <div
+                  style={{
+                    background: "linear-gradient(180deg, #38bdf8 0%, #0284c7 100%)",
+                    border: "1px solid #0369a1",
+                    borderRadius: "3px",
+                    padding: "2px 8px",
+                    fontSize: "9px",
+                    fontWeight: 700,
+                    color: "#ffffff",
+                    textShadow: "0 1px 1px rgba(0,0,0,0.4)",
+                  }}
+                >
+                  ODPOWIEDZ
+                </div>
+              </div>
+            </div>
 
-          <div
-            style={{
-              marginTop: "6px",
-              fontSize: "11px",
-              color: "#64748b",
-              fontFamily: "monospace",
-            }}
-          >
-            {threadDate}
-          </div>
-        </div>
+            {/* Table Header: Autor | Wiadomość */}
+            <div
+              style={{
+                backgroundColor: "#006699",
+                color: "#ffffff",
+                padding: "5px 16px",
+                display: "flex",
+                fontFamily: "Tahoma, sans-serif",
+                fontSize: "11px",
+                fontWeight: 700,
+                borderBottom: "1px solid #004d73",
+                flexShrink: 0,
+              }}
+            >
+              <span style={{ width: "200px" }}>Autor</span>
+              <span>Wiadomość</span>
+            </div>
+          </>
+        ) : (
+          /* ================= MODERN DARK NOIR FORUM HEADER ================= */
+          <>
+            {/* Forum Window Top Navigation Bar */}
+            <div
+              style={{
+                height: "44px",
+                backgroundColor: themeColors.headerBg,
+                borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
+                padding: "0 18px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                flexShrink: 0,
+                zIndex: 20,
+              }}
+            >
+              {/* Low-poly Window Controls (dots) */}
+              <div style={{ display: "flex", alignItems: "center", gap: "7px" }}>
+                <div style={{ width: "10px", height: "10px", borderRadius: "2px", backgroundColor: "#ef4444" }} />
+                <div style={{ width: "10px", height: "10px", borderRadius: "2px", backgroundColor: "#eab308" }} />
+                <div style={{ width: "10px", height: "10px", borderRadius: "2px", backgroundColor: "#10b981" }} />
+                <span
+                  style={{
+                    marginLeft: "12px",
+                    fontSize: "11px",
+                    fontFamily: "monospace",
+                    fontWeight: "700",
+                    color: "#e2e8f0",
+                    letterSpacing: "0.5px",
+                  }}
+                >
+                  {forumTitle}
+                </span>
+              </div>
+
+              {/* Breadcrumb path */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  fontSize: "10px",
+                  fontFamily: "monospace",
+                  color: "#64748b",
+                }}
+              >
+                <span>FORA</span>
+                <ChevronRight className="w-3 h-3" />
+                <span style={{ color: themeColors.accent }}>LOSTWAVE</span>
+                <ChevronRight className="w-3 h-3" />
+                <span style={{ color: "#94a3b8" }}>ID: #8492</span>
+              </div>
+            </div>
+
+            {/* Thread Header Banner */}
+            <div
+              style={{
+                padding: "16px 24px",
+                backgroundColor: "rgba(15, 18, 28, 0.8)",
+                borderBottom: "1px solid rgba(255, 255, 255, 0.06)",
+                flexShrink: 0,
+                zIndex: 15,
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "10px",
+                  fontFamily: "monospace",
+                  fontWeight: "700",
+                  color: themeColors.accent,
+                  textTransform: "uppercase",
+                  letterSpacing: "1px",
+                  marginBottom: "4px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                }}
+              >
+                <Hash className="w-3 h-3" />
+                <span>{threadCategory}</span>
+              </div>
+
+              <h1
+                style={{
+                  fontSize: "18px",
+                  fontWeight: "800",
+                  fontFamily: "system-ui, -apple-system, sans-serif",
+                  color: "#ffffff",
+                  margin: 0,
+                  lineHeight: 1.3,
+                }}
+              >
+                {threadTitle}
+              </h1>
+
+              <div
+                style={{
+                  marginTop: "6px",
+                  fontSize: "11px",
+                  color: "#64748b",
+                  fontFamily: "monospace",
+                }}
+              >
+                {threadDate}
+              </div>
+            </div>
+          </>
+        )}
 
         {/* SCROLLING POSTS CONTAINER */}
         <div
@@ -347,7 +502,8 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
             flex: 1,
             position: "relative",
             overflow: "hidden",
-            padding: "20px 24px 80px",
+            padding: isXP ? "12px 16px 80px" : "20px 24px 80px",
+            backgroundColor: isXP ? "#f4f6fa" : "transparent",
           }}
         >
           {/* Inner animated scroll plane */}
@@ -356,62 +512,127 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
               transform: `translateY(-${scrollOffset}px)`,
               display: "flex",
               flexDirection: "column",
-              gap: "16px",
+              gap: isXP ? "8px" : "16px",
               willChange: "transform",
             }}
           >
-            {/* POST 1 (OP) */}
-            <ForumPostCard
-              postNumber={1}
-              author={post1_author}
-              role={post1_role}
-              date={post1_date}
-              content={post1_content}
-              hasAudio={post1_hasAudio}
-              audioFile={post1_audioFile}
-              avatarColor={post1_avatarColor}
-              isHighlighted={highlightPostIndex === 1}
-              frame={frame}
-            />
+            {isXP ? (
+              <>
+                {/* 2007 phpBB POST 1 (OP) */}
+                <ForumPostCard2007
+                  postNumber={1}
+                  author={post1_author}
+                  role={post1_role}
+                  date={post1_date}
+                  content={post1_content}
+                  hasAudio={post1_hasAudio}
+                  audioFile={post1_audioFile}
+                  avatarColor={post1_avatarColor}
+                  signature={signatureText}
+                  isHighlighted={highlightPostIndex === 1}
+                  frame={frame}
+                />
 
-            {/* POST 2 */}
-            <ForumPostCard
-              postNumber={2}
-              author={post2_author}
-              role={post2_role}
-              date={post2_date}
-              content={post2_content}
-              hasAudio={post2_hasAudio}
-              avatarColor={post2_avatarColor}
-              isHighlighted={highlightPostIndex === 2}
-              frame={frame}
-            />
+                {/* 2007 phpBB POST 2 */}
+                <ForumPostCard2007
+                  postNumber={2}
+                  author={post2_author}
+                  role={post2_role}
+                  date={post2_date}
+                  content={post2_content}
+                  hasAudio={post2_hasAudio}
+                  avatarColor={post2_avatarColor}
+                  quoteAuthor={post1_author}
+                  quoteContent="Znalazłem starą kasetę z nagraniem z niemieckiego radia NDR (ok. 1984)..."
+                  signature='synth_seeker | "Yamaha DX7 to król lat 80."'
+                  isHighlighted={highlightPostIndex === 2}
+                  frame={frame}
+                />
 
-            {/* POST 3 */}
-            <ForumPostCard
-              postNumber={3}
-              author={post3_author}
-              role={post3_role}
-              date={post3_date}
-              content={post3_content}
-              hasAudio={post3_hasAudio}
-              avatarColor={post3_avatarColor}
-              isHighlighted={highlightPostIndex === 3}
-              frame={frame}
-            />
+                {/* 2007 phpBB POST 3 */}
+                <ForumPostCard2007
+                  postNumber={3}
+                  author={post3_author}
+                  role={post3_role}
+                  date={post3_date}
+                  content={post3_content}
+                  hasAudio={post3_hasAudio}
+                  avatarColor={post3_avatarColor}
+                  signature='vinyl_hunter_99 | "Winyle nigdy nie umierają."'
+                  isHighlighted={highlightPostIndex === 3}
+                  frame={frame}
+                />
 
-            {/* POST 4 */}
-            <ForumPostCard
-              postNumber={4}
-              author={post4_author}
-              role={post4_role}
-              date={post4_date}
-              content={post4_content}
-              hasAudio={post4_hasAudio}
-              avatarColor={post4_avatarColor}
-              isHighlighted={highlightPostIndex === 4}
-              frame={frame}
-            />
+                {/* 2007 phpBB POST 4 */}
+                <ForumPostCard2007
+                  postNumber={4}
+                  author={post4_author}
+                  role={post4_role}
+                  date={post4_date}
+                  content={post4_content}
+                  hasAudio={post4_hasAudio}
+                  avatarColor={post4_avatarColor}
+                  signature="[!] Moderator Forum :: Regulamin obowiązuje każdego użytkownika."
+                  isHighlighted={highlightPostIndex === 4}
+                  frame={frame}
+                />
+              </>
+            ) : (
+              <>
+                {/* MODERN NOIR POST 1 (OP) */}
+                <ForumPostCard
+                  postNumber={1}
+                  author={post1_author}
+                  role={post1_role}
+                  date={post1_date}
+                  content={post1_content}
+                  hasAudio={post1_hasAudio}
+                  audioFile={post1_audioFile}
+                  avatarColor={post1_avatarColor}
+                  isHighlighted={highlightPostIndex === 1}
+                  frame={frame}
+                />
+
+                {/* MODERN NOIR POST 2 */}
+                <ForumPostCard
+                  postNumber={2}
+                  author={post2_author}
+                  role={post2_role}
+                  date={post2_date}
+                  content={post2_content}
+                  hasAudio={post2_hasAudio}
+                  avatarColor={post2_avatarColor}
+                  isHighlighted={highlightPostIndex === 2}
+                  frame={frame}
+                />
+
+                {/* MODERN NOIR POST 3 */}
+                <ForumPostCard
+                  postNumber={3}
+                  author={post3_author}
+                  role={post3_role}
+                  date={post3_date}
+                  content={post3_content}
+                  hasAudio={post3_hasAudio}
+                  avatarColor={post3_avatarColor}
+                  isHighlighted={highlightPostIndex === 3}
+                  frame={frame}
+                />
+
+                {/* MODERN NOIR POST 4 */}
+                <ForumPostCard
+                  postNumber={4}
+                  author={post4_author}
+                  role={post4_role}
+                  date={post4_date}
+                  content={post4_content}
+                  hasAudio={post4_hasAudio}
+                  avatarColor={post4_avatarColor}
+                  isHighlighted={highlightPostIndex === 4}
+                  frame={frame}
+                />
+              </>
+            )}
           </div>
 
           {/* Bottom fade shadow for smooth edge scrolling */}
@@ -422,7 +643,9 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
               left: 0,
               right: 0,
               height: "70px",
-              background: "linear-gradient(to top, rgba(10, 12, 18, 0.95), transparent)",
+              background: isXP
+                ? "linear-gradient(to top, rgba(244, 246, 250, 0.95), transparent)"
+                : "linear-gradient(to top, rgba(10, 12, 18, 0.95), transparent)",
               pointerEvents: "none",
             }}
           />

@@ -7,6 +7,7 @@ import { MusicForumScroll } from "./MusicForumScroll";
 import {
   MusicForumScrollProps,
   defaultMusicForumScrollProps,
+  defaultMusicForum2007XPProps,
 } from "./MusicForumScroll/schema";
 import { AnimatedPhotoFrame } from "./AnimatedPhotoFrame";
 import {
@@ -69,16 +70,29 @@ export interface TemplateDefinition {
 }
 
 export const TEMPLATES: TemplateDefinition[] = [
-  // 0A. MUZYCZNE FORUM: PRZEWIJANIE 3D LOW-POLY
+  // 0A-1. MUZYCZNE FORUM: NOIR DARK
   {
     id: "music-forum-scroll",
-    name: "Muzyczne Forum: Przewijanie 3D Low-Poly",
+    name: "Muzyczne Forum: Noir Dark (3D)",
     category: "Archiwa & Fora (Forums)",
-    description: "Klimatyczne muzyczne forum internetowe w stylu retro/lostwave z płynnym przewijaniem postów, kątem 3D low-poly, siatką wektorową w tle i załącznikami audio.",
+    description: "Ciemne, klimatyczne forum internetowe z płynnym przewijaniem postów, kątem 3D, przezroczystym tłem do montażu i odtwarzaczem audio.",
     component: MusicForumScroll,
     defaultProps: defaultMusicForumScrollProps,
     defaultDurationInFrames: 240, // 8 seconds at 30fps
-    tags: ["Forum", "Muzyka", "Lostwave", "Low Poly", "3D", "Przewijanie", "Dyskusja", "Tajemnica"],
+    tags: ["Forum", "Muzyka", "Lostwave", "3D", "Przewijanie", "Dyskusja", "Tajemnica"],
+    isBackground: false,
+  },
+
+  // 0A-2. RETRO FORUM 2007: WINDOWS XP & phpBB
+  {
+    id: "music-forum-2007-xp",
+    name: "Forum Muzyczne 2007: Windows XP / phpBB",
+    category: "Archiwa & Fora (Forums)",
+    description: "Nostalgiczne forum internetowe z 2007 roku w oknie Windows XP (Luna Blue, IE, styl phpBB by Przemo) z postami, avatarami, załącznikiem mp3 i płynnym scrollem.",
+    component: MusicForumScroll,
+    defaultProps: defaultMusicForum2007XPProps,
+    defaultDurationInFrames: 240, // 8 seconds at 30fps
+    tags: ["2007", "Windows XP", "phpBB", "Forum", "Nostalgia", "Internet Explorer", "Alpha"],
     isBackground: false,
   },
 

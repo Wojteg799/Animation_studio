@@ -47,6 +47,60 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
 
   return (
     <div className="space-y-4">
+      {/* Forum Style Switcher: Modern Dark vs 2007 Windows XP */}
+      <div className="bg-[#12121a] p-3 rounded-xl border border-white/10 space-y-2">
+        <div className="flex items-center justify-between">
+          <label className="text-[10px] font-mono text-zinc-400 uppercase tracking-wider font-bold">
+            Wersja Stylistyczna Forum:
+          </label>
+          <span
+            className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold border ${
+              props.forumThemeVariant === "retro-xp-2007"
+                ? "bg-blue-500/20 text-blue-300 border-blue-500/40"
+                : "bg-amber-500/20 text-amber-300 border-amber-500/40"
+            }`}
+          >
+            {props.forumThemeVariant === "retro-xp-2007" ? "2007 ROK CORE" : "NOIR DARK"}
+          </span>
+        </div>
+
+        <div className="grid grid-cols-2 gap-2">
+          {/* Option 1: Modern Dark */}
+          <button
+            type="button"
+            onClick={() => updateProp("forumThemeVariant", "modern-dark")}
+            className={`p-2.5 rounded-lg border text-left transition-all flex flex-col gap-1 ${
+              props.forumThemeVariant !== "retro-xp-2007"
+                ? "bg-amber-500/20 border-amber-500/80 text-amber-300 font-bold shadow"
+                : "bg-[#181824] border-white/5 text-zinc-400 hover:text-white"
+            }`}
+          >
+            <span className="text-[11px] font-bold leading-tight">1. Nowoczesny Noir</span>
+            <span className="text-[9px] text-zinc-400 font-normal">
+              Ciemny motyw dossier, minimalizm, akcenty neonowe
+            </span>
+          </button>
+
+          {/* Option 2: Retro 2007 XP */}
+          <button
+            type="button"
+            onClick={() => updateProp("forumThemeVariant", "retro-xp-2007")}
+            className={`p-2.5 rounded-lg border text-left transition-all flex flex-col gap-1 ${
+              props.forumThemeVariant === "retro-xp-2007"
+                ? "bg-blue-600/25 border-blue-500 text-blue-300 font-bold shadow"
+                : "bg-[#181824] border-white/5 text-zinc-400 hover:text-white"
+            }`}
+          >
+            <span className="text-[11px] font-bold text-blue-300 leading-tight">
+              2. Retro 2007 (XP)
+            </span>
+            <span className="text-[9px] text-zinc-400 font-normal">
+              Windows XP Luna Blue, IE, phpBB by Przemo
+            </span>
+          </button>
+        </div>
+      </div>
+
       {/* Sub-tabs switcher */}
       <div className="grid grid-cols-4 gap-1 bg-[#15151f] p-1 rounded-xl border border-white/10 text-xs">
         <button
@@ -146,6 +200,49 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
                 className="w-full studio-input text-xs font-mono uppercase"
               />
             </div>
+
+            {props.forumThemeVariant === "retro-xp-2007" && (
+              <div className="pt-2 border-t border-white/5 space-y-3">
+                <span className="text-[10px] font-mono text-blue-400 uppercase font-bold block">
+                  Ustawienia Windows XP & 2007 Core:
+                </span>
+                <div>
+                  <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1">
+                    Tytuł Paska Windows XP:
+                  </label>
+                  <input
+                    type="text"
+                    value={props.xpWindowTitle}
+                    onChange={(e) => updateProp("xpWindowTitle", e.target.value)}
+                    className="w-full studio-input text-xs font-mono"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1">
+                    Adres Strony (Pasek URL):
+                  </label>
+                  <input
+                    type="text"
+                    value={props.xpUrl}
+                    onChange={(e) => updateProp("xpUrl", e.target.value)}
+                    className="w-full studio-input text-xs font-mono"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1">
+                    Sygnatura / Podpis Użytkownika:
+                  </label>
+                  <input
+                    type="text"
+                    value={props.signatureText}
+                    onChange={(e) => updateProp("signatureText", e.target.value)}
+                    className="w-full studio-input text-xs italic"
+                  />
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Posts Switcher (Post 1, Post 2, Post 3, Post 4) */}

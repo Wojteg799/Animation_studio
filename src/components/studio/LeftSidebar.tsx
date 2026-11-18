@@ -18,6 +18,7 @@ import {
   Shield,
   Disc,
   MessageSquare,
+  Tv,
 } from "lucide-react";
 import { AnimatedPhotoFrameProps } from "../../remotion/templates/AnimatedPhotoFrame/schema";
 import { PhotoFrameControls } from "./PhotoFrameControls";
@@ -125,7 +126,9 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
   const [activeOverlayTab, setActiveOverlayTab] = useState<OverlayTabType>("content");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const isForumCategory = selectedTemplateId === "music-forum-scroll";
+  const isForumCategory =
+    selectedTemplateId === "music-forum-scroll" ||
+    selectedTemplateId === "music-forum-2007-xp";
   const isCharacterCategory = selectedTemplateId === "character-stage";
 
   const isIntroCategory =
@@ -183,7 +186,9 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
             Wybór Sekcji & Szablonu
           </label>
           <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-amber-500/10 text-amber-300 border border-amber-500/30">
-            {isForumCategory
+            {selectedTemplateId === "music-forum-2007-xp"
+              ? "FORUM: 2007 XP"
+              : isForumCategory
               ? "SEKCJA: FORUM"
               : isCharacterCategory
               ? "SEKCJA: POSTACIE"
@@ -264,6 +269,49 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
             <span>Nakładki</span>
           </button>
         </div>
+
+        {/* When in Forum Category: 2-way version selector (Noir vs 2007 XP) */}
+        {isForumCategory && (
+          <div className="space-y-1.5 pt-1">
+            <div className="text-[10px] font-mono text-zinc-400 uppercase flex items-center justify-between">
+              <span>Wybór Wersji Forum:</span>
+              <span className="text-amber-400 font-bold">2 Wersje</span>
+            </div>
+            <div className="grid grid-cols-2 gap-1.5">
+              {/* Option 1: Modern Noir */}
+              <button
+                type="button"
+                onClick={() => onSelectTemplate("music-forum-scroll")}
+                className={`p-2 rounded-lg border text-center transition-all flex flex-col items-center gap-0.5 ${
+                  selectedTemplateId === "music-forum-scroll"
+                    ? "bg-amber-500/20 border-amber-500/70 shadow text-amber-300 font-bold"
+                    : "bg-[#181822] hover:bg-[#20202e] border-white/5 text-zinc-400 hover:text-white"
+                }`}
+                title="Wersja 1: Nowoczesne ciemne forum w stylu noir/dossier"
+              >
+                <MessageSquare className="w-3.5 h-3.5 text-amber-400" />
+                <span className="text-[10px] leading-tight font-bold">1. Noir Dark</span>
+                <span className="text-[8px] font-mono text-zinc-400">Dossier / 3D</span>
+              </button>
+
+              {/* Option 2: Retro 2007 Windows XP */}
+              <button
+                type="button"
+                onClick={() => onSelectTemplate("music-forum-2007-xp")}
+                className={`p-2 rounded-lg border text-center transition-all flex flex-col items-center gap-0.5 ${
+                  selectedTemplateId === "music-forum-2007-xp"
+                    ? "bg-blue-500/25 border-blue-500/80 shadow text-blue-300 font-bold"
+                    : "bg-[#181822] hover:bg-[#20202e] border-white/5 text-zinc-400 hover:text-white"
+                }`}
+                title="Wersja 2: Nostalgia 2007 core - okno Windows XP Luna Blue, IE, phpBB by Przemo"
+              >
+                <Tv className="w-3.5 h-3.5 text-blue-400" />
+                <span className="text-[10px] leading-tight font-bold text-blue-300">2. Retro 2007</span>
+                <span className="text-[8px] font-mono text-blue-400">Windows XP</span>
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* When in Intro Category: 2-way template selector */}
         {isIntroCategory && (
@@ -407,8 +455,8 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
       </div>
 
       {/* BODY CONTENT DEPENDING ON TEMPLATE TYPE */}
-      {selectedTemplateId === "music-forum-scroll" ? (
-        /* ================= 000. MUZYCZNE FORUM 3D LOW-POLY CONTROLS ================= */
+      {isForumCategory ? (
+        /* ================= 000. MUZYCZNE FORUM CONTROLS ================= */
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
           <MusicForumControls
             props={musicForumProps}

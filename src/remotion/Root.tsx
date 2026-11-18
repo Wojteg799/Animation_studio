@@ -14,6 +14,7 @@ import { MusicForumScroll } from "./templates/MusicForumScroll";
 import {
   MusicForumScrollProps,
   defaultMusicForumScrollProps,
+  defaultMusicForum2007XPProps,
 } from "./templates/MusicForumScroll/schema";
 import { JoyDivisionCassetteMorph } from "./templates/JoyDivisionCassetteMorph";
 import {
@@ -84,6 +85,45 @@ export const RemotionRoot: React.FC = () => {
         height={2160}
         defaultProps={{
           ...defaultMusicForumScrollProps,
+          depthPerspective: 2400,
+        }}
+      />
+
+      {/* 0A-2. SEKCJA: RETRO FORUM 2007 (WINDOWS XP / phpBB) */}
+      <Composition
+        id="MusicForum2007XP"
+        component={MusicForumScroll}
+        durationInFrames={240}
+        fps={30}
+        width={1920}
+        height={1080}
+        defaultProps={defaultMusicForum2007XPProps}
+        calculateMetadata={async ({ props }) => {
+          const customProps = props as MusicForumScrollProps & {
+            videoWidth?: number;
+            videoHeight?: number;
+            customFps?: number;
+            customDuration?: number;
+          };
+          return {
+            width: customProps.videoWidth || 1920,
+            height: customProps.videoHeight || 1080,
+            fps: customProps.customFps || 30,
+            durationInFrames: customProps.customDuration || 240,
+            props: customProps,
+          };
+        }}
+      />
+
+      <Composition
+        id="MusicForum2007XP-4K"
+        component={MusicForumScroll}
+        durationInFrames={240}
+        fps={30}
+        width={3840}
+        height={2160}
+        defaultProps={{
+          ...defaultMusicForum2007XPProps,
           depthPerspective: 2400,
         }}
       />
