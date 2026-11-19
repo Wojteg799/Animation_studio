@@ -31,36 +31,78 @@ export const CassetteTracklistCard: React.FC<CassetteTracklistCardProps> = ({ pr
     return null;
   }
 
-  // Dynamiczne tempo rysowania linii zależne od ustawionego przez użytkownika timingu
-  const writingSpan = Math.max(30, questionMarkStartFrame - writingStartFrame - 15);
-  const lineInterval = writingSpan / 3;
-  const lineDur = Math.max(12, lineInterval * 0.7);
+  // Obliczenie proporcjonalnego tempa rysowania linii zależnie od czasu trwania
+  const availableFrames = Math.max(45, questionMarkStartFrame - writingStartFrame);
+  const lineDur = Math.max(14, Math.floor(availableFrames * 0.22));
+  const gapDur = Math.max(6, Math.floor(availableFrames * 0.08));
 
-  const line1Start = writingStartFrame + 6;
-  const line2Start = line1Start + lineInterval;
-  const line3Start = line2Start + lineInterval;
+  const line1Start = writingStartFrame + 8;
+  const line1End = line1Start + lineDur;
 
+  const line2Start = line1End + gapDur;
+  const line2End = line2Start + lineDur;
+
+  const line3Start = line2End + gapDur;
+  const line3End = line3Start + lineDur;
+
+  const line4Arrival = Math.max(line3End + gapDur, questionMarkStartFrame);
+
+  // Progresy rysowania 3 linii utworów (od 0 do 1)
   const line1Prog = Math.max(0, Math.min(1, (frame - line1Start) / lineDur));
   const line2Prog = Math.max(0, Math.min(1, (frame - line2Start) / lineDur));
   const line3Prog = Math.max(0, Math.min(1, (frame - line3Start) / lineDur));
 
-  // Ołówek dochodzi do 4. linii w klatce questionMarkStartFrame
-  const isMysteryPhase = frame >= questionMarkStartFrame;
-  const pencilExit = Math.max(0, Math.min(1, (frame - questionMarkStartFrame) / 14));
+  // Ołówek dochodzi do 4. linii w klatce line4Arrival (wahanie i wyjście)
+  const isMysteryPhase = frame >= line4Arrival;
+  const pencilExit = Math.max(0, Math.min(1, (frame - line4Arrival) / 18));
 
-  // Pozycja ołówka na bazie aktualnie rysowanej linii
-  let pencilTargetY = 24;
-  let pencilTargetX = line1Prog * 180;
-  if (frame >= line3Start) {
-    pencilTargetY = 72;
-    pencilTargetX = line3Prog * 180;
-  } else if (frame >= line2Start) {
-    pencilTargetY = 48;
-    pencilTargetX = line2Prog * 180;
+  // Dokładna pozycja końcówki (czubka) długopisu/ołówka w pikselach:
+  // Karta ma szerokość 320, padding poziomy 20px, kropka 14px, odstęp 12px.
+  // Linia zaczyna się na X=46, a kończy na X=300 (długość 254px).
+  // Środki pionowe kolejnych wierszy: Row 1 = 23px, Row 2 = 51px, Row 3 = 79px, Row 4 = 107px.
+  let tipX = 46;
+  let tipY = 23;
+
+  if (frame < line1Start) {
+    // Czekanie na start pisania linii 1
+    tipX = 46;
+    tipY = 23;
+  } else if (frame < line1End) {
+    // Rysowanie linii 1: czubek ołówka DOKŁADNIE na końcu białej linii
+    tipX = 46 + line1Prog * 254;
+    tipY = 23;
+  } else if (frame < line2Start) {
+    // Przenoszenie ołówka z końca linii 1 na początek linii 2
+    const t = (frame - line1End) / (line2Start - line1End);
+    const ease = t * t * (3 - 2 * t);
+    tipX = 300 - ease * (300 - 46);
+    tipY = 23 + ease * (51 - 23);
+  } else if (frame < line2End) {
+    // Rysowanie linii 2
+    tipX = 46 + line2Prog * 254;
+    tipY = 51;
+  } else if (frame < line3Start) {
+    // Przenoszenie ołówka z końca linii 2 na początek linii 3
+    const t = (frame - line2End) / (line3Start - line2End);
+    const ease = t * t * (3 - 2 * t);
+    tipX = 300 - ease * (300 - 46);
+    tipY = 51 + ease * (79 - 51);
+  } else if (frame < line3End) {
+    // Rysowanie linii 3
+    tipX = 46 + line3Prog * 254;
+    tipY = 79;
+  } else if (frame < line4Arrival) {
+    // Przenoszenie ołówka z końca linii 3 na początek linii 4 (tajemniczy utwór)
+    const t = (frame - line3End) / (line4Arrival - line3End);
+    const ease = t * t * (3 - 2 * t);
+    tipX = 300 - ease * (300 - 46);
+    tipY = 79 + ease * (107 - 79);
+  } else {
+    // Linia 4: wahanie ołówka (nie wie co wpisać!) przed wyjściem
+    const pencilShake = Math.sin((frame - line4Arrival) * 0.6) * 4;
+    tipX = 46 + pencilShake;
+    tipY = 107;
   }
-
-  // Wahanie ołówka przy linii 4 (przed zniknięciem)
-  const pencilShake = isMysteryPhase ? Math.sin(frame * 0.5) * 6 : 0;
 
   // Migający kursor na pustej 4. linii (ZERO GLOW)
   const isCursorBlink = Math.floor(frame / 10) % 2 === 0;
@@ -106,7 +148,7 @@ export const CassetteTracklistCard: React.FC<CassetteTracklistCardProps> = ({ pr
               flexShrink: 0,
             }}
           />
-          {/* Rysująca się linia utworu */}
+          {/* Rysująca się linia utworu (długość 254px) */}
           <div style={{ flex: 1, height: 4, backgroundColor: "rgba(255,255,255,0.15)", borderRadius: 2, overflow: "hidden" }}>
             <div
               style={{
@@ -206,28 +248,41 @@ export const CassetteTracklistCard: React.FC<CassetteTracklistCardProps> = ({ pr
           </div>
         </div>
 
-        {/* ================= MINIMALISTYCZNY WEKTOROWY OŁÓWEK / DŁUGOPIS ================= */}
+        {/* ================= WEKTOROWY DŁUGOPIS / OŁÓWEK (IDEALNY STYK CZUBKA Z LINIĄ) ================= */}
         {pencilExit < 0.99 && (
           <div
             style={{
               position: "absolute",
-              left: 48 + pencilTargetX + pencilShake,
-              top: pencilTargetY - 14,
-              transform: `rotate(-35deg) scale(${1 - pencilExit * 0.5})`,
+              left: tipX,
+              top: tipY,
+              width: 0,
+              height: 0,
+              pointerEvents: "none",
               opacity: 1 - pencilExit,
-              transition: "left 0.08s linear, top 0.15s ease",
+              zIndex: 30,
             }}
           >
-            {/* Wektorowy ołówek line-art */}
-            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-              {/* Trzonek ołówka */}
-              <rect x="8" y="14" width="26" height="7" rx="1.5" fill="#000000" stroke={lineColor} strokeWidth="2" />
-              {/* Żółty akcent na ołówku */}
-              <rect x="18" y="15" width="10" height="5" fill={accentColor} />
-              {/* Czubek / grafit */}
-              <polygon points="8,14 8,21 1,17.5" fill="#000000" stroke={lineColor} strokeWidth="2" strokeLinejoin="round" />
-              <polygon points="4,16 4,19 1,17.5" fill={accentColor} />
-            </svg>
+            <div
+              style={{
+                position: "absolute",
+                left: 0,
+                top: 0,
+                transformOrigin: "0 0",
+                transform: `rotate(-40deg) scale(${1 - pencilExit * 0.4})`,
+              }}
+            >
+              <svg width="46" height="20" viewBox="0 0 46 20" style={{ position: "absolute", left: 0, top: -10 }}>
+                {/* Ostrze / grafit długopisu precyzyjnie w punkcie (0, 10), czyli (0, 0) */}
+                <polygon points="0,10 8,6 8,14" fill="#000000" stroke={lineColor} strokeWidth="1.8" />
+                <polygon points="0,10 4,8 4,12" fill={accentColor} />
+                {/* Korpus długopisu */}
+                <rect x="8" y="6" width="30" height="8" rx="1.5" fill="#000000" stroke={lineColor} strokeWidth="1.8" />
+                {/* Żółta opaska uchwytu */}
+                <rect x="18" y="7" width="12" height="6" fill={accentColor} />
+                {/* Przycisk na końcu */}
+                <rect x="38" y="8" width="4" height="4" rx="1" fill={lineColor} />
+              </svg>
+            </div>
           </div>
         )}
       </div>

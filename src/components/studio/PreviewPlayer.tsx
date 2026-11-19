@@ -50,7 +50,11 @@ export const PreviewPlayer: React.FC<PreviewPlayerProps> = ({
     }
   };
 
-  const durationSeconds = (durationFrames / fps).toFixed(1);
+  const effectiveDurationFrames = Math.max(
+    30,
+    props?.durationInFrames || durationFrames || 360
+  );
+  const durationSeconds = (effectiveDurationFrames / fps).toFixed(1);
 
   return (
     <div className="flex-1 flex flex-col h-full bg-[#0a0a0e] relative overflow-hidden">
@@ -69,7 +73,7 @@ export const PreviewPlayer: React.FC<PreviewPlayerProps> = ({
           <span className="text-zinc-600">|</span>
 
           <span className="text-[11px] font-mono text-zinc-400">
-            {durationFrames} klatek @ {fps} fps ({durationSeconds}s)
+            {effectiveDurationFrames} klatek @ {fps} fps ({durationSeconds}s)
           </span>
 
           {currentTemplate.isBackground && (
@@ -216,9 +220,10 @@ export const PreviewPlayer: React.FC<PreviewPlayerProps> = ({
           {/* Active Remotion Composition Player */}
           <Player
             ref={playerRef}
+            key={`${templateId}-${effectiveDurationFrames}`}
             component={ActiveComponent}
             inputProps={props}
-            durationInFrames={durationFrames}
+            durationInFrames={effectiveDurationFrames}
             fps={fps}
             compositionWidth={resConfig.width}
             compositionHeight={resConfig.height}

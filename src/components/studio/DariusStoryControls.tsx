@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import {
   User,
   Radio,
@@ -75,10 +75,24 @@ export const DariusStoryControls: React.FC<DariusStoryControlsProps> = ({
 
   const currentDuration = props.durationInFrames ?? durationFrames ?? 360;
 
+  const [durationSecInput, setDurationSecInput] = useState<string>(
+    (currentDuration / fps).toFixed(1)
+  );
+  const [durationFramesInput, setDurationFramesInput] = useState<string>(
+    currentDuration.toString()
+  );
+
+  useEffect(() => {
+    setDurationSecInput((currentDuration / fps).toFixed(1));
+    setDurationFramesInput(currentDuration.toString());
+  }, [currentDuration, fps]);
+
   const handleSetDuration = (frames: number) => {
     const validFrames = Math.max(60, Math.min(3600, frames));
     setDurationFrames(validFrames);
     updateProp("durationInFrames", validFrames);
+    setDurationSecInput((validFrames / fps).toFixed(1));
+    setDurationFramesInput(validFrames.toString());
   };
 
   const timingEvents: Array<{
@@ -482,18 +496,30 @@ export const DariusStoryControls: React.FC<DariusStoryControlsProps> = ({
               <span className="text-[10px] text-zinc-400 block mb-1">Sekundy (s):</span>
               <div className="flex items-center gap-1 bg-[#181822] px-2.5 py-1.5 rounded-lg border border-white/10">
                 <input
-                  type="number"
-                  step="0.1"
-                  min="2"
-                  max="120"
-                  value={parseFloat((currentDuration / fps).toFixed(2))}
+                  type="text"
+                  value={durationSecInput}
                   onChange={(e) => {
-                    const sec = parseFloat(e.target.value);
-                    if (!isNaN(sec) && sec > 0) {
-                      handleSetDuration(Math.round(sec * fps));
+                    const str = e.target.value;
+                    setDurationSecInput(str);
+                    const sec = parseFloat(str.replace(",", "."));
+                    if (!isNaN(sec) && sec >= 2) {
+                      const frames = Math.round(sec * fps);
+                      setDurationFrames(frames);
+                      updateProp("durationInFrames", frames);
+                      setDurationFramesInput(frames.toString());
                     }
                   }}
+                  onBlur={() => {
+                    const sec = parseFloat(durationSecInput.replace(",", "."));
+                    const validSec = isNaN(sec) || sec < 2 ? 2 : Math.min(120, sec);
+                    const frames = Math.round(validSec * fps);
+                    setDurationFrames(frames);
+                    updateProp("durationInFrames", frames);
+                    setDurationSecInput(validSec.toFixed(1));
+                    setDurationFramesInput(frames.toString());
+                  }}
                   className="w-full bg-transparent text-white font-mono text-xs focus:outline-none"
+                  placeholder="np. 14"
                 />
                 <span className="text-zinc-500 text-[11px] font-mono">s</span>
               </div>
@@ -503,18 +529,28 @@ export const DariusStoryControls: React.FC<DariusStoryControlsProps> = ({
               <span className="text-[10px] text-zinc-400 block mb-1">Klatki (frames @ 30fps):</span>
               <div className="flex items-center gap-1 bg-[#181822] px-2.5 py-1.5 rounded-lg border border-white/10">
                 <input
-                  type="number"
-                  step="1"
-                  min="60"
-                  max="3600"
-                  value={currentDuration}
+                  type="text"
+                  value={durationFramesInput}
                   onChange={(e) => {
-                    const fr = parseInt(e.target.value);
-                    if (!isNaN(fr) && fr > 0) {
-                      handleSetDuration(fr);
+                    const str = e.target.value;
+                    setDurationFramesInput(str);
+                    const fr = parseInt(str, 10);
+                    if (!isNaN(fr) && fr >= 60) {
+                      setDurationFrames(fr);
+                      updateProp("durationInFrames", fr);
+                      setDurationSecInput((fr / fps).toFixed(1));
                     }
                   }}
+                  onBlur={() => {
+                    const fr = parseInt(durationFramesInput, 10);
+                    const validFrames = isNaN(fr) || fr < 60 ? 60 : Math.min(3600, fr);
+                    setDurationFrames(validFrames);
+                    updateProp("durationInFrames", validFrames);
+                    setDurationFramesInput(validFrames.toString());
+                    setDurationSecInput((validFrames / fps).toFixed(1));
+                  }}
                   className="w-full bg-transparent text-white font-mono text-xs focus:outline-none"
+                  placeholder="np. 420"
                 />
                 <span className="text-zinc-500 text-[11px] font-mono">kl.</span>
               </div>
@@ -534,16 +570,16 @@ export const DariusStoryControls: React.FC<DariusStoryControlsProps> = ({
             />
           </div>
 
-          {/* Szybkie presety czasu trwania */}
+          {/* Szybkie presety czasu trwania z dedykowanym 14s */}
           <div className="grid grid-cols-4 gap-1 pt-1">
             {[
               { label: "8s", frames: 240 },
               { label: "10s", frames: 300 },
               { label: "12s", frames: 360 },
-              { label: "15s", frames: 450 },
+              { label: "14s (Twój wybór)", frames: 420 },
+              { label: "16s", frames: 480 },
               { label: "18s", frames: 540 },
               { label: "20s", frames: 600 },
-              { label: "25s", frames: 750 },
               { label: "30s", frames: 900 },
             ].map((d) => (
               <button

@@ -121,7 +121,7 @@ export default function StudioPage() {
       } else if (templateId === "character-stage") {
         setDurationFrames(240); // 8 seconds @ 30fps
       } else if (templateId === "darius-radio-story") {
-        setDurationFrames(300); // 10 seconds @ 30fps
+        setDurationFrames(dariusProps.durationInFrames || 360);
       } else if (templateId === "joy-division-cassette-morph") {
         setDurationFrames(240); // 8 seconds @ 30fps
       } else if (templateId === "retro-cassette-intro") {
@@ -192,6 +192,9 @@ export default function StudioPage() {
           ...prev,
           [key]: val,
         }));
+        if (key === "durationInFrames" && typeof val === "number") {
+          setDurationFrames(val);
+        }
       },
       []
     );
@@ -464,7 +467,11 @@ export default function StudioPage() {
               props={activeProps}
               resolution={resolution}
               fps={fps}
-              durationFrames={durationFrames}
+              durationFrames={
+                selectedTemplateId === "darius-radio-story" && dariusProps.durationInFrames
+                  ? dariusProps.durationInFrames
+                  : durationFrames
+              }
             />
           </div>
 
