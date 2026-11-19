@@ -814,12 +814,13 @@ export const DariusInternetQuestControls: React.FC<
 
               <div className="space-y-0.5">
                 <span className="text-[10px] text-yellow-400 font-mono font-bold">
-                  Piosenka 4 (Nierozpoznana ?):
+                  Piosenka 4 (Tajemnicza: ????):
                 </span>
                 <input
                   type="text"
-                  value={props.mysterySongTitle}
+                  value={props.mysterySongTitle || "????"}
                   onChange={(e) => updateProp("mysterySongTitle", e.target.value)}
+                  placeholder="????"
                   className="w-full bg-[#161622] px-2.5 py-1.5 rounded-lg border border-yellow-500/30 text-yellow-300 font-mono text-xs focus:outline-none"
                 />
               </div>

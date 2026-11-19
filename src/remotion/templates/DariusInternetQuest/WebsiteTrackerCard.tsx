@@ -107,6 +107,11 @@ export const WebsiteTrackerCard: React.FC<WebsiteTrackerCardProps> = ({
     )
   );
 
+  const displayMysteryTitle =
+    !mysterySongTitle || mysterySongTitle === "4. ???"
+      ? "????"
+      : mysterySongTitle;
+
   return (
     <div
       style={{
@@ -363,10 +368,18 @@ export const WebsiteTrackerCard: React.FC<WebsiteTrackerCardProps> = ({
                   width: 24,
                   height: 24,
                   borderRadius: "50%",
-                  border: "1.5px dashed #444455",
+                  border: "1.5px solid #444455",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "#666677",
+                  fontSize: 13,
+                  fontWeight: 700,
                   flexShrink: 0,
                 }}
-              />
+              >
+                ?
+              </div>
             )}
 
             <span
@@ -375,10 +388,16 @@ export const WebsiteTrackerCard: React.FC<WebsiteTrackerCardProps> = ({
                 fontWeight: 700,
                 fontFamily: "system-ui, sans-serif",
                 color: frame >= identifySong1Frame ? "#ffffff" : "#666677",
-                letterSpacing: 0.5,
+                letterSpacing: frame >= identifySong1Frame ? 0.5 : 2,
+                opacity: frame >= identifySong1Frame ? 1 : 0.6,
+                transform:
+                  frame >= identifySong1Frame
+                    ? `translateX(${(1 - song1Spring) * 6}px)`
+                    : "none",
+                display: "inline-block",
               }}
             >
-              {song1Title}
+              {frame >= identifySong1Frame ? song1Title : "????"}
             </span>
           </div>
 
@@ -422,10 +441,18 @@ export const WebsiteTrackerCard: React.FC<WebsiteTrackerCardProps> = ({
                   width: 24,
                   height: 24,
                   borderRadius: "50%",
-                  border: "1.5px dashed #444455",
+                  border: "1.5px solid #444455",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "#666677",
+                  fontSize: 13,
+                  fontWeight: 700,
                   flexShrink: 0,
                 }}
-              />
+              >
+                ?
+              </div>
             )}
 
             <span
@@ -434,10 +461,16 @@ export const WebsiteTrackerCard: React.FC<WebsiteTrackerCardProps> = ({
                 fontWeight: 700,
                 fontFamily: "system-ui, sans-serif",
                 color: frame >= identifySong2Frame ? "#ffffff" : "#666677",
-                letterSpacing: 0.5,
+                letterSpacing: frame >= identifySong2Frame ? 0.5 : 2,
+                opacity: frame >= identifySong2Frame ? 1 : 0.6,
+                transform:
+                  frame >= identifySong2Frame
+                    ? `translateX(${(1 - song2Spring) * 6}px)`
+                    : "none",
+                display: "inline-block",
               }}
             >
-              {song2Title}
+              {frame >= identifySong2Frame ? song2Title : "????"}
             </span>
           </div>
 
@@ -481,10 +514,18 @@ export const WebsiteTrackerCard: React.FC<WebsiteTrackerCardProps> = ({
                   width: 24,
                   height: 24,
                   borderRadius: "50%",
-                  border: "1.5px dashed #444455",
+                  border: "1.5px solid #444455",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "#666677",
+                  fontSize: 13,
+                  fontWeight: 700,
                   flexShrink: 0,
                 }}
-              />
+              >
+                ?
+              </div>
             )}
 
             <span
@@ -493,10 +534,16 @@ export const WebsiteTrackerCard: React.FC<WebsiteTrackerCardProps> = ({
                 fontWeight: 700,
                 fontFamily: "system-ui, sans-serif",
                 color: frame >= identifySong3Frame ? "#ffffff" : "#666677",
-                letterSpacing: 0.5,
+                letterSpacing: frame >= identifySong3Frame ? 0.5 : 2,
+                opacity: frame >= identifySong3Frame ? 1 : 0.6,
+                transform:
+                  frame >= identifySong3Frame
+                    ? `translateX(${(1 - song3Spring) * 6}px)`
+                    : "none",
+                display: "inline-block",
               }}
             >
-              {song3Title}
+              {frame >= identifySong3Frame ? song3Title : "????"}
             </span>
           </div>
 
@@ -559,10 +606,16 @@ export const WebsiteTrackerCard: React.FC<WebsiteTrackerCardProps> = ({
                 fontWeight: 900,
                 fontFamily: "system-ui, sans-serif",
                 color: isMysteryActive ? dariusColor : "#666677",
-                letterSpacing: 1,
+                letterSpacing: 2,
+                opacity: isMysteryActive ? 1 : 0.6,
+                transform:
+                  isMysteryActive
+                    ? `translateX(${(1 - mysterySpring) * 6}px)`
+                    : "none",
+                display: "inline-block",
               }}
             >
-              {mysterySongTitle}
+              {displayMysteryTitle}
             </span>
           </div>
         </div>
