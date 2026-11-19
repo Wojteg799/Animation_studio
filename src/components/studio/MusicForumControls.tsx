@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   MessageSquare,
   Move,
@@ -19,6 +19,22 @@ import {
   Paperclip,
   Eye,
   SlidersHorizontal,
+  Bold,
+  Italic,
+  Underline,
+  Strikethrough,
+  Quote,
+  Code,
+  EyeOff,
+  Smile,
+  ShieldAlert,
+  ChevronDown,
+  ChevronUp,
+  Terminal,
+  MapPin,
+  Calendar,
+  Award,
+  AlertTriangle,
 } from "lucide-react";
 import { MusicForumScrollProps } from "../../remotion/templates/MusicForumScroll/schema";
 
@@ -42,6 +58,69 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<"posts" | "scroll" | "lowpoly" | "duration">("posts");
   const [selectedPostTab, setSelectedPostTab] = useState<1 | 2 | 3 | 4>(1);
+  const [showAuthorMeta, setShowAuthorMeta] = useState<boolean>(false);
+  const contentTextareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const insertBBCode = (openTag: string, closeTag: string = "", defaultText: string = "") => {
+    const key = `post${selectedPostTab}_content` as keyof MusicForumScrollProps;
+    const currentText = ((props as any)[key] as string) || "";
+    const textarea = contentTextareaRef.current;
+
+    if (!textarea) {
+      updateProp(key, `${currentText}${currentText ? " " : ""}${openTag}${defaultText}${closeTag}`);
+      return;
+    }
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selected = currentText.substring(start, end) || defaultText;
+    const newText =
+      currentText.substring(0, start) +
+      openTag +
+      selected +
+      closeTag +
+      currentText.substring(end);
+
+    updateProp(key, newText);
+
+    setTimeout(() => {
+      textarea.focus();
+      const newCursorPos = start + openTag.length + selected.length + closeTag.length;
+      textarea.setSelectionRange(newCursorPos, newCursorPos);
+    }, 10);
+  };
+
+  const insertEasterEggPreset = (preset: "spoiler" | "hex" | "strike" | "badge" | "quote") => {
+    switch (preset) {
+      case "spoiler":
+        insertBBCode(
+          "[spoiler]",
+          "[/spoiler]",
+          "POSZLAKA: W 0:38 słychać niemieckiego prezentera mówiącego o zespole z Hamburga"
+        );
+        break;
+      case "hex":
+        insertBBCode(
+          "\n[code]",
+          "[/code]\n",
+          "INDEX: TAPE_04 // FREQ: 10.45 kHz // BIAS: HIGH // STATUS: UNVERIFIED"
+        );
+        break;
+      case "strike":
+        insertBBCode("[s]", "[/s]", "To nagranie nigdy nie zostało wyemitowane");
+        break;
+      case "badge":
+        insertBBCode("[badge=ADMIN]", "[/badge]", "MODERACJA: WĄTEK POD OBSERWACJĄ");
+        break;
+      case "quote":
+        insertBBCode(
+          "[quote=analog_master84]",
+          "[/quote]\n",
+          "Czy ktoś ma jeszcze zgrane audycje z radia NDR?"
+        );
+        break;
+    }
+  };
 
   const themes = [
     { id: "dark-graphite", name: "Ciemny Grafit (Dossier)", color: "#38bdf8" },
@@ -284,62 +363,246 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
               </span>
             </div>
 
-            {/* Author */}
+            {/* Author & Role in 2 columns */}
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1">
+                  Autor (Nick):
+                </label>
+                <input
+                  type="text"
+                  value={
+                    selectedPostTab === 1
+                      ? props.post1_author
+                      : selectedPostTab === 2
+                      ? props.post2_author
+                      : selectedPostTab === 3
+                      ? props.post3_author
+                      : props.post4_author
+                  }
+                  onChange={(e) =>
+                    updateProp(
+                      `post${selectedPostTab}_author` as any,
+                      e.target.value
+                    )
+                  }
+                  className="w-full studio-input text-xs font-mono font-bold"
+                />
+              </div>
+
+              <div>
+                <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1">
+                  Ranga / Tytuł:
+                </label>
+                <input
+                  type="text"
+                  value={
+                    selectedPostTab === 1
+                      ? props.post1_role
+                      : selectedPostTab === 2
+                      ? props.post2_role
+                      : selectedPostTab === 3
+                      ? props.post3_role
+                      : props.post4_role
+                  }
+                  onChange={(e) =>
+                    updateProp(`post${selectedPostTab}_role` as any, e.target.value)
+                  }
+                  className="w-full studio-input text-xs"
+                />
+              </div>
+            </div>
+
+            {/* Subject (Temat postu) */}
             <div>
               <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1">
-                Autor (Nick):
+                Temat wiadomości (Nagłówek wpisu):
               </label>
               <input
                 type="text"
                 value={
                   selectedPostTab === 1
-                    ? props.post1_author
+                    ? props.post1_subject
                     : selectedPostTab === 2
-                    ? props.post2_author
+                    ? props.post2_subject
                     : selectedPostTab === 3
-                    ? props.post3_author
-                    : props.post4_author
+                    ? props.post3_subject
+                    : props.post4_subject
                 }
                 onChange={(e) =>
-                  updateProp(
-                    `post${selectedPostTab}_author` as any,
-                    e.target.value
-                  )
+                  updateProp(`post${selectedPostTab}_subject` as any, e.target.value)
                 }
-                className="w-full studio-input text-xs font-mono font-bold"
+                className="w-full studio-input text-xs font-semibold"
+                placeholder="np. Re: Tajemnicza piosenka z radia NDR (1984)"
               />
             </div>
 
-            {/* Role */}
-            <div>
-              <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1">
-                Ranga / Tytuł Użytkownika:
-              </label>
-              <input
-                type="text"
-                value={
-                  selectedPostTab === 1
-                    ? props.post1_role
-                    : selectedPostTab === 2
-                    ? props.post2_role
-                    : selectedPostTab === 3
-                    ? props.post3_role
-                    : props.post4_role
-                }
-                onChange={(e) =>
-                  updateProp(`post${selectedPostTab}_role` as any, e.target.value)
-                }
-                className="w-full studio-input text-xs"
-              />
-            </div>
+            {/* Content & BBCode Editor Toolbar */}
+            <div className="space-y-1.5 pt-1">
+              <div className="flex items-center justify-between">
+                <label className="text-[10px] font-mono text-zinc-400 uppercase block">
+                  Treść Wiadomości (BBCode & Easter Eggi):
+                </label>
+                <span className="text-[9px] font-mono text-zinc-500">
+                  Tagi BBCode & emotki
+                </span>
+              </div>
 
-            {/* Content */}
-            <div>
-              <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1">
-                Treść Wiadomości:
-              </label>
+              {/* BBCode Toolbar */}
+              <div className="bg-[#181824] p-1.5 rounded-lg border border-white/10 space-y-1.5">
+                {/* Formatting Row */}
+                <div className="flex flex-wrap items-center gap-1">
+                  <button
+                    type="button"
+                    title="Pogrubienie [b]...[/b]"
+                    onClick={() => insertBBCode("[b]", "[/b]", "tekst pogrubiony")}
+                    className="p-1 rounded bg-[#202030] hover:bg-amber-500 hover:text-black text-zinc-300 text-[10px] font-bold transition-colors flex items-center gap-0.5 px-1.5 border border-white/5"
+                  >
+                    <Bold className="w-3 h-3" />
+                    <span>B</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    title="Kursywa [i]...[/i]"
+                    onClick={() => insertBBCode("[i]", "[/i]", "tekst pochylony")}
+                    className="p-1 rounded bg-[#202030] hover:bg-amber-500 hover:text-black text-zinc-300 text-[10px] italic transition-colors flex items-center gap-0.5 px-1.5 border border-white/5"
+                  >
+                    <Italic className="w-3 h-3" />
+                    <span>I</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    title="Podkreślenie [u]...[/u]"
+                    onClick={() => insertBBCode("[u]", "[/u]", "podkreślenie")}
+                    className="p-1 rounded bg-[#202030] hover:bg-amber-500 hover:text-black text-zinc-300 text-[10px] underline transition-colors flex items-center gap-0.5 px-1.5 border border-white/5"
+                  >
+                    <Underline className="w-3 h-3" />
+                    <span>U</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    title="Przekreślenie / Poszlaka [s]...[/s]"
+                    onClick={() => insertBBCode("[s]", "[/s]", "skreślona poszlaka")}
+                    className="p-1 rounded bg-red-950/40 hover:bg-red-500 hover:text-white text-red-300 text-[10px] line-through transition-colors flex items-center gap-0.5 px-1.5 border border-red-500/30"
+                  >
+                    <Strikethrough className="w-3 h-3 text-red-400" />
+                    <span>S</span>
+                  </button>
+
+                  <div className="h-3.5 w-px bg-white/10 mx-0.5" />
+
+                  <button
+                    type="button"
+                    title="Cytat forumowy [quote=Autor]...[/quote]"
+                    onClick={() => insertBBCode("[quote=analog_master84]", "[/quote]\n", "cytowany fragment wpisu")}
+                    className="p-1 rounded bg-[#202030] hover:bg-amber-500 hover:text-black text-zinc-300 text-[10px] transition-colors flex items-center gap-1 px-1.5 border border-white/5"
+                  >
+                    <Quote className="w-3 h-3 text-amber-400" />
+                    <span>CYTAT</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    title="Blok Kodu / Terminala [code]...[/code]"
+                    onClick={() => insertBBCode("\n[code]", "[/code]\n", "DANE HEX / KOD / PARAMETRY")}
+                    className="p-1 rounded bg-[#202030] hover:bg-emerald-500 hover:text-black text-zinc-300 text-[10px] font-mono transition-colors flex items-center gap-1 px-1.5 border border-white/5"
+                  >
+                    <Code className="w-3 h-3 text-emerald-400" />
+                    <span>KOD</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    title="Spoiler / Cenzura dossier [spoiler]...[/spoiler]"
+                    onClick={() => insertBBCode("[spoiler]", "[/spoiler]", "TAJNA INFORMACJA // ŚCIŚLE TAJNE")}
+                    className="p-1 rounded bg-[#202030] hover:bg-purple-500 hover:text-white text-zinc-300 text-[10px] font-mono transition-colors flex items-center gap-1 px-1.5 border border-purple-500/30"
+                  >
+                    <EyeOff className="w-3 h-3 text-purple-400" />
+                    <span>SPOILER</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    title="Kolor tekstu [color=#38bdf8]...[/color]"
+                    onClick={() => insertBBCode("[color=#38bdf8]", "[/color]", "kolorowy tekst")}
+                    className="p-1 rounded bg-[#202030] hover:bg-cyan-500 hover:text-black text-zinc-300 text-[10px] transition-colors flex items-center gap-1 px-1.5 border border-cyan-500/30"
+                  >
+                    <Palette className="w-3 h-3 text-cyan-400" />
+                    <span>KOLOR</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    title="Odznaka / Ranga [badge=ADMIN]...[/badge]"
+                    onClick={() => insertBBCode("[badge=ADMIN]", "[/badge]", "MODERACJA")}
+                    className="p-1 rounded bg-[#202030] hover:bg-red-500 hover:text-white text-zinc-300 text-[10px] font-bold transition-colors flex items-center gap-1 px-1.5 border border-red-500/30"
+                  >
+                    <ShieldAlert className="w-3 h-3 text-red-400" />
+                    <span>ODZNAKA</span>
+                  </button>
+                </div>
+
+                {/* Emoticons & Easter Egg Presets Row */}
+                <div className="flex flex-wrap items-center justify-between gap-1 pt-1 border-t border-white/5 text-[10px]">
+                  {/* Classic 2007 Smileys */}
+                  <div className="flex items-center gap-1">
+                    <span className="text-zinc-500 text-[9px] font-mono flex items-center gap-0.5">
+                      <Smile className="w-2.5 h-2.5" />
+                      Emotki:
+                    </span>
+                    {[":D", ":O", ":P", ";)", ":roll:", ":shock:", ":evil:", "8-)"].map((s) => (
+                      <button
+                        key={s}
+                        type="button"
+                        onClick={() => insertBBCode(s, "", "")}
+                        className="px-1.5 py-0.5 rounded bg-[#12121a] hover:bg-amber-500/20 hover:text-amber-300 text-zinc-400 font-mono text-[9px] border border-white/5 transition-colors"
+                      >
+                        {s}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Easter Egg quick snippets */}
+                  <div className="flex items-center gap-1">
+                    <span className="text-amber-400/80 text-[9px] font-mono font-bold flex items-center gap-0.5">
+                      <Sparkles className="w-2.5 h-2.5 text-amber-400" />
+                      Easter Eggi:
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => insertEasterEggPreset("spoiler")}
+                      className="px-1.5 py-0.5 rounded bg-purple-950/40 hover:bg-purple-900/60 text-purple-300 text-[9px] border border-purple-500/30"
+                      title="Wstaw ukryty spoiler ze śladem"
+                    >
+                      🕵️ Spoiler
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => insertEasterEggPreset("hex")}
+                      className="px-1.5 py-0.5 rounded bg-emerald-950/40 hover:bg-emerald-900/60 text-emerald-300 font-mono text-[9px] border border-emerald-500/30"
+                      title="Wstaw blok kodu taśmy / parametrów"
+                    >
+                      📟 Hex/Log
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => insertEasterEggPreset("strike")}
+                      className="px-1.5 py-0.5 rounded bg-red-950/40 hover:bg-red-900/60 text-red-300 text-[9px] border border-red-500/30"
+                      title="Wstaw skreśloną cenzurę"
+                    >
+                      🚫 Skreślenie
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Textarea */}
               <textarea
-                rows={3}
+                ref={contentTextareaRef}
+                rows={5}
                 value={
                   selectedPostTab === 1
                     ? props.post1_content
@@ -355,8 +618,208 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
                     e.target.value
                   )
                 }
-                className="w-full studio-input text-xs resize-none"
+                className="w-full studio-input text-xs font-mono resize-y leading-relaxed"
+                placeholder="Wpisz treść postu... Używaj BBCode do tworzenia ukrytych poszlak!"
               />
+            </div>
+
+            {/* Footnote Edit Note */}
+            <div>
+              <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1">
+                Notatka o edycji postu (Ostatnio zmieniony...):
+              </label>
+              <input
+                type="text"
+                value={
+                  selectedPostTab === 1
+                    ? props.post1_editNote
+                    : selectedPostTab === 2
+                    ? props.post2_editNote
+                    : selectedPostTab === 3
+                    ? props.post3_editNote
+                    : props.post4_editNote
+                }
+                onChange={(e) =>
+                  updateProp(`post${selectedPostTab}_editNote` as any, e.target.value)
+                }
+                className="w-full studio-input text-xs font-mono text-zinc-400"
+                placeholder="np. Ostatnio zmieniony przez bl4nk_tape dnia 14 paź 2007, 22:04, łącznie zmieniany 2 razy."
+              />
+              <span className="text-[9px] text-zinc-500 block mt-0.5">
+                Wyświetla się na dole postu kursywą (jak na forach phpBB / vBulletin). Znakomite na easter eggi o usuwaniu poszlak!
+              </span>
+            </div>
+
+            {/* Individual Signature */}
+            <div>
+              <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1">
+                Sygnatura / Podpis Użytkownika:
+              </label>
+              <input
+                type="text"
+                value={
+                  selectedPostTab === 1
+                    ? props.post1_signature
+                    : selectedPostTab === 2
+                    ? props.post2_signature
+                    : selectedPostTab === 3
+                    ? props.post3_signature
+                    : props.post4_signature
+                }
+                onChange={(e) =>
+                  updateProp(`post${selectedPostTab}_signature` as any, e.target.value)
+                }
+                className="w-full studio-input text-xs font-mono text-zinc-300"
+                placeholder='np. nick | "Ulubiony cytat" | [s]zaszyfrowany kod[/s]'
+              />
+              <span className="text-[9px] text-zinc-500 block mt-0.5">
+                Obsługuje tagi BBCode ([b], [i], [s], [color]).
+              </span>
+            </div>
+
+            {/* User Profile Stats & Easter Eggs (Collapsible Accordion) */}
+            <div className="pt-2 border-t border-white/5 space-y-2">
+              <button
+                type="button"
+                onClick={() => setShowAuthorMeta(!showAuthorMeta)}
+                className="w-full flex items-center justify-between p-2 rounded-lg bg-[#181824] hover:bg-[#202030] text-zinc-300 text-xs font-semibold border border-white/5 transition-colors"
+              >
+                <span className="flex items-center gap-1.5 text-amber-400 font-bold">
+                  <Award className="w-3.5 h-3.5" />
+                  Profil & Statystyki Autora (Easter Eggi lewej kolumny)
+                </span>
+                {showAuthorMeta ? (
+                  <ChevronUp className="w-4 h-4 text-zinc-400" />
+                ) : (
+                  <ChevronDown className="w-4 h-4 text-zinc-400" />
+                )}
+              </button>
+
+              {showAuthorMeta && (
+                <div className="p-3 bg-[#161622] rounded-lg border border-white/5 space-y-2.5 animate-in fade-in">
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1 flex items-center gap-1">
+                        <MapPin className="w-3 h-3 text-blue-400" />
+                        Skąd (Lokalizacja):
+                      </label>
+                      <input
+                        type="text"
+                        value={
+                          selectedPostTab === 1
+                            ? props.post1_location
+                            : selectedPostTab === 2
+                            ? props.post2_location
+                            : selectedPostTab === 3
+                            ? props.post3_location
+                            : props.post4_location
+                        }
+                        onChange={(e) =>
+                          updateProp(`post${selectedPostTab}_location` as any, e.target.value)
+                        }
+                        className="w-full studio-input text-xs font-mono"
+                        placeholder="np. Hamburg, Niemcy"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1 flex items-center gap-1">
+                        <Calendar className="w-3 h-3 text-emerald-400" />
+                        Dołączył (Data rejestracji):
+                      </label>
+                      <input
+                        type="text"
+                        value={
+                          selectedPostTab === 1
+                            ? props.post1_joined
+                            : selectedPostTab === 2
+                            ? props.post2_joined
+                            : selectedPostTab === 3
+                            ? props.post3_joined
+                            : props.post4_joined
+                        }
+                        onChange={(e) =>
+                          updateProp(`post${selectedPostTab}_joined` as any, e.target.value)
+                        }
+                        className="w-full studio-input text-xs font-mono"
+                        placeholder="np. Sie 2004"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-2">
+                    <div>
+                      <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1">
+                        Liczba postów:
+                      </label>
+                      <input
+                        type="text"
+                        value={
+                          selectedPostTab === 1
+                            ? props.post1_postsCount
+                            : selectedPostTab === 2
+                            ? props.post2_postsCount
+                            : selectedPostTab === 3
+                            ? props.post3_postsCount
+                            : props.post4_postsCount
+                        }
+                        onChange={(e) =>
+                          updateProp(`post${selectedPostTab}_postsCount` as any, e.target.value)
+                        }
+                        className="w-full studio-input text-xs font-mono"
+                        placeholder="np. 1,420"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1">
+                        Pochwały / Reputacja:
+                      </label>
+                      <input
+                        type="text"
+                        value={
+                          selectedPostTab === 1
+                            ? props.post1_reputation
+                            : selectedPostTab === 2
+                            ? props.post2_reputation
+                            : selectedPostTab === 3
+                            ? props.post3_reputation
+                            : props.post4_reputation
+                        }
+                        onChange={(e) =>
+                          updateProp(`post${selectedPostTab}_reputation` as any, e.target.value)
+                        }
+                        className="w-full studio-input text-xs font-mono"
+                        placeholder="np. Pomógł: 42 razy"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1 flex items-center gap-1">
+                        <AlertTriangle className="w-3 h-3 text-amber-400" />
+                        Ostrzeżenia:
+                      </label>
+                      <input
+                        type="text"
+                        value={
+                          selectedPostTab === 1
+                            ? props.post1_warnings
+                            : selectedPostTab === 2
+                            ? props.post2_warnings
+                            : selectedPostTab === 3
+                            ? props.post3_warnings
+                            : props.post4_warnings
+                        }
+                        onChange={(e) =>
+                          updateProp(`post${selectedPostTab}_warnings` as any, e.target.value)
+                        }
+                        className="w-full studio-input text-xs font-mono"
+                        placeholder="np. Ostrzeżenia: [ 0 / 3 ]"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Surowy załącznik pliku (Dla aktualnie wybranego postu) */}

@@ -28,52 +28,104 @@ export const MusicForumScrollSchema = z.object({
     .default("Wątek założony: 14.10.2007 • 142 odpowiedzi"),
 
   // Post 1 (Original Post / Question)
-  post1_author: z.string().default("bl4nk_tape"),
-  post1_role: z.string().default("Archiwista Kaset"),
-  post1_date: z.string().default("14 paź 2007, 21:40"),
+  post1_author: z.string().default("analog_master84"),
+  post1_role: z.string().default("Kolekcjoner Taśm"),
+  post1_date: z.string().default("14 paź 2007, 18:20"),
+  post1_subject: z
+    .string()
+    .default("Tajemnicza piosenka z radia NDR (1984) - poszukiwanie wykonawcy"),
+  post1_location: z.string().default("Hamburg, Niemcy"),
+  post1_joined: z.string().default("Sie 2004"),
+  post1_postsCount: z.string().default("1,420"),
+  post1_reputation: z.string().default("Pomógł: 42 razy"),
+  post1_warnings: z.string().default("Ostrzeżenia: [ 0 / 3 ]"),
+  post1_signature: z
+    .string()
+    .default('Lostwave Archivist 2007 | "Taśmy z radia nigdy nie kłamią" // Yamaha DX7'),
+  post1_editNote: z.string().default(""),
   post1_content: z
     .string()
     .default(
-      "Znalazłem starą kasetę z nagraniem z niemieckiego radia NDR (ok. 1984). Ktoś rozpoznaje ten wokal i syntezator? Załączam zgrany fragment."
+      "Przeglądam stare nagrania radiowe z lat 80. Czy ktoś ma jeszcze zgrane audycje z niemieckiego radia [b]NDR[/b] z tego okresu?\nSzukam autorskich audycji [i]Musik für junge Leute[/i]. [spoiler]Kolekcja zawiera taśmy oznaczone symbolem #X-84[/spoiler]"
     ),
-  post1_hasAudio: z.boolean().default(true),
-  post1_audioFile: z.string().default("radio_rip_ndr_1984.mp3 [1.4 MB]"),
-  post1_avatarColor: z.string().default("#38bdf8"),
+  post1_hasAudio: z.boolean().default(false),
+  post1_audioFile: z.string().default("intro_tape.mp3 [0.8 MB]"),
+  post1_avatarColor: z.string().default("#64748b"),
 
   // Post 2
-  post2_author: z.string().default("synth_seeker"),
-  post2_role: z.string().default("Ekspert Sprzętu 80s"),
-  post2_date: z.string().default("15 paź 2007, 00:15"),
+  post2_author: z.string().default("tape_collector"),
+  post2_role: z.string().default("Kolekcjoner Kaset"),
+  post2_date: z.string().default("14 paź 2007, 19:45"),
+  post2_subject: z
+    .string()
+    .default("Re: Tajemnicza piosenka z radia NDR (1984)"),
+  post2_location: z.string().default("Bremen / Studio"),
+  post2_joined: z.string().default("Kwi 2006"),
+  post2_postsCount: z.string().default("389"),
+  post2_reputation: z.string().default("Pochwały: 18"),
+  post2_warnings: z.string().default("Ostrzeżenia: [ 1 / 3 ]"),
+  post2_signature: z
+    .string()
+    .default('tape_collector | "Stilon Gorzów to klasyka." | [s]Nie szukajcie w katalogu ZYX[/s]'),
+  post2_editNote: z.string().default(""),
   post2_content: z
     .string()
     .default(
-      "Syntezator w tle to klasyczny Yamaha DX7. Brzmienie perkusji wskazuje na LinnDrum. Styl post-punk / new wave z Europy Środkowej."
+      "[quote=analog_master84]Czy ktoś ma jeszcze zgrane audycje z niemieckiego radia NDR?[/quote]\nMam kilkanaście kaset [b]BASF[/b] i [b]Stilon[/b] z lat 1982-1986. [s]To nie było zgrane z radia[/s] [color=#38bdf8]Jeden utwór nie pasuje do żadnego znanego zespołu![/color] :shock:\n\n[code]INDEX: TAPE_04 // FREQ: 10.45 kHz // BIAS: HIGH[/code]"
     ),
   post2_hasAudio: z.boolean().default(false),
   post2_audioFile: z.string().default("sample_snippet.mp3 [0.6 MB]"),
-  post2_avatarColor: z.string().default("#eab308"),
+  post2_avatarColor: z.string().default("#ef4444"),
 
   // Post 3
-  post3_author: z.string().default("vinyl_hunter_99"),
-  post3_role: z.string().default("Poszukiwacz Winyli"),
-  post3_date: z.string().default("15 paź 2007, 10:22"),
+  post3_author: z.string().default("bl4nk_tape"),
+  post3_role: z.string().default("Archiwista Kaset"),
+  post3_date: z.string().default("14 paź 2007, 21:40"),
+  post3_subject: z
+    .string()
+    .default("PILNE: Znalazłem nagranie! Odsłuchajcie załącznik mp3"),
+  post3_location: z.string().default("Piwnica z kasetami"),
+  post3_joined: z.string().default("Paź 2007"),
+  post3_postsCount: z.string().default("14"),
+  post3_reputation: z.string().default("Nowy poszukiwacz"),
+  post3_warnings: z.string().default("Ostrzeżenia: [ 0 / 3 ]"),
+  post3_signature: z
+    .string()
+    .default('bl4nk_tape | "Kaseta BASF LH-EI 90 | Ostatnia nadzieja na identyfikację"'),
+  post3_editNote: z
+    .string()
+    .default(
+      "Ostatnio zmieniony przez bl4nk_tape dnia 14 paź 2007, 22:04, łącznie zmieniany 2 razy. Powód: usunięto wzmiankę o taśmie nr 4"
+    ),
   post3_content: z
     .string()
     .default(
-      "Sprawdziłem niemieckie archiwa GEMA i katalogi wytwórni ZYX. Żadnych oficjalnych wydań. To musiało być nagranie demo nadesłane bezpośrednio do stacji."
+      "Znalazłem na kasecie ten niesamowity utwór. Przeszukałem archiwa [u]GEMA[/u] i katalogi [b]ZYX Music[/b] – [color=#ef4444]ZERO WYNIKÓW[/color] :O\nZałączam surowy plik zgrany bezpośrednio z magnetofonu.\n[spoiler]POSZLAKA: W 0:38 słychać niemieckiego prezentera mówiącego o zespole z Hamburga[/spoiler]"
     ),
-  post3_hasAudio: z.boolean().default(false),
+  post3_hasAudio: z.boolean().default(true),
   post3_audioFile: z.string().default("radio_rip_ndr_1984.mp3 [1.4 MB]"),
-  post3_avatarColor: z.string().default("#ef4444"),
+  post3_avatarColor: z.string().default("#38bdf8"),
 
   // Post 4
-  post4_author: z.string().default("lostwave_mod"),
-  post4_role: z.string().default("Moderator Forum"),
-  post4_date: z.string().default("16 paź 2007, 18:05"),
+  post4_author: z.string().default("synth_seeker"),
+  post4_role: z.string().default("Ekspert Sprzętu 80s"),
+  post4_date: z.string().default("14 paź 2007, 22:15"),
+  post4_subject: z
+    .string()
+    .default("Re: Tajemnicza piosenka z radia NDR (1984) - Poszlaki"),
+  post4_location: z.string().default("Baza Danych NDR"),
+  post4_joined: z.string().default("Maj 2003"),
+  post4_postsCount: z.string().default("4,892"),
+  post4_reputation: z.string().default("Pomógł: 512 razy"),
+  post4_warnings: z.string().default("Czyste konto (MODERATOR)"),
+  post4_signature: z
+    .string()
+    .default('lostwave_mod | "Przestrzegaj regulaminu! Nie publikuj numerów telefonów." // [b]LOSTWAVE 2007[/b]'),
+  post4_editNote: z.string().default(""),
   post4_content: z
     .string()
     .default(
-      "Podbijam temat. Przesłuchujemy audycje 'Musik für junge Leute'. Otwieramy oficjalny arkusz z poszlakami i wykluczonymi zespołami."
+      "[badge=ADMIN]MODERACJA[/badge] Podbijam temat. Sprawdziłem syntezator w tle – to klasyczny [b]Yamaha DX7[/b].\n[code]STATUS: ŚLEDZTWO W TOKU // PODEJRZANI WYKLUCZENI: 12[/code]\n[s]Nie piszcie do stacji radiowej[/s] Przesłuchujemy kolejne taśmy :D"
     ),
   post4_hasAudio: z.boolean().default(false),
   post4_audioFile: z.string().default("voice_note.mp3 [0.4 MB]"),
@@ -145,8 +197,16 @@ export const defaultMusicForumScrollProps: MusicForumScrollProps = {
   post1_author: "analog_master84",
   post1_role: "Kolekcjoner Taśm",
   post1_date: "14 paź 2007, 18:20",
+  post1_subject: "Tajemnicza piosenka z radia NDR (1984) - poszukiwanie wykonawcy",
+  post1_location: "Hamburg, Niemcy",
+  post1_joined: "Sie 2004",
+  post1_postsCount: "1,420",
+  post1_reputation: "Pomógł: 42 razy",
+  post1_warnings: "Ostrzeżenia: [ 0 / 3 ]",
+  post1_signature: 'Lostwave Archivist 2007 | "Taśmy z radia nigdy nie kłamią" // Yamaha DX7',
+  post1_editNote: "",
   post1_content:
-    "Przeglądam stare nagrania radiowe z lat 80. Czy ktoś ma jeszcze zgrane audycje z niemieckiego radia NDR z tego okresu? Szukam ciekawych autorskich audycji.",
+    "Przeglądam stare nagrania radiowe z lat 80. Czy ktoś ma jeszcze zgrane audycje z niemieckiego radia [b]NDR[/b] z tego okresu?\nSzukam autorskich audycji [i]Musik für junge Leute[/i]. [spoiler]Kolekcja zawiera taśmy oznaczone symbolem #X-84[/spoiler]",
   post1_hasAudio: false,
   post1_audioFile: "intro_tape.mp3 [0.8 MB]",
   post1_avatarColor: "#64748b",
@@ -154,8 +214,16 @@ export const defaultMusicForumScrollProps: MusicForumScrollProps = {
   post2_author: "tape_collector",
   post2_role: "Kolekcjoner Kaset",
   post2_date: "14 paź 2007, 19:45",
+  post2_subject: "Re: Tajemnicza piosenka z radia NDR (1984)",
+  post2_location: "Bremen / Studio",
+  post2_joined: "Kwi 2006",
+  post2_postsCount: "389",
+  post2_reputation: "Pochwały: 18",
+  post2_warnings: "Ostrzeżenia: [ 1 / 3 ]",
+  post2_signature: 'tape_collector | "Stilon Gorzów to klasyka." | [s]Nie szukajcie w katalogu ZYX[/s]',
+  post2_editNote: "",
   post2_content:
-    "Mam kilkanaście kaset Stilon i BASF nagranych z radia w latach 1982-1986. Głównie new wave i synth-pop, ale jest też parę rzeczy zupełnie bez opisu.",
+    "[quote=analog_master84]Czy ktoś ma jeszcze zgrane audycje z niemieckiego radia NDR?[/quote]\nMam kilkanaście kaset [b]BASF[/b] i [b]Stilon[/b] z lat 1982-1986. [s]To nie było zgrane z radia[/s] [color=#38bdf8]Jeden utwór nie pasuje do żadnego znanego zespołu![/color] :shock:\n\n[code]INDEX: TAPE_04 // FREQ: 10.45 kHz // BIAS: HIGH[/code]",
   post2_hasAudio: false,
   post2_audioFile: "sample_snippet.mp3 [0.6 MB]",
   post2_avatarColor: "#ef4444",
@@ -164,8 +232,17 @@ export const defaultMusicForumScrollProps: MusicForumScrollProps = {
   post3_author: "bl4nk_tape",
   post3_role: "Archiwista Kaset",
   post3_date: "14 paź 2007, 21:40",
+  post3_subject: "PILNE: Znalazłem nagranie! Odsłuchajcie załącznik mp3",
+  post3_location: "Piwnica z kasetami",
+  post3_joined: "Paź 2007",
+  post3_postsCount: "14",
+  post3_reputation: "Nowy poszukiwacz",
+  post3_warnings: "Ostrzeżenia: [ 0 / 3 ]",
+  post3_signature: 'bl4nk_tape | "Kaseta BASF LH-EI 90 | Ostatnia nadzieja na identyfikację"',
+  post3_editNote:
+    "Ostatnio zmieniony przez bl4nk_tape dnia 14 paź 2007, 22:04, łącznie zmieniany 2 razy. Powód: usunięto wzmiankę o taśmie nr 4",
   post3_content:
-    "Znalazłem na kasecie z radia NDR (ok. 1984) ten niesamowity utwór. Przeszukałem całe archiwa i nikt ze znajomych nie kojarzy zespołu ani tytułu. Załączam zgrany fragment mp3!",
+    "Znalazłem na kasecie ten niesamowity utwór. Przeszukałem archiwa [u]GEMA[/u] i katalogi [b]ZYX Music[/b] – [color=#ef4444]ZERO WYNIKÓW[/color] :O\nZałączam surowy plik zgrany bezpośrednio z magnetofonu.\n[spoiler]POSZLAKA: W 0:38 słychać niemieckiego prezentera mówiącego o zespole z Hamburga[/spoiler]",
   post3_hasAudio: true,
   post3_audioFile: "radio_rip_ndr_1984.mp3 [1.4 MB]",
   post3_avatarColor: "#38bdf8",
@@ -173,8 +250,16 @@ export const defaultMusicForumScrollProps: MusicForumScrollProps = {
   post4_author: "synth_seeker",
   post4_role: "Ekspert Sprzętu 80s",
   post4_date: "14 paź 2007, 22:15",
+  post4_subject: "Re: Tajemnicza piosenka z radia NDR (1984) - Poszlaki",
+  post4_location: "Baza Danych NDR",
+  post4_joined: "Maj 2003",
+  post4_postsCount: "4,892",
+  post4_reputation: "Pomógł: 512 razy",
+  post4_warnings: "Czyste konto (MODERATOR)",
+  post4_signature: 'lostwave_mod | "Przestrzegaj regulaminu! Nie publikuj numerów telefonów." // [b]LOSTWAVE 2007[/b]',
+  post4_editNote: "",
   post4_content:
-    "Syntezator w tle to klasyczny Yamaha DX7. Brzmienie perkusji wskazuje na LinnDrum. Stylistyka post-punk / new wave z Europy Środkowej.",
+    "[badge=ADMIN]MODERACJA[/badge] Podbijam temat. Sprawdziłem syntezator w tle – to klasyczny [b]Yamaha DX7[/b].\n[code]STATUS: ŚLEDZTWO W TOKU // PODEJRZANI WYKLUCZENI: 12[/code]\n[s]Nie piszcie do stacji radiowej[/s] Przesłuchujemy kolejne taśmy :D",
   post4_hasAudio: false,
   post4_audioFile: "voice_note.mp3 [0.4 MB]",
   post4_avatarColor: "#10b981",

@@ -1,11 +1,20 @@
 import React from "react";
 import { Music, Disc, Volume2, FileAudio, CornerDownRight, Paperclip, Download } from "lucide-react";
+import { RenderBBCode } from "./bbcode-renderer";
 
 export interface ForumPostCardProps {
   postNumber: number;
   author: string;
   role: string;
   date: string;
+  subject?: string;
+  location?: string;
+  joined?: string;
+  postsCount?: string;
+  reputation?: string;
+  warnings?: string;
+  editNote?: string;
+  signature?: string;
   content: string;
   hasAudio?: boolean;
   audioFile?: string;
@@ -29,6 +38,14 @@ export const ForumPostCard: React.FC<ForumPostCardProps> = ({
   author,
   role,
   date,
+  subject,
+  location,
+  joined,
+  postsCount,
+  reputation,
+  warnings,
+  editNote,
+  signature,
   content,
   hasAudio,
   audioFile,
@@ -193,11 +210,31 @@ export const ForumPostCard: React.FC<ForumPostCardProps> = ({
             fontSize: "9px",
             color: "#64748b",
             fontFamily: "monospace",
-            lineHeight: 1.4,
+            lineHeight: 1.45,
+            display: "flex",
+            flexDirection: "column",
+            gap: "2px",
           }}
         >
-          <div>Dołączył: 2006</div>
-          <div>Posty: {120 + postNumber * 37}</div>
+          <div>Dołączył: {joined || "2006"}</div>
+          <div>Posty: {postsCount || (120 + postNumber * 37)}</div>
+          {location && <div>Skąd: {location}</div>}
+          {reputation && (
+            <div style={{ color: "#38bdf8", fontWeight: "700", marginTop: "2px" }}>
+              {reputation}
+            </div>
+          )}
+          {warnings && (
+            <div
+              style={{
+                color: warnings.includes("BAN") ? "#ef4444" : "#f59e0b",
+                fontWeight: "700",
+                fontSize: "8.5px",
+              }}
+            >
+              {warnings}
+            </div>
+          )}
         </div>
       </div>
 
@@ -234,6 +271,12 @@ export const ForumPostCard: React.FC<ForumPostCardProps> = ({
               }}
             >
               <span style={{ color: "#e2e8f0" }}>Wysłano: {date}</span>
+              {subject && (
+                <>
+                  <span style={{ opacity: 0.4 }}>•</span>
+                  <span style={{ color: "#38bdf8", fontWeight: 700 }}>{subject}</span>
+                </>
+              )}
             </div>
 
             <div
@@ -292,7 +335,7 @@ export const ForumPostCard: React.FC<ForumPostCardProps> = ({
             </div>
           )}
 
-          {/* Post Text Content */}
+          {/* Post Text Content with BBCode & Easter Eggs */}
           <div
             style={{
               fontSize: "13px",
@@ -302,7 +345,7 @@ export const ForumPostCard: React.FC<ForumPostCardProps> = ({
               letterSpacing: "0.2px",
             }}
           >
-            {content}
+            <RenderBBCode text={content} isXP={false} />
           </div>
 
           {/* Modern Noir Raw Static File Attachment Box (Statyczny załącznik, bez ruchów i fal) */}
@@ -396,6 +439,39 @@ export const ForumPostCard: React.FC<ForumPostCardProps> = ({
                 <Download className="w-3 h-3 text-cyan-400" />
                 <span>POBIERZ</span>
               </div>
+            </div>
+          )}
+
+          {/* Edit Note Footnote */}
+          {editNote && (
+            <div
+              style={{
+                fontSize: "10px",
+                color: "#64748b",
+                fontStyle: "italic",
+                fontFamily: "monospace",
+                marginTop: "10px",
+                paddingTop: "4px",
+                borderTop: "1px dashed rgba(255, 255, 255, 0.06)",
+              }}
+            >
+              {editNote}
+            </div>
+          )}
+
+          {/* User Signature */}
+          {signature && (
+            <div
+              style={{
+                marginTop: "14px",
+                paddingTop: "6px",
+                borderTop: "1px dashed rgba(255, 255, 255, 0.08)",
+                fontSize: "10px",
+                color: "#64748b",
+                fontStyle: "italic",
+              }}
+            >
+              <RenderBBCode text={signature} isXP={false} />
             </div>
           )}
         </div>

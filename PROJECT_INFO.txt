@@ -100,7 +100,14 @@ c:\Users\...\Animation_studio\
      - W dokładnie wybranej klatce (markerStartFrame) animowany neonowo-żółty zakreślacz przesuwa się po nagłówku pytania.
    - Surowy Załącznik Pliku (Raw Attachment): Statyczny załącznik z ikoną spinacza, nazwą pliku mp3 i rozmiarem
      (100% statyczny, bez ruchomych fal korektora i bez przycisku play).
-   - Pliki: ForumPostCard.tsx, lowpoly-mesh.ts, schema.ts, index.tsx, MusicForumControls.tsx.
+   - Silnik BBCode & Easter Eggi (bbcode-renderer.tsx):
+     - Pełne wsparcie dla formatowania BBCode: [b], [i], [u], [s] (przekreślenie śledcze w kolorze czerwonym), [color=#hex], [quote=Autor],
+       [code] (terminal / zrzut hex w ramce), [spoiler] (zaczerniony pasek dossier / cenzury), [badge=TYTUŁ] (odznaka administracji).
+     - Obsługa klasycznych emotikonów 2007: :D, :), :P, ;), :O, :roll:, :shock:, :evil:, 8-).
+     - Pasek narzędzi BBCode Toolbar w panelu bocznym z przyciskami szybkiego wstawiania oraz presetami poszlak (Spoiler, Hex Dump, Skreślenie).
+     - Indywidualne pola dla każdego postu: Temat wiadomości (postX_subject), Notatka o edycji (postX_editNote), Sygnatura BBCode (postX_signature)
+       oraz rozwijana sekcja profilu i statystyk: Skąd (postX_location), Dołączył (postX_joined), Posty (postX_postsCount), Pochwały (postX_reputation), Ostrzeżenia (postX_warnings).
+   - Pliki: ForumPostCard.tsx, bbcode-renderer.tsx, lowpoly-mesh.ts, schema.ts, index.tsx, MusicForumControls.tsx.
 
 0A-2. Muzyczne Forum 2007: Windows XP & phpBB (id: "music-forum-2007-xp")
    - Koncepcja: Wersja "2007 rok core" bazująca na mechanice, przewijaniu i efekcie focusu wersji Noir, ale w estetyce
@@ -118,7 +125,7 @@ c:\Users\...\Animation_studio\
    - Pełna Oś Czasu (Timeline): Konfiguracja klatki startu rozmycia początkowego, omijania postów,
      klatki startu podkreślenia markerem oraz całkowitego czasu trwania sceny w klatkach i sekundach.
    - 100% przezroczyste tło wokół okna Windows XP (eksport ProRes 4444 do DaVinci/Premiere).
-   - Pliki: WindowsXPChrome.tsx, ForumPostCard2007.tsx, schema.ts, index.tsx, MusicForumControls.tsx.
+   - Pliki: WindowsXPChrome.tsx, ForumPostCard2007.tsx, bbcode-renderer.tsx, schema.ts, index.tsx, MusicForumControls.tsx.
 
 0B. Studio Postaci & Relacji (id: "character-stage")
    - Koncepcja: Postacie w kółkach z kolorową obwódką (border color, glow), zdjęciem w środku

@@ -1,11 +1,19 @@
 import React from "react";
 import { Disc, FileAudio, Play, MessageSquare, Quote, Edit3, Volume2, Paperclip, Download } from "lucide-react";
+import { RenderBBCode } from "./bbcode-renderer";
 
 interface ForumPostCard2007Props {
   postNumber: number;
   author: string;
   role: string;
   date: string;
+  subject?: string;
+  location?: string;
+  joined?: string;
+  postsCount?: string;
+  reputation?: string;
+  warnings?: string;
+  editNote?: string;
   content: string;
   hasAudio?: boolean;
   audioFile?: string;
@@ -33,6 +41,13 @@ export const ForumPostCard2007: React.FC<ForumPostCard2007Props> = ({
   author,
   role,
   date,
+  subject,
+  location,
+  joined,
+  postsCount,
+  reputation,
+  warnings,
+  editNote,
   content,
   hasAudio = false,
   audioFile = "radio_rip_ndr_1984.mp3 [1.4 MB]",
@@ -205,16 +220,33 @@ export const ForumPostCard2007: React.FC<ForumPostCard2007Props> = ({
         >
           <div>
             <span style={{ color: "#64748b" }}>Dołączył: </span>
-            <span style={{ fontWeight: 600 }}>Paź 2005</span>
+            <span style={{ fontWeight: 600 }}>{joined || "Paź 2005"}</span>
           </div>
           <div>
             <span style={{ color: "#64748b" }}>Posty: </span>
-            <span style={{ fontWeight: 600 }}>{1240 + postNumber * 62}</span>
+            <span style={{ fontWeight: 600 }}>{postsCount || (1240 + postNumber * 62)}</span>
           </div>
           <div>
             <span style={{ color: "#64748b" }}>Skąd: </span>
-            <span>Polska</span>
+            <span style={{ fontWeight: 600 }}>{location || "Polska"}</span>
           </div>
+          {reputation && (
+            <div style={{ color: "#0284c7", fontWeight: 700, fontSize: "9px" }}>
+              {reputation}
+            </div>
+          )}
+          {warnings && (
+            <div
+              style={{
+                color: warnings.includes("BAN") ? "#dc2626" : "#b45309",
+                fontWeight: 700,
+                fontSize: "9px",
+                fontFamily: "monospace",
+              }}
+            >
+              {warnings}
+            </div>
+          )}
           <div style={{ display: "flex", alignItems: "center", gap: "4px", marginTop: "2px" }}>
             <div
               style={{
@@ -267,7 +299,7 @@ export const ForumPostCard2007: React.FC<ForumPostCard2007Props> = ({
               />
               <span>Wysłany: <strong style={{ color: "#334155" }}>{date}</strong></span>
               <span>•</span>
-              <span>Temat postu: <strong style={{ color: "#0055aa" }}>Re: Lostwave NDR 1984</strong></span>
+              <span>Temat: <strong style={{ color: "#0055aa" }}>{subject || "Re: Lostwave NDR 1984"}</strong></span>
             </div>
 
             {/* Authentic 2007 Action Buttons */}
@@ -392,8 +424,8 @@ export const ForumPostCard2007: React.FC<ForumPostCard2007Props> = ({
             </div>
           )}
 
-          {/* Main Post Text */}
-          <p
+          {/* Main Post Text with BBCode & Easter Egg Parsing */}
+          <div
             style={{
               fontSize: "12px",
               color: "#1e293b",
@@ -401,8 +433,8 @@ export const ForumPostCard2007: React.FC<ForumPostCard2007Props> = ({
               margin: "0 0 12px 0",
             }}
           >
-            {content}
-          </p>
+            <RenderBBCode text={content} isXP={true} />
+          </div>
 
           {/* phpBB 2007 Raw Static File Attachment Box (Statyczny załącznik, bez ruchów i play) */}
           {hasAudio && (
@@ -473,24 +505,43 @@ export const ForumPostCard2007: React.FC<ForumPostCard2007Props> = ({
               </div>
             </div>
           )}
+
+          {/* Edit Note Footnote (Legendary forum easter egg!) */}
+          {editNote && (
+            <div
+              style={{
+                fontSize: "9px",
+                color: "#64748b",
+                fontStyle: "italic",
+                marginTop: "10px",
+                fontFamily: "Tahoma, Verdana, sans-serif",
+                borderTop: "1px dotted #cbd5e1",
+                paddingTop: "4px",
+              }}
+            >
+              {editNote}
+            </div>
+          )}
         </div>
 
         {/* Vintage Signature Separator & Text */}
-        <div
-          style={{
-            borderTop: "1px dashed #cbd5e1",
-            marginTop: "16px",
-            paddingTop: "6px",
-            fontSize: "10px",
-            color: "#64748b",
-            fontStyle: "italic",
-          }}
-        >
-          <span style={{ display: "block", color: "#94a3b8", marginBottom: "2px" }}>
-            _________________
-          </span>
-          <span>{signature}</span>
-        </div>
+        {signature && (
+          <div
+            style={{
+              borderTop: "1px dashed #cbd5e1",
+              marginTop: "14px",
+              paddingTop: "6px",
+              fontSize: "10px",
+              color: "#64748b",
+              fontStyle: "italic",
+            }}
+          >
+            <span style={{ display: "block", color: "#94a3b8", marginBottom: "2px" }}>
+              _________________
+            </span>
+            <RenderBBCode text={signature} isXP={true} />
+          </div>
+        )}
       </div>
     </div>
   );
