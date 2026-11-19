@@ -23,9 +23,9 @@ export const DariusCharacter: React.FC<DariusCharacterProps> = ({ props, frame }
     showQuestionMark = true,
     dariusEnterFrame = 5,
     heartNotesStartFrame = 22,
-    heartNotesEndFrame = 75,
-    radioStartFrame = 75,
-    questionMarkStartFrame = 215,
+    heartNotesEndFrame = 80,
+    radioStartFrame = 80,
+    questionMarkStartFrame = 235,
   } = props;
 
   // 1. Wejście postaci Dariusa (sprężysty pop-in)
@@ -42,7 +42,7 @@ export const DariusCharacter: React.FC<DariusCharacterProps> = ({ props, frame }
   const clampedEnter = Math.max(0, Math.min(1, enterSpring));
 
   // 2. Pozycja: Na początku na środku (X ~ 50%), a gdy wchodzi radio przesuwa się w lewo (X ~ 22%)
-  const shiftProgress = Math.max(0, Math.min(1, (frame - (radioStartFrame - 8)) / 20));
+  const shiftProgress = Math.max(0, Math.min(1, (frame - (radioStartFrame - 8)) / 22));
   const shiftEased = shiftProgress * shiftProgress * (3 - 2 * shiftProgress);
   const posX = interpolate(shiftEased, [0, 1], [50, 22]);
 
@@ -55,11 +55,11 @@ export const DariusCharacter: React.FC<DariusCharacterProps> = ({ props, frame }
     fps,
     config: { damping: 12, stiffness: 110 },
   });
-  const heartExit = Math.max(0, Math.min(1, (frame - (heartNotesEndFrame - 10)) / 12));
+  const heartExit = Math.max(0, Math.min(1, (frame - (heartNotesEndFrame - 10)) / 14));
   const heartOpacity = Math.max(0, heartSpring - heartExit);
   const heartPulse = 1 + 0.1 * Math.sin(frame * 0.22);
 
-  // 4. Faza Pytajnika (od questionMarkStartFrame, ze zredukowanym subtelnym glowem)
+  // 4. Faza Pytajnika (od questionMarkStartFrame, ZERO glow - czysty minimalistyczny line-art)
   const questionSpring = spring({
     frame: frame - questionMarkStartFrame,
     fps,
@@ -91,7 +91,7 @@ export const DariusCharacter: React.FC<DariusCharacterProps> = ({ props, frame }
         pointerEvents: "none",
       }}
     >
-      {/* ================= PROSTE SERCE & NUTY (BEZ ŻADNYCH TEKSTÓW!) ================= */}
+      {/* ================= PROSTE SERCE & NUTY (ZERO GLOW) ================= */}
       {showHeartAndNotes && heartOpacity > 0.001 && (
         <div
           style={{
@@ -105,11 +105,10 @@ export const DariusCharacter: React.FC<DariusCharacterProps> = ({ props, frame }
             transform: `scale(${heartScale})`,
           }}
         >
-          {/* Proste geometryczne serduszko w kolorze żółtym */}
+          {/* Czyste geometryczne serduszko w kolorze żółtym bez żadnego glow */}
           <div
             style={{
               transform: `scale(${heartSpring * heartPulse})`,
-              filter: `drop-shadow(0 0 4px ${accentColor}40)`,
             }}
           >
             <svg width="48" height="48" viewBox="0 0 24 24" fill={accentColor}>
@@ -117,7 +116,7 @@ export const DariusCharacter: React.FC<DariusCharacterProps> = ({ props, frame }
             </svg>
           </div>
 
-          {/* Minimalistyczne białe nutki unoszące się w górę */}
+          {/* Minimalistyczne białe nutki unoszące się w górę (bez textShadow / glow) */}
           {[
             { symbol: "♪", x: -55, y: -12, delay: 0 },
             { symbol: "♫", x: 55, y: -16, delay: 8 },
@@ -147,7 +146,7 @@ export const DariusCharacter: React.FC<DariusCharacterProps> = ({ props, frame }
         </div>
       )}
 
-      {/* ================= WYRAZISTY ŻÓŁTY ZNAK ZAPYTANIA (ZREDUKOWANY GLOW) ================= */}
+      {/* ================= WYRAZISTY ŻÓŁTY ZNAK ZAPYTANIA (ZERO GLOW) ================= */}
       {showQuestionMark && frame >= questionMarkStartFrame && (
         <div
           style={{
@@ -161,7 +160,7 @@ export const DariusCharacter: React.FC<DariusCharacterProps> = ({ props, frame }
             justifyContent: "center",
           }}
         >
-          {/* Czysty, ostry żółty badge z pytajnikiem — bez oślepiającego glow */}
+          {/* Czysty, ostry żółty badge z pytajnikiem — bez jakiegokolwiek glow */}
           <div
             style={{
               width: 64,
@@ -169,7 +168,7 @@ export const DariusCharacter: React.FC<DariusCharacterProps> = ({ props, frame }
               borderRadius: "50%",
               backgroundColor: "#000000",
               border: `3px solid ${accentColor}`,
-              boxShadow: "0 6px 16px rgba(0, 0, 0, 0.8)",
+              boxShadow: "none",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -201,7 +200,7 @@ export const DariusCharacter: React.FC<DariusCharacterProps> = ({ props, frame }
           border: `3.5px solid ${lineColor}`,
           overflow: "hidden",
           backgroundColor: "#000000",
-          boxShadow: "0 20px 45px rgba(0, 0, 0, 0.9)",
+          boxShadow: "none",
         }}
       >
         {isCustomImage ? (
@@ -235,7 +234,7 @@ export const DariusCharacter: React.FC<DariusCharacterProps> = ({ props, frame }
           border: `2px solid ${lineColor}`,
           borderRadius: 8,
           padding: "5px 22px",
-          boxShadow: "0 6px 20px rgba(0,0,0,0.8)",
+          boxShadow: "none",
         }}
       >
         <span

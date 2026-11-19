@@ -122,7 +122,7 @@ export const TEMPLATES: TemplateDefinition[] = [
     description: "Animacja narracyjna: wejście Dariusa ze statusem fana muzyki (serce i nuty), nagrywanie audycji z radia NDR 1 na kasetę, spisywanie tytułów na wkładce J-Card oraz znak zapytania przy nieznanym utworze.",
     component: DariusRadioStory,
     defaultProps: defaultDariusRadioStoryProps,
-    defaultDurationInFrames: 300, // 10 seconds at 30fps
+    defaultDurationInFrames: 360, // 12 seconds at 30fps (rozszerzalne)
     tags: ["Darius", "Postać", "Radio", "Kaseta", "Mixtape", "Tajemnicza Piosenka", "Pytajnik", "Alpha"],
     isBackground: false,
   },

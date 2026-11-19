@@ -25,14 +25,14 @@ export const DariusRadioStorySchema = z.object({
   showWritingPencil: z.boolean().default(true),
   showQuestionMark: z.boolean().default(true),
 
-  // Oś czasu (klatki kluczowe)
-  durationInFrames: z.number().min(90).max(600).default(300),
-  dariusEnterFrame: z.number().min(0).max(60).default(5),
-  heartNotesStartFrame: z.number().min(10).max(80).default(22),
-  heartNotesEndFrame: z.number().min(50).max(120).default(75),
-  radioStartFrame: z.number().min(50).max(140).default(75),
-  writingStartFrame: z.number().min(110).max(210).default(145),
-  questionMarkStartFrame: z.number().min(170).max(280).default(215),
+  // Oś czasu i timingi (pełna elastyczność - od 2s do 120s / 3600 klatek)
+  durationInFrames: z.number().min(60).max(3600).default(360),
+  dariusEnterFrame: z.number().min(0).max(3600).default(5),
+  heartNotesStartFrame: z.number().min(0).max(3600).default(22),
+  heartNotesEndFrame: z.number().min(0).max(3600).default(80),
+  radioStartFrame: z.number().min(0).max(3600).default(80),
+  writingStartFrame: z.number().min(0).max(3600).default(150),
+  questionMarkStartFrame: z.number().min(0).max(3600).default(235),
 
   // Przezroczyste tło do montażu
   transparentBackground: z.boolean().default(true),
@@ -60,13 +60,13 @@ export const defaultDariusRadioStoryProps: DariusRadioStoryProps = {
   showWritingPencil: true,
   showQuestionMark: true,
 
-  durationInFrames: 300,
+  durationInFrames: 360, // 12s domyślnie
   dariusEnterFrame: 5,
   heartNotesStartFrame: 22,
-  heartNotesEndFrame: 75,
-  radioStartFrame: 75,
-  writingStartFrame: 145,
-  questionMarkStartFrame: 215,
+  heartNotesEndFrame: 80,
+  radioStartFrame: 80,
+  writingStartFrame: 150,
+  questionMarkStartFrame: 235,
 
   transparentBackground: true,
 };

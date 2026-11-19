@@ -12,6 +12,10 @@ import {
   Palette,
   Maximize2,
   Sliders,
+  Timer,
+  Play,
+  FileQuestion,
+  Pencil,
 } from "lucide-react";
 import { DariusRadioStoryProps } from "../../remotion/templates/DariusRadioStory/schema";
 import { DARIUS_AVATAR_SVG } from "../../remotion/templates/DariusRadioStory/darius-avatar";
@@ -63,6 +67,65 @@ export const DariusStoryControls: React.FC<DariusStoryControlsProps> = ({
   const currentTracklistScale = props.tracklistScale ?? 1.15;
   const currentHeartScale = props.heartScale ?? 1.25;
   const currentQuestionMarkScale = props.questionMarkScale ?? 1.35;
+
+  const currentDuration = props.durationInFrames ?? durationFrames ?? 360;
+
+  const handleSetDuration = (frames: number) => {
+    const validFrames = Math.max(60, Math.min(3600, frames));
+    setDurationFrames(validFrames);
+    updateProp("durationInFrames", validFrames);
+  };
+
+  const timingEvents: Array<{
+    key: keyof DariusRadioStoryProps;
+    title: string;
+    desc: string;
+    icon: React.ReactNode;
+    val: number;
+  }> = [
+    {
+      key: "dariusEnterFrame",
+      title: "1. Wejście Dariusa",
+      desc: "Klatka wejścia postaci na ekran",
+      icon: <User className="w-3.5 h-3.5 text-yellow-400" />,
+      val: props.dariusEnterFrame ?? 5,
+    },
+    {
+      key: "heartNotesStartFrame",
+      title: "2. Serce & Nuty (Początek)",
+      desc: "Pojawienie się serca i nutek (status fana)",
+      icon: <Heart className="w-3.5 h-3.5 text-yellow-400" />,
+      val: props.heartNotesStartFrame ?? 22,
+    },
+    {
+      key: "heartNotesEndFrame",
+      title: "3. Serce & Nuty (Zniknięcie)",
+      desc: "Wygaszenie nutek przed przejściem do radia",
+      icon: <Sparkles className="w-3.5 h-3.5 text-yellow-400" />,
+      val: props.heartNotesEndFrame ?? 80,
+    },
+    {
+      key: "radioStartFrame",
+      title: "4. Wejście Radia & Kasety",
+      desc: "Pojawienie się radia i kasety, przesunięcie Dariusa",
+      icon: <Radio className="w-3.5 h-3.5 text-yellow-400" />,
+      val: props.radioStartFrame ?? 80,
+    },
+    {
+      key: "writingStartFrame",
+      title: "5. Spisywanie Utworów (Ołówek)",
+      desc: "Wjazd karty notatek i rysowanie linii utworów",
+      icon: <Pencil className="w-3.5 h-3.5 text-yellow-400" />,
+      val: props.writingStartFrame ?? 150,
+    },
+    {
+      key: "questionMarkStartFrame",
+      title: "6. Tajemnicza Piosenka (Pytajnik)",
+      desc: "Wstrzymanie ołówka i wyskok pytajnika (?)",
+      icon: <FileQuestion className="w-3.5 h-3.5 text-yellow-400" />,
+      val: props.questionMarkStartFrame ?? 235,
+    },
+  ];
 
   return (
     <div className="space-y-4">
@@ -138,7 +201,7 @@ export const DariusStoryControls: React.FC<DariusStoryControlsProps> = ({
                 type="button"
                 onClick={() => updateProp("avatarUrl", DARIUS_AVATAR_SVG)}
                 className="px-2 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-300 text-[11px] transition-colors"
-                title="Przywróć domyślną prostą ilustrację line-art"
+                title="Przywróć domyślną prostą ilustrację: żółte koło i półkole"
               >
                 Domyślny
               </button>
@@ -170,7 +233,7 @@ export const DariusStoryControls: React.FC<DariusStoryControlsProps> = ({
         </div>
       </div>
 
-      {/* 2. ROZMIARY I SKALOWANIE POSZCZEGÓLNYCH ELEMENTÓW (NOWE!) */}
+      {/* 2. ROZMIARY I SKALOWANIE POSZCZEGÓLNYCH ELEMENTÓW */}
       <div className="bg-[#12121a] p-3 rounded-xl border border-white/5 space-y-3.5">
         <span className="text-xs font-semibold text-white block flex items-center gap-1.5">
           <Maximize2 className="w-3.5 h-3.5 text-yellow-400" />
@@ -294,11 +357,201 @@ export const DariusStoryControls: React.FC<DariusStoryControlsProps> = ({
         </div>
       </div>
 
-      {/* 3. KOLORYSTYKA CZARNO-BIAŁA Z ŻÓŁTYM AKCENTEM */}
+      {/* 3. PEŁNA KONTROLA NAD CZASEM TRWANIA I TIMINGIEM (ROZSZERZONE!) */}
+      <div className="bg-[#12121a] p-3.5 rounded-xl border border-yellow-400/20 space-y-4">
+        <div className="flex items-center justify-between">
+          <span className="text-xs font-bold text-white flex items-center gap-1.5">
+            <Timer className="w-4 h-4 text-yellow-400" />
+            Czas Trwania i Timing Animacji:
+          </span>
+          <span className="text-[10px] font-mono text-yellow-400 bg-yellow-400/10 px-2 py-0.5 rounded">
+            {(currentDuration / fps).toFixed(1)}s ({currentDuration} kl.)
+          </span>
+        </div>
+
+        {/* A. CAŁKOWITY CZAS TRWANIA — DOWOLNA DŁUGOŚĆ */}
+        <div className="space-y-2.5 p-2.5 rounded-lg bg-black/40 border border-white/5">
+          <div className="flex items-center justify-between">
+            <label className="text-xs font-semibold text-zinc-200">
+              Całkowity Czas Trwania Sceny:
+            </label>
+          </div>
+
+          {/* Bezpośrednie wpisywanie sekund i klatek */}
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <span className="text-[10px] text-zinc-400 block mb-1">Sekundy (s):</span>
+              <div className="flex items-center gap-1 bg-[#181822] px-2.5 py-1.5 rounded-lg border border-white/10">
+                <input
+                  type="number"
+                  step="0.1"
+                  min="2"
+                  max="120"
+                  value={parseFloat((currentDuration / fps).toFixed(2))}
+                  onChange={(e) => {
+                    const sec = parseFloat(e.target.value);
+                    if (!isNaN(sec) && sec > 0) {
+                      handleSetDuration(Math.round(sec * fps));
+                    }
+                  }}
+                  className="w-full bg-transparent text-white font-mono text-xs focus:outline-none"
+                />
+                <span className="text-zinc-500 text-[11px] font-mono">s</span>
+              </div>
+            </div>
+
+            <div>
+              <span className="text-[10px] text-zinc-400 block mb-1">Klatki (frames @ 30fps):</span>
+              <div className="flex items-center gap-1 bg-[#181822] px-2.5 py-1.5 rounded-lg border border-white/10">
+                <input
+                  type="number"
+                  step="1"
+                  min="60"
+                  max="3600"
+                  value={currentDuration}
+                  onChange={(e) => {
+                    const fr = parseInt(e.target.value);
+                    if (!isNaN(fr) && fr > 0) {
+                      handleSetDuration(fr);
+                    }
+                  }}
+                  className="w-full bg-transparent text-white font-mono text-xs focus:outline-none"
+                />
+                <span className="text-zinc-500 text-[11px] font-mono">kl.</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Suwak czasu trwania do 60 sekund (1800 klatek) */}
+          <div className="pt-1">
+            <input
+              type="range"
+              min="90"
+              max="1800"
+              step="15"
+              value={currentDuration}
+              onChange={(e) => handleSetDuration(parseInt(e.target.value))}
+              className="w-full accent-yellow-400"
+            />
+          </div>
+
+          {/* Szybkie presety czasu trwania */}
+          <div className="grid grid-cols-4 gap-1 pt-1">
+            {[
+              { label: "8s", frames: 240 },
+              { label: "10s", frames: 300 },
+              { label: "12s", frames: 360 },
+              { label: "15s", frames: 450 },
+              { label: "18s", frames: 540 },
+              { label: "20s", frames: 600 },
+              { label: "25s", frames: 750 },
+              { label: "30s", frames: 900 },
+            ].map((d) => (
+              <button
+                key={d.frames}
+                type="button"
+                onClick={() => handleSetDuration(d.frames)}
+                className={`py-1 rounded text-center text-[10px] font-mono transition-all ${
+                  currentDuration === d.frames
+                    ? "bg-yellow-500 text-black font-bold"
+                    : "bg-[#181822] text-zinc-400 hover:text-white"
+                }`}
+              >
+                {d.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* B. DOKŁADNE WPISYWANIE TIMINGU KLATEK KLUCZOWYCH */}
+        <div className="space-y-3 pt-1">
+          <span className="text-[11px] font-semibold text-zinc-300 block">
+            Kiedy co ma się pojawić (wpisz klatkę lub sekundę):
+          </span>
+
+          <div className="space-y-2.5">
+            {timingEvents.map((ev) => {
+              const currentVal = ev.val;
+              const currentSec = parseFloat((currentVal / fps).toFixed(2));
+
+              return (
+                <div
+                  key={ev.key}
+                  className="bg-black/30 p-2.5 rounded-lg border border-white/5 space-y-1.5"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-semibold text-white flex items-center gap-1.5">
+                      {ev.icon}
+                      {ev.title}
+                    </span>
+                    <span className="text-[10px] font-mono text-zinc-400">
+                      {currentSec}s ({currentVal} kl.)
+                    </span>
+                  </div>
+
+                  {/* Pola do wpisywania */}
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="flex items-center gap-1 bg-[#14141e] px-2 py-1 rounded border border-white/10">
+                      <span className="text-[9px] text-zinc-400 uppercase">Klatka:</span>
+                      <input
+                        type="number"
+                        min="0"
+                        max={currentDuration}
+                        step="1"
+                        value={currentVal}
+                        onChange={(e) => {
+                          const val = parseInt(e.target.value);
+                          if (!isNaN(val)) {
+                            updateProp(ev.key, Math.max(0, val));
+                          }
+                        }}
+                        className="w-full bg-transparent text-white font-mono text-xs focus:outline-none"
+                      />
+                    </div>
+
+                    <div className="flex items-center gap-1 bg-[#14141e] px-2 py-1 rounded border border-white/10">
+                      <span className="text-[9px] text-zinc-400 uppercase">Sek:</span>
+                      <input
+                        type="number"
+                        min="0"
+                        max={parseFloat((currentDuration / fps).toFixed(2))}
+                        step="0.1"
+                        value={currentSec}
+                        onChange={(e) => {
+                          const sec = parseFloat(e.target.value);
+                          if (!isNaN(sec)) {
+                            updateProp(ev.key, Math.max(0, Math.round(sec * fps)));
+                          }
+                        }}
+                        className="w-full bg-transparent text-white font-mono text-xs focus:outline-none"
+                      />
+                      <span className="text-[10px] text-zinc-500 font-mono">s</span>
+                    </div>
+                  </div>
+
+                  {/* Płynny suwak dostosowany do pełnego czasu trwania */}
+                  <input
+                    type="range"
+                    min="0"
+                    max={currentDuration}
+                    step="1"
+                    value={currentVal}
+                    onChange={(e) => updateProp(ev.key, parseInt(e.target.value))}
+                    className="w-full accent-yellow-400"
+                  />
+                  <p className="text-[9px] text-zinc-500">{ev.desc}</p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* 4. KOLORYSTYKA CZARNO-BIAŁA Z ŻÓŁTYM AKCENTEM */}
       <div className="bg-[#12121a] p-3 rounded-xl border border-white/5 space-y-2">
         <span className="text-xs font-semibold text-white block flex items-center gap-1.5">
           <Palette className="w-3.5 h-3.5 text-yellow-400" />
-          Kolor Akcentu (Słuchawki, Serce, Pytajnik):
+          Kolor Akcentu (Głowa, Tułów, Pytajnik):
         </span>
         <div className="grid grid-cols-5 gap-1.5">
           {accentColors.map((col) => (
@@ -322,10 +575,10 @@ export const DariusStoryControls: React.FC<DariusStoryControlsProps> = ({
         </div>
       </div>
 
-      {/* 4. ELEMENTY SCENY (PROSTE PRZEŁĄCZNIKI) */}
+      {/* 5. PRZEŁĄCZNIKI ELEMENTÓW */}
       <div className="bg-[#12121a] p-3 rounded-xl border border-white/5 space-y-2.5">
         <span className="text-xs font-semibold text-white block">
-          Elementy Sceny:
+          Włączanie / Wyłączanie Elementów:
         </span>
 
         {/* Serce & Nuty */}
@@ -394,98 +647,6 @@ export const DariusStoryControls: React.FC<DariusStoryControlsProps> = ({
           >
             {props.showQuestionMark ? "WŁ" : "WYŁ"}
           </button>
-        </div>
-      </div>
-
-      {/* 5. CZASY I OŚ CZASU */}
-      <div className="bg-[#12121a] p-3 rounded-xl border border-white/5 space-y-3">
-        <span className="text-xs font-semibold text-white block flex items-center gap-1.5">
-          <Clock className="w-3.5 h-3.5 text-yellow-400" />
-          Synchronizacja z Lektorem:
-        </span>
-
-        {/* Całkowity czas */}
-        <div>
-          <label className="text-[11px] text-zinc-400 block mb-1">
-            Całkowity Czas Trwania Sceny:
-          </label>
-          <div className="grid grid-cols-3 gap-1.5">
-            {[
-              { label: "8s (240 kl.)", frames: 240 },
-              { label: "10s (300 kl.)", frames: 300 },
-              { label: "12s (360 kl.)", frames: 360 },
-            ].map((d) => (
-              <button
-                key={d.frames}
-                type="button"
-                onClick={() => {
-                  setDurationFrames(d.frames);
-                  updateProp("durationInFrames", d.frames);
-                }}
-                className={`py-1.5 px-2 rounded-lg border text-center transition-all ${
-                  props.durationInFrames === d.frames
-                    ? "bg-yellow-500/20 border-yellow-500 text-yellow-300 font-bold"
-                    : "bg-[#181822] border-white/5 text-zinc-400 hover:text-white"
-                }`}
-              >
-                <span className="text-xs font-mono">{d.label}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Suwak: Kiedy wchodzi Radio */}
-        <div>
-          <div className="flex justify-between text-[11px] mb-1">
-            <span className="text-zinc-300">Start Radia i Kasety:</span>
-            <span className="font-mono text-yellow-400">
-              klatka {props.radioStartFrame} ({(props.radioStartFrame / fps).toFixed(1)}s)
-            </span>
-          </div>
-          <input
-            type="range"
-            min="50"
-            max="120"
-            value={props.radioStartFrame}
-            onChange={(e) => updateProp("radioStartFrame", parseInt(e.target.value))}
-            className="w-full accent-yellow-400"
-          />
-        </div>
-
-        {/* Suwak: Kiedy ołówek notuje */}
-        <div>
-          <div className="flex justify-between text-[11px] mb-1">
-            <span className="text-zinc-300">Zapisywanie Lini Utworów:</span>
-            <span className="font-mono text-yellow-400">
-              klatka {props.writingStartFrame} ({(props.writingStartFrame / fps).toFixed(1)}s)
-            </span>
-          </div>
-          <input
-            type="range"
-            min="100"
-            max="180"
-            value={props.writingStartFrame}
-            onChange={(e) => updateProp("writingStartFrame", parseInt(e.target.value))}
-            className="w-full accent-yellow-400"
-          />
-        </div>
-
-        {/* Suwak: Kiedy pojawia się Znak Zapytania */}
-        <div>
-          <div className="flex justify-between text-[11px] mb-1">
-            <span className="text-zinc-300">Pojawienie się Pytajnika:</span>
-            <span className="font-mono text-yellow-400">
-              klatka {props.questionMarkStartFrame} ({(props.questionMarkStartFrame / fps).toFixed(1)}s)
-            </span>
-          </div>
-          <input
-            type="range"
-            min="170"
-            max="260"
-            value={props.questionMarkStartFrame}
-            onChange={(e) => updateProp("questionMarkStartFrame", parseInt(e.target.value))}
-            className="w-full accent-yellow-400"
-          />
         </div>
       </div>
     </div>

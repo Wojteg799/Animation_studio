@@ -10,8 +10,8 @@ interface CassetteTracklistCardProps {
 export const CassetteTracklistCard: React.FC<CassetteTracklistCardProps> = ({ props, frame }) => {
   const { fps } = useVideoConfig();
   const {
-    writingStartFrame = 145,
-    questionMarkStartFrame = 215,
+    writingStartFrame = 150,
+    questionMarkStartFrame = 235,
     accentColor = "#facc15",
     lineColor = "#ffffff",
     lineWidth = 2.5,
@@ -31,25 +31,30 @@ export const CassetteTracklistCard: React.FC<CassetteTracklistCardProps> = ({ pr
     return null;
   }
 
-  // Animacja rysowania linii przez ołówek (3 kolejne linie piosenek)
-  // Linia 1: klatki 150 - 168
-  const line1Prog = Math.max(0, Math.min(1, (frame - (writingStartFrame + 6)) / 18));
-  // Linia 2: klatki 170 - 188
-  const line2Prog = Math.max(0, Math.min(1, (frame - (writingStartFrame + 24)) / 18));
-  // Linia 3: klatki 190 - 208
-  const line3Prog = Math.max(0, Math.min(1, (frame - (writingStartFrame + 42)) / 18));
+  // Dynamiczne tempo rysowania linii zależne od ustawionego przez użytkownika timingu
+  const writingSpan = Math.max(30, questionMarkStartFrame - writingStartFrame - 15);
+  const lineInterval = writingSpan / 3;
+  const lineDur = Math.max(12, lineInterval * 0.7);
 
-  // Ołówek dochodzi do 4. linii w klatce ~215 (punkt kulminacyjny: wahanie i brak zapisu)
+  const line1Start = writingStartFrame + 6;
+  const line2Start = line1Start + lineInterval;
+  const line3Start = line2Start + lineInterval;
+
+  const line1Prog = Math.max(0, Math.min(1, (frame - line1Start) / lineDur));
+  const line2Prog = Math.max(0, Math.min(1, (frame - line2Start) / lineDur));
+  const line3Prog = Math.max(0, Math.min(1, (frame - line3Start) / lineDur));
+
+  // Ołówek dochodzi do 4. linii w klatce questionMarkStartFrame
   const isMysteryPhase = frame >= questionMarkStartFrame;
   const pencilExit = Math.max(0, Math.min(1, (frame - questionMarkStartFrame) / 14));
 
   // Pozycja ołówka na bazie aktualnie rysowanej linii
   let pencilTargetY = 24;
   let pencilTargetX = line1Prog * 180;
-  if (frame >= writingStartFrame + 42) {
+  if (frame >= line3Start) {
     pencilTargetY = 72;
     pencilTargetX = line3Prog * 180;
-  } else if (frame >= writingStartFrame + 24) {
+  } else if (frame >= line2Start) {
     pencilTargetY = 48;
     pencilTargetX = line2Prog * 180;
   }
@@ -57,7 +62,7 @@ export const CassetteTracklistCard: React.FC<CassetteTracklistCardProps> = ({ pr
   // Wahanie ołówka przy linii 4 (przed zniknięciem)
   const pencilShake = isMysteryPhase ? Math.sin(frame * 0.5) * 6 : 0;
 
-  // Migający kursor na pustej 4. linii
+  // Migający kursor na pustej 4. linii (ZERO GLOW)
   const isCursorBlink = Math.floor(frame / 10) % 2 === 0;
 
   return (
@@ -74,7 +79,7 @@ export const CassetteTracklistCard: React.FC<CassetteTracklistCardProps> = ({ pr
         alignItems: "center",
       }}
     >
-      {/* ================= MINIMALIST WIREFRAME TRACKLIST CARD ================= */}
+      {/* ================= MINIMALIST WIREFRAME TRACKLIST CARD (ZERO GLOW) ================= */}
       <div
         style={{
           width: 320,
@@ -82,7 +87,6 @@ export const CassetteTracklistCard: React.FC<CassetteTracklistCardProps> = ({ pr
           border: `${lineWidth}px solid ${lineColor}`,
           borderRadius: 12,
           padding: "16px 20px",
-          boxShadow: "0 18px 45px rgba(0,0,0,0.85)",
           display: "flex",
           flexDirection: "column",
           gap: 14,
@@ -176,7 +180,7 @@ export const CassetteTracklistCard: React.FC<CassetteTracklistCardProps> = ({ pr
             }}
           />
 
-          {/* Przerywana, pusta linia z migającym kursorem */}
+          {/* Przerywana, pusta linia z migającym kursorem (ZERO GLOW) */}
           <div style={{ flex: 1, height: 16, display: "flex", alignItems: "center", position: "relative" }}>
             <div
               style={{
@@ -187,7 +191,7 @@ export const CassetteTracklistCard: React.FC<CassetteTracklistCardProps> = ({ pr
               }}
             />
 
-            {/* Migający kursor wskazujący na brak zapisu */}
+            {/* Migający kursor wskazujący na brak zapisu (ZERO GLOW) */}
             {isMysteryPhase && isCursorBlink && (
               <div
                 style={{
@@ -196,7 +200,6 @@ export const CassetteTracklistCard: React.FC<CassetteTracklistCardProps> = ({ pr
                   width: 3,
                   height: 14,
                   backgroundColor: accentColor,
-                  boxShadow: `0 0 8px ${accentColor}`,
                 }}
               />
             )}

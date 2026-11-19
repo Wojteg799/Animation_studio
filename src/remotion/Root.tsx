@@ -223,7 +223,7 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="DariusRadioStory"
         component={DariusRadioStory}
-        durationInFrames={300} // 10 sekund przy 30fps
+        durationInFrames={360} // 12 sekund przy 30fps domyślnie
         fps={30}
         width={1920}
         height={1080}
@@ -239,7 +239,7 @@ export const RemotionRoot: React.FC = () => {
             width: customProps.videoWidth || 1920,
             height: customProps.videoHeight || 1080,
             fps: customProps.customFps || 30,
-            durationInFrames: customProps.durationInFrames || customProps.customDuration || 300,
+            durationInFrames: customProps.durationInFrames || customProps.customDuration || 360,
             props: customProps,
           };
         }}
@@ -248,21 +248,41 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="DariusRadioStory-4K"
         component={DariusRadioStory}
-        durationInFrames={300}
+        durationInFrames={360}
         fps={30}
         width={3840}
         height={2160}
         defaultProps={defaultDariusRadioStoryProps}
+        calculateMetadata={async ({ props }) => {
+          const customProps = props as DariusRadioStoryProps & {
+            customFps?: number;
+            customDuration?: number;
+          };
+          return {
+            durationInFrames: customProps.durationInFrames || customProps.customDuration || 360,
+            props: customProps,
+          };
+        }}
       />
 
       <Composition
         id="DariusRadioStory-Shorts"
         component={DariusRadioStory}
-        durationInFrames={300}
+        durationInFrames={360}
         fps={30}
         width={1080}
         height={1920}
         defaultProps={defaultDariusRadioStoryProps}
+        calculateMetadata={async ({ props }) => {
+          const customProps = props as DariusRadioStoryProps & {
+            customFps?: number;
+            customDuration?: number;
+          };
+          return {
+            durationInFrames: customProps.durationInFrames || customProps.customDuration || 360,
+            props: customProps,
+          };
+        }}
       />
 
       {/* 1. SEKCJA: JOY DIVISION 25 KASET -> UNKNOWN PLEASURES */}
