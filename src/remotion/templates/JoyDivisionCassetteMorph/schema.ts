@@ -8,21 +8,30 @@ export const JoyDivisionCassetteMorphSchema = z.object({
 
   // Card Dealing Intro Animation ("Rozdawanie rządków kaset jak kart")
   enableDealIntro: z.boolean().default(true),
-  dealStartFrame: z.number().min(0).max(30).default(4),
-  dealRowStagger: z.number().min(2).max(16).default(6),
-  dealRowDuration: z.number().min(6).max(28).default(14),
+  dealStartFrame: z.number().min(0).max(3600).default(4),
+  dealRowStagger: z.number().min(1).max(60).default(6),
+  dealRowDuration: z.number().min(4).max(180).default(14),
   dealDirection: z
     .enum(["from-top", "from-bottom", "scale-snap", "diagonal-deck"])
     .default("from-top"),
 
   // Cassette Sizing & Grid Spacing (delikatne powiększenie i mniejszy spacing bez wychodzenia poza ekran)
-  cassetteScale: z.number().min(0.8).max(1.5).default(1.15),
-  gridSpacingX: z.number().min(130).max(250).default(180),
-  gridSpacingY: z.number().min(80).max(160).default(115),
+  cassetteScale: z.number().min(0.5).max(3.0).default(1.15),
+  gridSpacingX: z.number().min(60).max(400).default(180),
+  gridSpacingY: z.number().min(40).max(300).default(115),
 
   // Morph timing & speed (when alignment into rows begins)
-  morphStartFrame: z.number().min(20).max(120).default(50),
-  morphDurationFrames: z.number().min(30).max(120).default(70),
+  alignStartFrame: z.number().min(0).max(3600).default(50),
+  alignDuration: z.number().min(5).max(1800).default(38),
+
+  flattenStartFrame: z.number().min(0).max(3600).default(88),
+  flattenDuration: z.number().min(5).max(1800).default(45),
+
+  mountainStartFrame: z.number().min(0).max(3600).default(133),
+  mountainDuration: z.number().min(5).max(1800).default(52),
+
+  morphStartFrame: z.number().min(0).max(3600).default(50),
+  morphDurationFrames: z.number().min(10).max(3600).default(70),
 
   // Sposób ułożenia w rzędzie:
   // "natural-stack": Kasety zachowują 100% naturalne proporcje bez deformacji podczas układania w rzędzie
@@ -41,8 +50,8 @@ export const JoyDivisionCassetteMorphSchema = z.object({
   // Cassette mechanics
   spoolSpinSpeed: z.number().min(0.2).max(3.0).default(1.0),
 
-  // Composition duration (240 frames = 8 seconds at 30fps)
-  durationInFrames: z.number().min(150).max(600).default(240),
+  // Composition duration (unlocked from 60 to 3600 frames, e.g. 2s to 120s)
+  durationInFrames: z.number().min(60).max(3600).default(240),
 });
 
 export type JoyDivisionCassetteMorphProps = z.infer<
@@ -59,9 +68,15 @@ export const defaultJoyDivisionCassetteMorphProps: JoyDivisionCassetteMorphProps
   cassetteScale: 1.15,
   gridSpacingX: 180,
   gridSpacingY: 115,
-  alignStyle: "natural-stack",
+  alignStartFrame: 50,
+  alignDuration: 38,
+  flattenStartFrame: 88,
+  flattenDuration: 45,
+  mountainStartFrame: 133,
+  mountainDuration: 52,
   morphStartFrame: 50,
   morphDurationFrames: 70,
+  alignStyle: "natural-stack",
   transparentBackground: true,
   lineColor: "#ffffff",
   lineWidth: 1.8,

@@ -123,7 +123,7 @@ export default function StudioPage() {
       } else if (templateId === "darius-radio-story") {
         setDurationFrames(dariusProps.durationInFrames || 360);
       } else if (templateId === "joy-division-cassette-morph") {
-        setDurationFrames(240); // 8 seconds @ 30fps
+        setDurationFrames(joyDivisionProps.durationInFrames || 240);
       } else if (templateId === "retro-cassette-intro") {
         setDurationFrames(210); // 7 seconds @ 30fps
       } else if (isBackground) {
@@ -209,6 +209,9 @@ export default function StudioPage() {
           ...prev,
           [key]: val,
         }));
+        if (key === "durationInFrames" && typeof val === "number") {
+          setDurationFrames(val);
+        }
       },
       []
     );
@@ -470,6 +473,8 @@ export default function StudioPage() {
               durationFrames={
                 selectedTemplateId === "darius-radio-story" && dariusProps.durationInFrames
                   ? dariusProps.durationInFrames
+                  : selectedTemplateId === "joy-division-cassette-morph" && joyDivisionProps.durationInFrames
+                  ? joyDivisionProps.durationInFrames
                   : durationFrames
               }
             />

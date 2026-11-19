@@ -15,6 +15,12 @@ export const JoyDivisionCassetteMorph: React.FC<JoyDivisionCassetteMorphProps> =
   gridSpacingX = 180,
   gridSpacingY = 115,
   alignStyle = "natural-stack",
+  alignStartFrame,
+  alignDuration,
+  flattenStartFrame,
+  flattenDuration,
+  mountainStartFrame,
+  mountainDuration,
   morphStartFrame = 50,
   morphDurationFrames = 70,
   transparentBackground = true,
@@ -30,7 +36,7 @@ export const JoyDivisionCassetteMorph: React.FC<JoyDivisionCassetteMorphProps> =
   const frame = useCurrentFrame();
   const { width, height } = useVideoConfig();
 
-  // Milestone frame timing scaled proportionally to overall duration
+  // Milestone frame timing scaled proportionally to overall duration if not explicitly provided
   const timeScale = durationInFrames / 240;
 
   // Dealing intro finish frame
@@ -38,20 +44,32 @@ export const JoyDivisionCassetteMorph: React.FC<JoyDivisionCassetteMorphProps> =
     ? dealStartFrame + 4 * dealRowStagger + dealRowDuration
     : 0;
 
-  // Stage 1 -> 2: Align into 25 rows (starts at morphStartFrame, ensuring cards have landed)
-  const alignStartFrame = Math.max(
-    Math.round((dealFinishFrame + 6) * timeScale),
-    Math.round(morphStartFrame * timeScale)
-  );
-  const alignDuration = Math.round(38 * timeScale);
+  // Stage 1 -> 2: Align into 25 rows
+  const effectiveAlignStartFrame =
+    alignStartFrame !== undefined
+      ? alignStartFrame
+      : Math.max(
+          Math.round((dealFinishFrame + 6) * timeScale),
+          Math.round(morphStartFrame * timeScale)
+        );
+  const effectiveAlignDuration =
+    alignDuration !== undefined ? alignDuration : Math.round(38 * timeScale);
 
   // Stage 2 -> 3: Stretch horizontally & squash into flat lines
-  const flattenStartFrame = alignStartFrame + alignDuration;
-  const flattenDuration = Math.round(45 * timeScale);
+  const effectiveFlattenStartFrame =
+    flattenStartFrame !== undefined
+      ? flattenStartFrame
+      : effectiveAlignStartFrame + effectiveAlignDuration;
+  const effectiveFlattenDuration =
+    flattenDuration !== undefined ? flattenDuration : Math.round(45 * timeScale);
 
   // Stage 3 -> 4: Mountain peaks rise upwards
-  const mountainStartFrame = flattenStartFrame + flattenDuration;
-  const mountainDuration = Math.round(52 * timeScale);
+  const effectiveMountainStartFrame =
+    mountainStartFrame !== undefined
+      ? mountainStartFrame
+      : effectiveFlattenStartFrame + effectiveFlattenDuration;
+  const effectiveMountainDuration =
+    mountainDuration !== undefined ? mountainDuration : Math.round(52 * timeScale);
 
   // Generate the 25 unique Joy Division CP 1919 pulsar waveforms
   const pulsarLines = useMemo(() => {
@@ -142,12 +160,12 @@ export const JoyDivisionCassetteMorph: React.FC<JoyDivisionCassetteMorphProps> =
               dealRowDuration={dealRowDuration}
               dealDirection={dealDirection}
               frame={frame}
-              alignStartFrame={alignStartFrame}
-              alignDuration={alignDuration}
-              flattenStartFrame={flattenStartFrame}
-              flattenDuration={flattenDuration}
-              mountainStartFrame={mountainStartFrame}
-              mountainDuration={mountainDuration}
+              alignStartFrame={effectiveAlignStartFrame}
+              alignDuration={effectiveAlignDuration}
+              flattenStartFrame={effectiveFlattenStartFrame}
+              flattenDuration={effectiveFlattenDuration}
+              mountainStartFrame={effectiveMountainStartFrame}
+              mountainDuration={effectiveMountainDuration}
             />
           );
         })}

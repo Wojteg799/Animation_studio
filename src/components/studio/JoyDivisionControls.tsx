@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Grid,
   Activity,
@@ -12,6 +12,10 @@ import {
   Layers,
   Clock,
   Check,
+  Zap,
+  ArrowDown,
+  TrendingUp,
+  Maximize2,
 } from "lucide-react";
 import { JoyDivisionCassetteMorphProps } from "../../remotion/templates/JoyDivisionCassetteMorph/schema";
 
@@ -36,6 +40,164 @@ export const JoyDivisionControls: React.FC<JoyDivisionControlsProps> = ({
   const [activeTab, setActiveTab] = useState<
     "layout" | "deal" | "waves" | "duration"
   >("layout");
+
+  const currentDuration = props.durationInFrames ?? durationFrames ?? 240;
+
+  const [durationSecInput, setDurationSecInput] = useState<string>(
+    (currentDuration / fps).toFixed(1)
+  );
+  const [durationFramesInput, setDurationFramesInput] = useState<string>(
+    currentDuration.toString()
+  );
+
+  useEffect(() => {
+    setDurationSecInput((currentDuration / fps).toFixed(1));
+    setDurationFramesInput(currentDuration.toString());
+  }, [currentDuration, fps]);
+
+  const handleSetDuration = (frames: number) => {
+    const validFrames = Math.max(60, Math.min(3600, frames));
+    setDurationFrames(validFrames);
+    updateProp("durationInFrames", validFrames);
+    setDurationSecInput((validFrames / fps).toFixed(1));
+    setDurationFramesInput(validFrames.toString());
+  };
+
+  const handleAutoScaleMilestones = () => {
+    const scale = currentDuration / 240;
+    const newDealStart = Math.round(4 * scale);
+    const newDealStagger = Math.max(2, Math.round(6 * scale));
+    const newDealDuration = Math.max(6, Math.round(14 * scale));
+    const newDealFinish = (props.enableDealIntro ?? true)
+      ? newDealStart + 4 * newDealStagger + newDealDuration
+      : 0;
+
+    const newAlignStart = Math.max(newDealFinish + 4, Math.round(50 * scale));
+    const newAlignDuration = Math.max(15, Math.round(38 * scale));
+    const newFlattenStart = newAlignStart + newAlignDuration;
+    const newFlattenDuration = Math.max(15, Math.round(45 * scale));
+    const newMountainStart = newFlattenStart + newFlattenDuration;
+    const newMountainDuration = Math.max(20, Math.round(52 * scale));
+
+    updateProp("dealStartFrame", newDealStart);
+    updateProp("dealRowStagger", newDealStagger);
+    updateProp("dealRowDuration", newDealDuration);
+    updateProp("alignStartFrame", newAlignStart);
+    updateProp("morphStartFrame", newAlignStart);
+    updateProp("alignDuration", newAlignDuration);
+    updateProp("flattenStartFrame", newFlattenStart);
+    updateProp("flattenDuration", newFlattenDuration);
+    updateProp("mountainStartFrame", newMountainStart);
+    updateProp("mountainDuration", newMountainDuration);
+  };
+
+  const currentAlignStart = props.alignStartFrame ?? props.morphStartFrame ?? 50;
+  const currentAlignDuration = props.alignDuration ?? 38;
+  const currentFlattenStart = props.flattenStartFrame ?? (currentAlignStart + currentAlignDuration);
+  const currentFlattenDuration = props.flattenDuration ?? 45;
+  const currentMountainStart = props.mountainStartFrame ?? (currentFlattenStart + currentFlattenDuration);
+  const currentMountainDuration = props.mountainDuration ?? 52;
+  const currentDealStart = props.dealStartFrame ?? 4;
+  const currentDealStagger = props.dealRowStagger ?? 6;
+  const currentDealDuration = props.dealRowDuration ?? 14;
+
+  const dealTotalLandedFrame = (props.enableDealIntro ?? true)
+    ? currentDealStart + 4 * currentDealStagger + currentDealDuration
+    : 0;
+  const fullMountainsReadyFrame = currentMountainStart + currentMountainDuration + Math.round(24 * 0.7);
+
+  const timingMilestones = [
+    {
+      key: "dealStartFrame" as const,
+      title: "1. Start Rozdawania Kaset",
+      desc: "Klatka wlotu pierwszego rządka kaset na blat stołu",
+      icon: <Layers className="w-3.5 h-3.5 text-amber-400" />,
+      val: currentDealStart,
+      min: 0,
+      max: currentDuration,
+      isDuration: false,
+    },
+    {
+      key: "dealRowDuration" as const,
+      title: "2. Czas Lotu Pojedynczego Rządka",
+      desc: "Długość lotu i sprężystego zatrzaśnięcia każdego rzędu",
+      icon: <ArrowDown className="w-3.5 h-3.5 text-amber-400" />,
+      val: currentDealDuration,
+      min: 4,
+      max: 120,
+      isDuration: true,
+    },
+    {
+      key: "dealRowStagger" as const,
+      title: "3. Odstęp Między Rządkami (Stagger)",
+      desc: "Opóźnienie między wlotem kolejnych 5 rzędów kaset",
+      icon: <Sliders className="w-3.5 h-3.5 text-amber-400" />,
+      val: currentDealStagger,
+      min: 1,
+      max: 60,
+      isDuration: true,
+    },
+    {
+      key: "alignStartFrame" as const,
+      title: "4. Początek Zjazdu do 25 Rzędów",
+      desc: "Klatka, w której kasety zaczynają zjeżdżać w pionowy stos",
+      icon: <Grid className="w-3.5 h-3.5 text-amber-400" />,
+      val: currentAlignStart,
+      min: 0,
+      max: currentDuration,
+      isDuration: false,
+    },
+    {
+      key: "alignDuration" as const,
+      title: "5. Czas Trwania Zjazdu (Duration)",
+      desc: "Ile klatek trwa wyrównanie i ułożenie kaset w 25 rzędach",
+      icon: <Clock className="w-3.5 h-3.5 text-amber-400" />,
+      val: currentAlignDuration,
+      min: 5,
+      max: 300,
+      isDuration: true,
+    },
+    {
+      key: "flattenStartFrame" as const,
+      title: "6. Początek Spłaszczania w Linie",
+      desc: "Klatka rozpoczęcia rozciągania wszerz i spłaszczania w linie",
+      icon: <Maximize2 className="w-3.5 h-3.5 text-amber-400" />,
+      val: currentFlattenStart,
+      min: 0,
+      max: currentDuration,
+      isDuration: false,
+    },
+    {
+      key: "flattenDuration" as const,
+      title: "7. Czas Trwania Spłaszczania (Duration)",
+      desc: "Czas spłaszczania kaset do 100% płaskiej, cienkiej linii",
+      icon: <Clock className="w-3.5 h-3.5 text-amber-400" />,
+      val: currentFlattenDuration,
+      min: 5,
+      max: 300,
+      isDuration: true,
+    },
+    {
+      key: "mountainStartFrame" as const,
+      title: "8. Początek Wyrastania Gór Joy Division",
+      desc: "Klatka, w której z płaskich linii zaczynają wznosić się szczyty",
+      icon: <TrendingUp className="w-3.5 h-3.5 text-amber-400" />,
+      val: currentMountainStart,
+      min: 0,
+      max: currentDuration,
+      isDuration: false,
+    },
+    {
+      key: "mountainDuration" as const,
+      title: "9. Czas Wznoszenia Szczytów (Duration)",
+      desc: "Czas erupcji pełnej wysokości szczytów Unknown Pleasures",
+      icon: <Activity className="w-3.5 h-3.5 text-amber-400" />,
+      val: currentMountainDuration,
+      min: 5,
+      max: 300,
+      isDuration: true,
+    },
+  ];
 
   const dealDirections = [
     {
@@ -435,23 +597,69 @@ export const JoyDivisionControls: React.FC<JoyDivisionControlsProps> = ({
                 Moment Układania w Rzędy
               </span>
               <span className="font-mono text-amber-400 text-xs font-bold">
-                klatka {props.morphStartFrame} ({(props.morphStartFrame / fps).toFixed(1)}s)
+                klatka {currentAlignStart} ({(currentAlignStart / fps).toFixed(2)}s)
               </span>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2">
+              <div className="flex items-center gap-1 bg-[#14141e] px-2 py-1 rounded border border-white/10">
+                <span className="text-[9px] text-zinc-400 uppercase">Klatka:</span>
+                <input
+                  type="number"
+                  min="0"
+                  max={currentDuration}
+                  step="1"
+                  value={currentAlignStart}
+                  onChange={(e) => {
+                    const val = parseInt(e.target.value);
+                    if (!isNaN(val)) {
+                      updateProp("alignStartFrame", Math.max(0, val));
+                      updateProp("morphStartFrame", Math.max(0, val));
+                    }
+                  }}
+                  className="w-full bg-transparent text-white font-mono text-xs focus:outline-none"
+                />
+              </div>
+
+              <div className="flex items-center gap-1 bg-[#14141e] px-2 py-1 rounded border border-white/10">
+                <span className="text-[9px] text-zinc-400 uppercase">Sek:</span>
+                <input
+                  type="number"
+                  min="0"
+                  max={parseFloat((currentDuration / fps).toFixed(2))}
+                  step="0.1"
+                  value={parseFloat((currentAlignStart / fps).toFixed(2))}
+                  onChange={(e) => {
+                    const sec = parseFloat(e.target.value);
+                    if (!isNaN(sec)) {
+                      const fr = Math.max(0, Math.round(sec * fps));
+                      updateProp("alignStartFrame", fr);
+                      updateProp("morphStartFrame", fr);
+                    }
+                  }}
+                  className="w-full bg-transparent text-white font-mono text-xs focus:outline-none"
+                />
+                <span className="text-[10px] text-zinc-500 font-mono">s</span>
+              </div>
             </div>
 
             <input
               type="range"
-              min={15}
-              max={90}
-              step={5}
-              value={props.morphStartFrame}
-              onChange={(e) => updateProp("morphStartFrame", Number(e.target.value))}
-              className="w-full h-1.5 bg-zinc-800 rounded-lg cursor-pointer"
+              min={0}
+              max={currentDuration}
+              step={1}
+              value={currentAlignStart}
+              onChange={(e) => {
+                const val = Number(e.target.value);
+                updateProp("alignStartFrame", val);
+                updateProp("morphStartFrame", val);
+              }}
+              className="w-full h-1.5 bg-zinc-800 rounded-lg cursor-pointer accent-amber-400"
             />
 
             <div className="flex justify-between text-[9px] text-zinc-500 font-mono">
-              <span>Szybkie ułożenie (0.5s)</span>
-              <span>Dłuższy podgląd 25 kaset (3s)</span>
+              <span>Wczesny zjazd (od razu)</span>
+              <span>Dłuższy podgląd 25 kaset</span>
             </div>
           </div>
 
@@ -734,33 +942,63 @@ export const JoyDivisionControls: React.FC<JoyDivisionControlsProps> = ({
                   Timing & Prędkość Rozdawania:
                 </span>
 
-                {/* Odstęp między rządkami (Stagger) */}
+                {/* Klatka Rozpoczęcia (Deal Start Frame) */}
                 <div className="space-y-1.5">
                   <div className="flex justify-between items-center text-[11px] text-zinc-300">
                     <div>
-                      <span className="font-semibold block">Odstęp Między Rządkami (Stagger)</span>
+                      <span className="font-semibold block">Klatka Rozpoczęcia (Start)</span>
                       <span className="text-[9px] text-zinc-500">
-                        Czas między wyrzutem kolejnych 5 rzędów kaset
+                        Chwila ciszy przed pierwszym rozdaniem
                       </span>
                     </div>
                     <span className="font-mono text-amber-400 font-bold">
-                      {props.dealRowStagger ?? 6} kl. ({(((props.dealRowStagger ?? 6) / fps)).toFixed(2)}s)
+                      klatka {props.dealStartFrame ?? 4} ({(((props.dealStartFrame ?? 4) / fps)).toFixed(2)}s)
                     </span>
                   </div>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="flex items-center gap-1 bg-[#14141e] px-2 py-1 rounded border border-white/10">
+                      <span className="text-[9px] text-zinc-400 uppercase">Klatka:</span>
+                      <input
+                        type="number"
+                        min="0"
+                        max={currentDuration}
+                        step="1"
+                        value={props.dealStartFrame ?? 4}
+                        onChange={(e) => {
+                          const val = parseInt(e.target.value);
+                          if (!isNaN(val)) updateProp("dealStartFrame", Math.max(0, val));
+                        }}
+                        className="w-full bg-transparent text-white font-mono text-xs focus:outline-none"
+                      />
+                    </div>
+                    <div className="flex items-center gap-1 bg-[#14141e] px-2 py-1 rounded border border-white/10">
+                      <span className="text-[9px] text-zinc-400 uppercase">Sek:</span>
+                      <input
+                        type="number"
+                        min="0"
+                        max={parseFloat((currentDuration / fps).toFixed(2))}
+                        step="0.1"
+                        value={parseFloat((((props.dealStartFrame ?? 4) / fps)).toFixed(2))}
+                        onChange={(e) => {
+                          const sec = parseFloat(e.target.value);
+                          if (!isNaN(sec)) updateProp("dealStartFrame", Math.max(0, Math.round(sec * fps)));
+                        }}
+                        className="w-full bg-transparent text-white font-mono text-xs focus:outline-none"
+                      />
+                      <span className="text-[10px] text-zinc-500 font-mono">s</span>
+                    </div>
+                  </div>
+
                   <input
                     type="range"
-                    min={2}
-                    max={14}
+                    min={0}
+                    max={Math.min(currentDuration, 120)}
                     step={1}
-                    value={props.dealRowStagger ?? 6}
-                    onChange={(e) => updateProp("dealRowStagger", Number(e.target.value))}
-                    className="w-full h-1.5 bg-zinc-800 rounded-lg cursor-pointer"
+                    value={props.dealStartFrame ?? 4}
+                    onChange={(e) => updateProp("dealStartFrame", Number(e.target.value))}
+                    className="w-full h-1.5 bg-zinc-800 rounded-lg cursor-pointer accent-amber-400"
                   />
-                  <div className="flex justify-between text-[9px] text-zinc-500 font-mono">
-                    <span>Ekspresowe (2 kl.)</span>
-                    <span>Standard (6 kl.)</span>
-                    <span>Powolne (14 kl.)</span>
-                  </div>
                 </div>
 
                 {/* Czas lotu pojedynczego rządka (Duration) */}
@@ -776,43 +1014,118 @@ export const JoyDivisionControls: React.FC<JoyDivisionControlsProps> = ({
                       {props.dealRowDuration ?? 14} kl. ({(((props.dealRowDuration ?? 14) / fps)).toFixed(2)}s)
                     </span>
                   </div>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="flex items-center gap-1 bg-[#14141e] px-2 py-1 rounded border border-white/10">
+                      <span className="text-[9px] text-zinc-400 uppercase">Klatka:</span>
+                      <input
+                        type="number"
+                        min="4"
+                        max="120"
+                        step="1"
+                        value={props.dealRowDuration ?? 14}
+                        onChange={(e) => {
+                          const val = parseInt(e.target.value);
+                          if (!isNaN(val)) updateProp("dealRowDuration", Math.max(4, val));
+                        }}
+                        className="w-full bg-transparent text-white font-mono text-xs focus:outline-none"
+                      />
+                    </div>
+                    <div className="flex items-center gap-1 bg-[#14141e] px-2 py-1 rounded border border-white/10">
+                      <span className="text-[9px] text-zinc-400 uppercase">Sek:</span>
+                      <input
+                        type="number"
+                        min="0.1"
+                        max="4.0"
+                        step="0.05"
+                        value={parseFloat((((props.dealRowDuration ?? 14) / fps)).toFixed(2))}
+                        onChange={(e) => {
+                          const sec = parseFloat(e.target.value);
+                          if (!isNaN(sec)) updateProp("dealRowDuration", Math.max(4, Math.round(sec * fps)));
+                        }}
+                        className="w-full bg-transparent text-white font-mono text-xs focus:outline-none"
+                      />
+                      <span className="text-[10px] text-zinc-500 font-mono">s</span>
+                    </div>
+                  </div>
+
                   <input
                     type="range"
-                    min={8}
-                    max={26}
+                    min={4}
+                    max={60}
                     step={1}
                     value={props.dealRowDuration ?? 14}
                     onChange={(e) => updateProp("dealRowDuration", Number(e.target.value))}
-                    className="w-full h-1.5 bg-zinc-800 rounded-lg cursor-pointer"
+                    className="w-full h-1.5 bg-zinc-800 rounded-lg cursor-pointer accent-amber-400"
                   />
                   <div className="flex justify-between text-[9px] text-zinc-500 font-mono">
-                    <span>Błyskawiczny snap (8 kl.)</span>
-                    <span>Miękkie lądowanie (26 kl.)</span>
+                    <span>Błyskawiczny snap (4 kl.)</span>
+                    <span>Miękkie lądowanie (60 kl.)</span>
                   </div>
                 </div>
 
-                {/* Opóźnienie startu (Deal Start Frame) */}
+                {/* Odstęp między rządkami (Stagger) */}
                 <div className="space-y-1.5 pt-2 border-t border-white/5">
                   <div className="flex justify-between items-center text-[11px] text-zinc-300">
                     <div>
-                      <span className="font-semibold block">Klatka Rozpoczęcia (Start)</span>
+                      <span className="font-semibold block">Odstęp Między Rządkami (Stagger)</span>
                       <span className="text-[9px] text-zinc-500">
-                        Chwila ciszy przed pierwszym rozdaniem
+                        Czas między wyrzutem kolejnych 5 rzędów kaset
                       </span>
                     </div>
                     <span className="font-mono text-amber-400 font-bold">
-                      klatka {props.dealStartFrame ?? 4} ({(((props.dealStartFrame ?? 4) / fps)).toFixed(2)}s)
+                      {props.dealRowStagger ?? 6} kl. ({(((props.dealRowStagger ?? 6) / fps)).toFixed(2)}s)
                     </span>
                   </div>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="flex items-center gap-1 bg-[#14141e] px-2 py-1 rounded border border-white/10">
+                      <span className="text-[9px] text-zinc-400 uppercase">Klatka:</span>
+                      <input
+                        type="number"
+                        min="1"
+                        max="40"
+                        step="1"
+                        value={props.dealRowStagger ?? 6}
+                        onChange={(e) => {
+                          const val = parseInt(e.target.value);
+                          if (!isNaN(val)) updateProp("dealRowStagger", Math.max(1, val));
+                        }}
+                        className="w-full bg-transparent text-white font-mono text-xs focus:outline-none"
+                      />
+                    </div>
+                    <div className="flex items-center gap-1 bg-[#14141e] px-2 py-1 rounded border border-white/10">
+                      <span className="text-[9px] text-zinc-400 uppercase">Sek:</span>
+                      <input
+                        type="number"
+                        min="0.05"
+                        max="1.5"
+                        step="0.05"
+                        value={parseFloat((((props.dealRowStagger ?? 6) / fps)).toFixed(2))}
+                        onChange={(e) => {
+                          const sec = parseFloat(e.target.value);
+                          if (!isNaN(sec)) updateProp("dealRowStagger", Math.max(1, Math.round(sec * fps)));
+                        }}
+                        className="w-full bg-transparent text-white font-mono text-xs focus:outline-none"
+                      />
+                      <span className="text-[10px] text-zinc-500 font-mono">s</span>
+                    </div>
+                  </div>
+
                   <input
                     type="range"
-                    min={0}
-                    max={24}
-                    step={2}
-                    value={props.dealStartFrame ?? 4}
-                    onChange={(e) => updateProp("dealStartFrame", Number(e.target.value))}
-                    className="w-full h-1.5 bg-zinc-800 rounded-lg cursor-pointer"
+                    min={1}
+                    max={30}
+                    step={1}
+                    value={props.dealRowStagger ?? 6}
+                    onChange={(e) => updateProp("dealRowStagger", Number(e.target.value))}
+                    className="w-full h-1.5 bg-zinc-800 rounded-lg cursor-pointer accent-amber-400"
                   />
+                  <div className="flex justify-between text-[9px] text-zinc-500 font-mono">
+                    <span>Ekspresowe (1 kl.)</span>
+                    <span>Standard (6 kl.)</span>
+                    <span>Powolne (30 kl.)</span>
+                  </div>
                 </div>
               </div>
             </>
@@ -820,42 +1133,298 @@ export const JoyDivisionControls: React.FC<JoyDivisionControlsProps> = ({
         </div>
       )}
 
-      {/* ================= TAB 4: CZAS TRWANIA ================= */}
+      {/* ================= TAB 4: CZAS TRWANIA & HARMONOGRAM TIMINGU ================= */}
       {activeTab === "duration" && (
         <div className="space-y-4 animate-in fade-in">
+          {/* A. CAŁKOWITY CZAS TRWANIA WIDEO */}
           <div className="bg-[#12121a] p-3.5 rounded-xl border border-white/5 space-y-3">
-            <label className="text-xs font-semibold text-white block">
-              Długość Animacji:
-            </label>
-            <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold text-white flex items-center gap-1.5">
+                <Clock className="w-3.5 h-3.5 text-amber-400" />
+                Całkowity Czas Trwania Wideo:
+              </span>
+              <span className="text-[11px] font-mono text-amber-400 font-bold bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/20">
+                {(currentDuration / fps).toFixed(1)}s ({currentDuration} kl.)
+              </span>
+            </div>
+
+            {/* Bezpośrednie wpisywanie: Sekundy oraz Klatki */}
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <span className="text-[10px] text-zinc-400 block mb-1">Sekundy (np. 14 lub 14.5):</span>
+                <div className="flex items-center gap-1 bg-[#181822] px-2.5 py-1.5 rounded-lg border border-white/10">
+                  <input
+                    type="text"
+                    value={durationSecInput}
+                    onChange={(e) => {
+                      const str = e.target.value;
+                      setDurationSecInput(str);
+                      const cleaned = str.replace(",", ".");
+                      const sec = parseFloat(cleaned);
+                      if (!isNaN(sec) && sec >= 2) {
+                        const frames = Math.round(sec * fps);
+                        setDurationFrames(frames);
+                        updateProp("durationInFrames", frames);
+                        setDurationFramesInput(frames.toString());
+                      }
+                    }}
+                    onBlur={() => {
+                      const sec = parseFloat(durationSecInput.replace(",", "."));
+                      const validSec = isNaN(sec) || sec < 2 ? 2 : Math.min(120, sec);
+                      const frames = Math.round(validSec * fps);
+                      setDurationFrames(frames);
+                      updateProp("durationInFrames", frames);
+                      setDurationSecInput(validSec.toFixed(1));
+                      setDurationFramesInput(frames.toString());
+                    }}
+                    className="w-full bg-transparent text-white font-mono text-xs focus:outline-none"
+                    placeholder="np. 14"
+                  />
+                  <span className="text-zinc-500 text-[11px] font-mono">s</span>
+                </div>
+              </div>
+
+              <div>
+                <span className="text-[10px] text-zinc-400 block mb-1">Klatki (frames @ 30fps):</span>
+                <div className="flex items-center gap-1 bg-[#181822] px-2.5 py-1.5 rounded-lg border border-white/10">
+                  <input
+                    type="text"
+                    value={durationFramesInput}
+                    onChange={(e) => {
+                      const str = e.target.value;
+                      setDurationFramesInput(str);
+                      const fr = parseInt(str, 10);
+                      if (!isNaN(fr) && fr >= 60) {
+                        setDurationFrames(fr);
+                        updateProp("durationInFrames", fr);
+                        setDurationSecInput((fr / fps).toFixed(1));
+                      }
+                    }}
+                    onBlur={() => {
+                      const fr = parseInt(durationFramesInput, 10);
+                      const validFrames = isNaN(fr) || fr < 60 ? 60 : Math.min(3600, fr);
+                      setDurationFrames(validFrames);
+                      updateProp("durationInFrames", validFrames);
+                      setDurationFramesInput(validFrames.toString());
+                      setDurationSecInput((validFrames / fps).toFixed(1));
+                    }}
+                    className="w-full bg-transparent text-white font-mono text-xs focus:outline-none"
+                    placeholder="np. 420"
+                  />
+                  <span className="text-zinc-500 text-[11px] font-mono">kl.</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Suwak czasu trwania do 60 sekund (1800 klatek) */}
+            <div className="pt-1">
+              <input
+                type="range"
+                min="60"
+                max="1800"
+                step="15"
+                value={currentDuration}
+                onChange={(e) => handleSetDuration(parseInt(e.target.value))}
+                className="w-full accent-amber-400"
+              />
+            </div>
+
+            {/* Szybkie presety czasu trwania */}
+            <div className="grid grid-cols-4 gap-1 pt-1">
               {[
-                { sec: 8, frames: 240, label: "8 sekund (Rekomendowane)", badge: "240 klatek" },
-                { sec: 10, frames: 300, label: "10 sekund (Spokojne tempo)", badge: "300 klatek" },
-                { sec: 6, frames: 180, label: "6 sekund (Krótkie intro)", badge: "180 klatek" },
+                { label: "6s", frames: 180 },
+                { label: "8s", frames: 240 },
+                { label: "10s", frames: 300 },
+                { label: "12s", frames: 360 },
+                { label: "14s (Twój wybór)", frames: 420 },
+                { label: "16s", frames: 480 },
+                { label: "20s", frames: 600 },
+                { label: "30s", frames: 900 },
               ].map((d) => (
                 <button
                   key={d.frames}
                   type="button"
-                  onClick={() => {
-                    setDurationFrames(d.frames);
-                    updateProp("durationInFrames", d.frames);
-                  }}
-                  className={`w-full p-2.5 rounded-xl border text-left transition-all flex items-center justify-between ${
-                    durationFrames === d.frames
-                      ? "bg-amber-500/20 border-amber-500/80 text-white font-bold"
-                      : "bg-[#161622] border-white/5 text-zinc-400"
+                  onClick={() => handleSetDuration(d.frames)}
+                  className={`py-1 rounded text-center text-[10px] font-mono transition-all ${
+                    currentDuration === d.frames
+                      ? "bg-amber-500 text-black font-bold"
+                      : "bg-[#181822] text-zinc-400 hover:text-white"
                   }`}
                 >
-                  <div>
-                    <div className="text-xs text-white">{d.label}</div>
-                    <div className="text-[10px] text-zinc-500 font-mono">
-                      @{fps} fps ({d.sec} sek.)
-                    </div>
-                  </div>
-                  <span className="text-[10px] font-mono text-amber-400">{d.badge}</span>
+                  {d.label}
                 </button>
               ))}
             </div>
+
+            {/* Przycisk automatycznego rozłożenia etapów proporcjonalnie do czasu filmu */}
+            <div className="pt-2 border-t border-white/5">
+              <button
+                type="button"
+                onClick={handleAutoScaleMilestones}
+                className="w-full py-2 px-3 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all shadow-sm"
+              >
+                <Zap className="w-3.5 h-3.5 text-amber-400" />
+                ⚡ Automatycznie rozłóż etapy proporcjonalnie do {currentDuration} kl. ({(currentDuration / fps).toFixed(1)}s)
+              </button>
+              <p className="text-[9px] text-zinc-500 mt-1 text-center">
+                Dopasowuje tempo rozdania, zjazdu do rzędów, spłaszczania i wyrastania gór tak, aby film wyglądał idealnie w zadanym czasie.
+              </p>
+            </div>
+          </div>
+
+          {/* B. PRECYZYJNY TIMING KLATEK KLUCZOWYCH (KIEDY CO WCHODZI I ILE TRWA) */}
+          <div className="bg-[#12121a] p-3.5 rounded-xl border border-white/5 space-y-3">
+            <span className="text-xs font-semibold text-white block">
+              Precyzyjny Harmonogram Metamorfozy (Klatki & Sekundy):
+            </span>
+            <p className="text-[10px] text-zinc-400 leading-snug">
+              Wpisz dokładną klatkę lub sekundę, w której ma się zacząć lub ile ma trwać dany etap. Wszystkie zmiany natychmiast odświeżają podgląd.
+            </p>
+
+            <div className="space-y-3 pt-1">
+              {timingMilestones.map((ev) => {
+                const currentVal = ev.val;
+                const currentSec = parseFloat((currentVal / fps).toFixed(2));
+
+                return (
+                  <div
+                    key={ev.key}
+                    className="bg-black/30 p-2.5 rounded-lg border border-white/5 space-y-1.5"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-semibold text-white flex items-center gap-1.5">
+                        {ev.icon}
+                        {ev.title}
+                      </span>
+                      <span className="text-[10px] font-mono text-amber-400 font-bold">
+                        {currentSec}s ({currentVal} kl.)
+                      </span>
+                    </div>
+
+                    {/* Pola do wpisywania */}
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="flex items-center gap-1 bg-[#14141e] px-2 py-1 rounded border border-white/10">
+                        <span className="text-[9px] text-zinc-400 uppercase">Klatka:</span>
+                        <input
+                          type="number"
+                          min={ev.min}
+                          max={ev.max}
+                          step="1"
+                          value={currentVal}
+                          onChange={(e) => {
+                            const val = parseInt(e.target.value);
+                            if (!isNaN(val)) {
+                              const safeVal = Math.max(ev.min, val);
+                              updateProp(ev.key, safeVal);
+                              if (ev.key === "alignStartFrame") {
+                                updateProp("morphStartFrame", safeVal);
+                              }
+                            }
+                          }}
+                          className="w-full bg-transparent text-white font-mono text-xs focus:outline-none"
+                        />
+                      </div>
+
+                      <div className="flex items-center gap-1 bg-[#14141e] px-2 py-1 rounded border border-white/10">
+                        <span className="text-[9px] text-zinc-400 uppercase">Sek:</span>
+                        <input
+                          type="number"
+                          min={parseFloat((ev.min / fps).toFixed(2))}
+                          max={parseFloat((ev.max / fps).toFixed(2))}
+                          step="0.1"
+                          value={currentSec}
+                          onChange={(e) => {
+                            const sec = parseFloat(e.target.value);
+                            if (!isNaN(sec)) {
+                              const fr = Math.max(ev.min, Math.round(sec * fps));
+                              updateProp(ev.key, fr);
+                              if (ev.key === "alignStartFrame") {
+                                updateProp("morphStartFrame", fr);
+                              }
+                            }
+                          }}
+                          className="w-full bg-transparent text-white font-mono text-xs focus:outline-none"
+                        />
+                        <span className="text-[10px] text-zinc-500 font-mono">s</span>
+                      </div>
+                    </div>
+
+                    {/* Płynny suwak dostosowany do pełnego zakresu */}
+                    <input
+                      type="range"
+                      min={ev.min}
+                      max={ev.max}
+                      step="1"
+                      value={currentVal}
+                      onChange={(e) => {
+                        const val = parseInt(e.target.value);
+                        updateProp(ev.key, val);
+                        if (ev.key === "alignStartFrame") {
+                          updateProp("morphStartFrame", val);
+                        }
+                      }}
+                      className="w-full accent-amber-400"
+                    />
+                    <p className="text-[9px] text-zinc-500">{ev.desc}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* C. KARTA PODSUMOWANIA CAŁEGO PRZEBIEGU (TIMELINE SUMMARY) */}
+          <div className="bg-gradient-to-br from-[#13131c] to-[#0c0c14] p-3.5 rounded-xl border border-amber-500/20 space-y-2">
+            <span className="text-xs font-semibold text-amber-300 block flex items-center gap-1.5">
+              <Activity className="w-3.5 h-3.5 text-amber-400" />
+              Podsumowanie Osi Czasu Metamorfozy:
+            </span>
+
+            <div className="space-y-1.5 text-[10px] font-mono text-zinc-300">
+              <div className="flex justify-between items-center py-1 border-b border-white/5">
+                <span className="text-zinc-400">1. Lądowanie wszystkich 25 kaset:</span>
+                <span className="text-white font-bold">
+                  klatka {dealTotalLandedFrame} ({(dealTotalLandedFrame / fps).toFixed(2)}s)
+                </span>
+              </div>
+
+              <div className="flex justify-between items-center py-1 border-b border-white/5">
+                <span className="text-zinc-400">2. Zjazd do 25 rzędów ukończony:</span>
+                <span className="text-white font-bold">
+                  klatka {currentAlignStart + currentAlignDuration} ({((currentAlignStart + currentAlignDuration) / fps).toFixed(2)}s)
+                </span>
+              </div>
+
+              <div className="flex justify-between items-center py-1 border-b border-white/5">
+                <span className="text-zinc-400">3. Spłaszczenie do cienkich linii:</span>
+                <span className="text-white font-bold">
+                  klatka {currentFlattenStart + currentFlattenDuration} ({((currentFlattenStart + currentFlattenDuration) / fps).toFixed(2)}s)
+                </span>
+              </div>
+
+              <div className="flex justify-between items-center py-1 border-b border-white/5">
+                <span className="text-zinc-400">4. Szczyty Joy Division w 100% gotowe:</span>
+                <span className="text-amber-400 font-bold">
+                  klatka {fullMountainsReadyFrame} ({(fullMountainsReadyFrame / fps).toFixed(2)}s)
+                </span>
+              </div>
+
+              <div className="flex justify-between items-center py-1">
+                <span className="text-zinc-400">5. Czas trwania widoczności gór:</span>
+                <span className="text-emerald-400 font-bold">
+                  {Math.max(0, currentDuration - fullMountainsReadyFrame)} kl. ({Math.max(0, (currentDuration - fullMountainsReadyFrame) / fps).toFixed(1)}s)
+                </span>
+              </div>
+            </div>
+
+            {fullMountainsReadyFrame <= currentDuration ? (
+              <p className="text-[10px] text-emerald-400 font-mono bg-emerald-500/10 p-2 rounded-lg border border-emerald-500/20">
+                ✓ Wszystkie fazy metamorfozy mieszczą się w wybranym czasie ({currentDuration} kl. / {(currentDuration / fps).toFixed(1)}s).
+              </p>
+            ) : (
+              <p className="text-[10px] text-rose-400 font-mono bg-rose-500/10 p-2 rounded-lg border border-rose-500/20">
+                ⚠ Uwaga: Ostatnia faza (wyrastanie szczytów) przekracza czas wideo o {fullMountainsReadyFrame - currentDuration} kl. Kliknij "Automatycznie rozłóż etapy" lub wydłuż czas wideo.
+              </p>
+            )}
           </div>
         </div>
       )}

@@ -322,6 +322,21 @@ export const RemotionRoot: React.FC = () => {
           ...defaultJoyDivisionCassetteMorphProps,
           lineWidth: 3.2,
         }}
+        calculateMetadata={async ({ props }) => {
+          const customProps = props as JoyDivisionCassetteMorphProps & {
+            videoWidth?: number;
+            videoHeight?: number;
+            customFps?: number;
+            customDuration?: number;
+          };
+          return {
+            width: customProps.videoWidth || 3840,
+            height: customProps.videoHeight || 2160,
+            fps: customProps.customFps || 30,
+            durationInFrames: customProps.durationInFrames || customProps.customDuration || 240,
+            props: customProps,
+          };
+        }}
       />
 
       <Composition
@@ -335,6 +350,21 @@ export const RemotionRoot: React.FC = () => {
           ...defaultJoyDivisionCassetteMorphProps,
           initialLayout: "vertical-stack",
           lineWidth: 2.2,
+        }}
+        calculateMetadata={async ({ props }) => {
+          const customProps = props as JoyDivisionCassetteMorphProps & {
+            videoWidth?: number;
+            videoHeight?: number;
+            customFps?: number;
+            customDuration?: number;
+          };
+          return {
+            width: customProps.videoWidth || 1080,
+            height: customProps.videoHeight || 1920,
+            fps: customProps.customFps || 30,
+            durationInFrames: customProps.durationInFrames || customProps.customDuration || 240,
+            props: customProps,
+          };
         }}
       />
 
