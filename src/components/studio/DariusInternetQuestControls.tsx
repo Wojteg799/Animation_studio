@@ -745,60 +745,27 @@ export const DariusInternetQuestControls: React.FC<
       {/* ================= TAB 4: STRONA & PIOSENKI ================= */}
       {activeTab === "website" && (
         <div className="space-y-4 animate-in fade-in">
-          <div className="bg-[#12121a] p-3.5 rounded-xl border border-white/5 space-y-3">
-            <span className="text-xs font-semibold text-white block flex items-center gap-1.5">
-              <Globe className="w-3.5 h-3.5 text-yellow-400" />
-              Strona Internetowa & Odtwarzacz Próbek:
-            </span>
-
-            {/* Tytuł okna */}
-            <div className="space-y-1">
-              <span className="text-[10px] text-zinc-400 block">
-                Nagłówek archiwum:
+          {/* Skala okna */}
+          <div className="bg-[#12121a] p-3.5 rounded-xl border border-white/5 space-y-2">
+            <div className="flex justify-between items-center text-xs">
+              <span className="text-white font-semibold">
+                Rozmiar Okna Przeglądarki:
               </span>
-              <input
-                type="text"
-                value={props.browserTitle}
-                onChange={(e) => updateProp("browserTitle", e.target.value)}
-                className="w-full bg-[#161622] px-2.5 py-1.5 rounded-lg border border-white/10 text-white font-mono text-xs focus:outline-none"
-              />
-            </div>
-
-            {/* Nazwa pliku audio */}
-            <div className="space-y-1">
-              <span className="text-[10px] text-zinc-400 block">
-                Nazwa pliku próbki dźwiękowej (Snippet):
+              <span className="text-yellow-400 font-mono font-bold">
+                {((props.websiteScale ?? 1.15) * 100).toFixed(0)}%
               </span>
-              <input
-                type="text"
-                value={props.audioSnippetName}
-                onChange={(e) => updateProp("audioSnippetName", e.target.value)}
-                className="w-full bg-[#161622] px-2.5 py-1.5 rounded-lg border border-white/10 text-white font-mono text-xs focus:outline-none"
-              />
             </div>
-
-            {/* Skala okna */}
-            <div className="space-y-2 pt-2 border-t border-white/5">
-              <div className="flex justify-between items-center text-xs">
-                <span className="text-white font-semibold">
-                  Rozmiar Okna Przeglądarki:
-                </span>
-                <span className="text-yellow-400 font-mono font-bold">
-                  {((props.websiteScale ?? 1.15) * 100).toFixed(0)}%
-                </span>
-              </div>
-              <input
-                type="range"
-                min="0.7"
-                max="1.8"
-                step="0.05"
-                value={props.websiteScale ?? 1.15}
-                onChange={(e) =>
-                  updateProp("websiteScale", parseFloat(e.target.value))
-                }
-                className="w-full accent-yellow-400"
-              />
-            </div>
+            <input
+              type="range"
+              min="0.7"
+              max="1.8"
+              step="0.05"
+              value={props.websiteScale ?? 1.15}
+              onChange={(e) =>
+                updateProp("websiteScale", parseFloat(e.target.value))
+              }
+              className="w-full accent-yellow-400"
+            />
           </div>
 
           {/* Lista piosenek */}
@@ -847,7 +814,7 @@ export const DariusInternetQuestControls: React.FC<
 
               <div className="space-y-0.5">
                 <span className="text-[10px] text-yellow-400 font-mono font-bold">
-                  Piosenka 4 (Nierozpoznana ? Zagadka):
+                  Piosenka 4 (Nierozpoznana ?):
                 </span>
                 <input
                   type="text"

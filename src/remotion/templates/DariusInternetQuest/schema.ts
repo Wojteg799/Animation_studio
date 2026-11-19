@@ -34,7 +34,7 @@ export const DariusInternetQuestSchema = z.object({
   song1Title: z.string().default("1. Christian Youth"),
   song2Title: z.string().default("2. Statues in the Park"),
   song3Title: z.string().default("3. Heart in Danger"),
-  mysterySongTitle: z.string().default("4. ??? (Tajemnicza Piosenka)"),
+  mysterySongTitle: z.string().default("4. ???"),
 
   // Przełączniki elementów
   showGift: z.boolean().default(true),
@@ -91,7 +91,7 @@ export const defaultDariusInternetQuestProps: DariusInternetQuestProps = {
   song1Title: "1. Christian Youth",
   song2Title: "2. Statues in the Park",
   song3Title: "3. Heart in Danger",
-  mysterySongTitle: "4. ??? (Tajemnicza Piosenka)",
+  mysterySongTitle: "4. ???",
 
   showGift: true,
   showWebsite: true,

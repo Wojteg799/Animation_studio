@@ -14,20 +14,16 @@ export const WebsiteTrackerCard: React.FC<WebsiteTrackerCardProps> = ({
   const { fps } = useVideoConfig();
   const {
     domainText = "www.unknown-song.net",
-    browserTitle = "ARCHIWUM KASETEK INTERNETOWYCH",
-    audioSnippetName = "Snippet_RadioTape_10kHz.mp3",
     song1Title = "1. Christian Youth",
     song2Title = "2. Statues in the Park",
     song3Title = "3. Heart in Danger",
-    mysterySongTitle = "4. ??? (Tajemnicza Piosenka)",
+    mysterySongTitle = "4. ???",
 
     dariusColor = "#facc15",
-    lydiaColor = "#38bdf8",
     lineColor = "#ffffff",
     successColor = "#4ade80",
 
     websiteScale = 1.15,
-    tracklistScale = 1.15,
 
     websiteStartFrame = 95,
     identifySong1Frame = 160,
@@ -36,8 +32,6 @@ export const WebsiteTrackerCard: React.FC<WebsiteTrackerCardProps> = ({
     mysteryQuestionFrame = 285,
 
     showWebsite = true,
-    showSolvedSongs = true,
-    showMysteryQuestion = true,
   } = props;
 
   if (!showWebsite || frame < websiteStartFrame) {
@@ -55,14 +49,14 @@ export const WebsiteTrackerCard: React.FC<WebsiteTrackerCardProps> = ({
   // Animacja obrotu szpuli kasety w odtwarzaczu
   const spoolRotation = (frame * 3.5) % 360;
 
-  // Animowane słupki fal audio w odtwarzaczu (20 słupków)
-  const waveBars = Array.from({ length: 22 }).map((_, i) => {
-    const freq = 0.18 + (i % 5) * 0.04;
-    const heightMod = Math.abs(Math.sin(frame * freq + i * 0.7));
-    return 10 + heightMod * 32;
+  // Animowane słupki fal audio w odtwarzaczu (26 słupków)
+  const waveBars = Array.from({ length: 28 }).map((_, i) => {
+    const freq = 0.18 + (i % 6) * 0.035;
+    const heightMod = Math.abs(Math.sin(frame * freq + i * 0.65));
+    return 8 + heightMod * 30;
   });
 
-  // Sprężyny wejścia kolejnych rozpoznanych piosenek
+  // Sprężyny wejścia ptaszków sukcesu
   const song1Spring = Math.max(
     0,
     Math.min(
@@ -99,7 +93,8 @@ export const WebsiteTrackerCard: React.FC<WebsiteTrackerCardProps> = ({
     )
   );
 
-  // Sprężyna wejścia tajemniczej piosenki (znak zapytania)
+  // Wejście żółtego pytajnika przy utworze 4 (stabilne, bez niepotrzebnego pulsowania)
+  const isMysteryActive = frame >= mysteryQuestionFrame;
   const mysterySpring = Math.max(
     0,
     Math.min(
@@ -107,22 +102,21 @@ export const WebsiteTrackerCard: React.FC<WebsiteTrackerCardProps> = ({
       spring({
         frame: frame - mysteryQuestionFrame,
         fps,
-        config: { damping: 10, stiffness: 130 },
+        config: { damping: 12, stiffness: 120 },
       })
     )
   );
-  const mysteryPulse = 1 + (frame >= mysteryQuestionFrame ? 0.08 * Math.sin(frame * 0.2) : 0);
 
   return (
     <div
       style={{
         position: "absolute",
-        right: "5%",
+        right: "6%",
         top: "50%",
         transform: `translateY(-50%) scale(${clampedWindow * websiteScale})`,
         transformOrigin: "center right",
         opacity: Math.min(1, clampedWindow * 1.6),
-        width: 760,
+        width: 660,
         backgroundColor: "#000000",
         border: `3px solid ${lineColor}`,
         borderRadius: 16,
@@ -135,7 +129,7 @@ export const WebsiteTrackerCard: React.FC<WebsiteTrackerCardProps> = ({
       {/* ================= 1. GÓRNY PASEK PRZEGLĄDARKI ================= */}
       <div
         style={{
-          height: 48,
+          height: 46,
           backgroundColor: "#0d0d14",
           borderBottom: `2px solid ${lineColor}`,
           display: "flex",
@@ -144,7 +138,7 @@ export const WebsiteTrackerCard: React.FC<WebsiteTrackerCardProps> = ({
           gap: 14,
         }}
       >
-        {/* Przyciski okna (3 kropki) */}
+        {/* Przyciski okna (3 minimalistyczne kropki) */}
         <div style={{ display: "flex", gap: 6 }}>
           <div
             style={{
@@ -172,7 +166,7 @@ export const WebsiteTrackerCard: React.FC<WebsiteTrackerCardProps> = ({
           />
         </div>
 
-        {/* Pasek adresu URL z globem i domeną */}
+        {/* Pasek adresu URL: tylko domena internetowa z globem */}
         <div
           style={{
             flex: 1,
@@ -182,14 +176,14 @@ export const WebsiteTrackerCard: React.FC<WebsiteTrackerCardProps> = ({
             borderRadius: 6,
             display: "flex",
             alignItems: "center",
-            padding: "0 10px",
+            padding: "0 12px",
             gap: 8,
           }}
         >
           {/* Globus SVG */}
           <svg
-            width="14"
-            height="14"
+            width="15"
+            height="15"
             viewBox="0 0 24 24"
             fill="none"
             stroke={dariusColor}
@@ -203,115 +197,55 @@ export const WebsiteTrackerCard: React.FC<WebsiteTrackerCardProps> = ({
           </svg>
           <span
             style={{
-              fontSize: 12,
+              fontSize: 13,
               fontFamily: "monospace",
               color: "#ffffff",
               letterSpacing: 0.8,
+              fontWeight: 700,
             }}
           >
-            https://{domainText}
+            {domainText}
           </span>
-        </div>
-
-        <div
-          style={{
-            fontSize: 10,
-            fontFamily: "monospace",
-            color: lydiaColor,
-            fontWeight: "bold",
-          }}
-        >
-          [ONLINE]
         </div>
       </div>
 
       {/* ================= 2. ZAWARTOŚĆ STRONY ================= */}
-      <div style={{ padding: "20px 24px", display: "flex", flexDirection: "column", gap: 18 }}>
-        {/* Tytuł nagłówka */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <span
-              style={{
-                fontSize: 14,
-                fontWeight: 900,
-                fontFamily: "system-ui, sans-serif",
-                color: lineColor,
-                letterSpacing: 2,
-              }}
-            >
-              {browserTitle}
-            </span>
-          </div>
-
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 6,
-              padding: "3px 10px",
-              borderRadius: 4,
-              border: `1.5px solid ${dariusColor}`,
-              backgroundColor: "#161600",
-            }}
-          >
-            <div
-              style={{
-                width: 6,
-                height: 6,
-                borderRadius: "50%",
-                backgroundColor: dariusColor,
-              }}
-            />
-            <span
-              style={{
-                fontSize: 10,
-                fontFamily: "monospace",
-                color: dariusColor,
-                fontWeight: "bold",
-                letterSpacing: 1,
-              }}
-            >
-              SZUKANIE W SIECI
-            </span>
-          </div>
-        </div>
-
-        {/* ================= 3. ODTWARZACZ AUDIO Z KASETA & FALAMI ================= */}
+      <div style={{ padding: "18px 22px", display: "flex", flexDirection: "column", gap: 14 }}>
+        {/* ================= 3. ODTWARZACZ AUDIO (KASETA & FALE AUDIO) ================= */}
         <div
           style={{
             backgroundColor: "#0d0d16",
             border: `2px solid ${lineColor}`,
             borderRadius: 10,
-            padding: "14px 18px",
+            padding: "12px 18px",
             display: "flex",
             alignItems: "center",
-            gap: 18,
+            gap: 16,
           }}
         >
-          {/* Mini Kaseta Magnetofonowa */}
+          {/* Czysta wektorowa kaseta magnetofonowa bez żadnego tekstu */}
           <div
             style={{
-              width: 90,
-              height: 56,
+              width: 86,
+              height: 52,
               backgroundColor: "#000000",
               border: `2px solid ${lineColor}`,
               borderRadius: 6,
               position: "relative",
               display: "flex",
-              flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
               flexShrink: 0,
             }}
           >
-            {/* Etykieta */}
+            {/* Etykieta kasety */}
             <div
               style={{
-                width: "80%",
-                height: 22,
+                width: "82%",
+                height: 24,
                 backgroundColor: "#14141e",
                 border: `1px solid ${dariusColor}`,
-                borderRadius: 2,
+                borderRadius: 3,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-around",
@@ -360,390 +294,276 @@ export const WebsiteTrackerCard: React.FC<WebsiteTrackerCardProps> = ({
                 <div style={{ width: 3, height: 3, backgroundColor: lineColor }} />
               </div>
             </div>
-
-            <div
-              style={{
-                position: "absolute",
-                bottom: 3,
-                fontSize: 8,
-                fontFamily: "monospace",
-                color: "#888888",
-              }}
-            >
-              PLAY ►
-            </div>
           </div>
 
-          {/* Nazwa pliku i animowany korektor audio */}
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                marginBottom: 6,
-              }}
-            >
-              <span
+          {/* Animowany korektor audio (fale dźwiękowe na pełną szerokość) */}
+          <div
+            style={{
+              flex: 1,
+              height: 40,
+              display: "flex",
+              alignItems: "flex-end",
+              gap: 4,
+              padding: "2px 0",
+            }}
+          >
+            {waveBars.map((h, i) => (
+              <div
+                key={i}
                 style={{
-                  fontSize: 12,
-                  fontWeight: "bold",
-                  fontFamily: "monospace",
-                  color: "#ffffff",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
+                  flex: 1,
+                  height: `${h}px`,
+                  backgroundColor: i % 2 === 0 ? dariusColor : lineColor,
+                  borderRadius: 1,
                 }}
-              >
-                {audioSnippetName}
-              </span>
-              <span style={{ fontSize: 10, fontFamily: "monospace", color: lydiaColor }}>
-                AUDIO SNIPPET
-              </span>
-            </div>
-
-            {/* Słupki Equalizera */}
-            <div
-              style={{
-                height: 36,
-                display: "flex",
-                alignItems: "flex-end",
-                gap: 4,
-                padding: "2px 0",
-              }}
-            >
-              {waveBars.map((h, i) => (
-                <div
-                  key={i}
-                  style={{
-                    flex: 1,
-                    height: `${h}px`,
-                    backgroundColor: i % 2 === 0 ? dariusColor : lineColor,
-                    borderRadius: 1,
-                  }}
-                />
-              ))}
-            </div>
+              />
+            ))}
           </div>
         </div>
 
-        {/* ================= 4. LISTA IDENTYFIKOWANYCH PIOSENEK ================= */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          <div
-            style={{
-              fontSize: 11,
-              fontFamily: "monospace",
-              color: "#a1a1aa",
-              letterSpacing: 1.2,
-              textTransform: "uppercase",
-            }}
-          >
-            Stan Identyfikacji Utworów w Sieci:
-          </div>
-
+        {/* ================= 4. LISTA UTWORÓW (TYLKO NAZWY PIOSENEK, BEZ ZBĘDNEGO TEKSTU) ================= */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
           {/* Piosenka 1 */}
           <div
             style={{
-              height: 40,
+              height: 42,
               backgroundColor: "#0d0d16",
               border: `1.5px solid ${frame >= identifySong1Frame ? successColor : "#333340"}`,
               borderRadius: 8,
               padding: "0 14px",
               display: "flex",
               alignItems: "center",
-              justifyContent: "space-between",
+              justifyContent: "flex-start",
+              gap: 12,
               transition: "border-color 0.2s",
             }}
           >
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              {frame >= identifySong1Frame ? (
-                <div
-                  style={{
-                    width: 22,
-                    height: 22,
-                    borderRadius: "50%",
-                    backgroundColor: successColor,
-                    color: "#000000",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontWeight: 900,
-                    fontSize: 13,
-                    transform: `scale(${song1Spring})`,
-                  }}
-                >
-                  ✓
-                </div>
-              ) : (
-                <div
-                  style={{
-                    width: 22,
-                    height: 22,
-                    borderRadius: "50%",
-                    border: "1.5px dashed #555566",
-                  }}
-                />
-              )}
-
-              <span
+            {frame >= identifySong1Frame ? (
+              <div
                 style={{
-                  fontSize: 13,
-                  fontWeight: 700,
-                  fontFamily: "system-ui, sans-serif",
-                  color: frame >= identifySong1Frame ? "#ffffff" : "#777788",
+                  width: 24,
+                  height: 24,
+                  borderRadius: "50%",
+                  backgroundColor: successColor,
+                  color: "#000000",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontWeight: 900,
+                  fontSize: 14,
+                  transform: `scale(${song1Spring})`,
+                  flexShrink: 0,
                 }}
               >
-                {song1Title}
-              </span>
-            </div>
+                ✓
+              </div>
+            ) : (
+              <div
+                style={{
+                  width: 24,
+                  height: 24,
+                  borderRadius: "50%",
+                  border: "1.5px dashed #444455",
+                  flexShrink: 0,
+                }}
+              />
+            )}
 
             <span
               style={{
-                fontSize: 11,
-                fontFamily: "monospace",
-                fontWeight: "bold",
-                color: frame >= identifySong1Frame ? successColor : "#555566",
+                fontSize: 14,
+                fontWeight: 700,
+                fontFamily: "system-ui, sans-serif",
+                color: frame >= identifySong1Frame ? "#ffffff" : "#666677",
+                letterSpacing: 0.5,
               }}
             >
-              {frame >= identifySong1Frame ? "ROZPOZNANA (SOLVED)" : "SZUKANIE..."}
+              {song1Title}
             </span>
           </div>
 
           {/* Piosenka 2 */}
           <div
             style={{
-              height: 40,
+              height: 42,
               backgroundColor: "#0d0d16",
               border: `1.5px solid ${frame >= identifySong2Frame ? successColor : "#333340"}`,
               borderRadius: 8,
               padding: "0 14px",
               display: "flex",
               alignItems: "center",
-              justifyContent: "space-between",
+              justifyContent: "flex-start",
+              gap: 12,
+              transition: "border-color 0.2s",
             }}
           >
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              {frame >= identifySong2Frame ? (
-                <div
-                  style={{
-                    width: 22,
-                    height: 22,
-                    borderRadius: "50%",
-                    backgroundColor: successColor,
-                    color: "#000000",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontWeight: 900,
-                    fontSize: 13,
-                    transform: `scale(${song2Spring})`,
-                  }}
-                >
-                  ✓
-                </div>
-              ) : (
-                <div
-                  style={{
-                    width: 22,
-                    height: 22,
-                    borderRadius: "50%",
-                    border: "1.5px dashed #555566",
-                  }}
-                />
-              )}
-
-              <span
+            {frame >= identifySong2Frame ? (
+              <div
                 style={{
-                  fontSize: 13,
-                  fontWeight: 700,
-                  fontFamily: "system-ui, sans-serif",
-                  color: frame >= identifySong2Frame ? "#ffffff" : "#777788",
+                  width: 24,
+                  height: 24,
+                  borderRadius: "50%",
+                  backgroundColor: successColor,
+                  color: "#000000",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontWeight: 900,
+                  fontSize: 14,
+                  transform: `scale(${song2Spring})`,
+                  flexShrink: 0,
                 }}
               >
-                {song2Title}
-              </span>
-            </div>
+                ✓
+              </div>
+            ) : (
+              <div
+                style={{
+                  width: 24,
+                  height: 24,
+                  borderRadius: "50%",
+                  border: "1.5px dashed #444455",
+                  flexShrink: 0,
+                }}
+              />
+            )}
 
             <span
               style={{
-                fontSize: 11,
-                fontFamily: "monospace",
-                fontWeight: "bold",
-                color: frame >= identifySong2Frame ? successColor : "#555566",
+                fontSize: 14,
+                fontWeight: 700,
+                fontFamily: "system-ui, sans-serif",
+                color: frame >= identifySong2Frame ? "#ffffff" : "#666677",
+                letterSpacing: 0.5,
               }}
             >
-              {frame >= identifySong2Frame ? "ROZPOZNANA (SOLVED)" : "SZUKANIE..."}
+              {song2Title}
             </span>
           </div>
 
           {/* Piosenka 3 */}
           <div
             style={{
-              height: 40,
+              height: 42,
               backgroundColor: "#0d0d16",
               border: `1.5px solid ${frame >= identifySong3Frame ? successColor : "#333340"}`,
               borderRadius: 8,
               padding: "0 14px",
               display: "flex",
               alignItems: "center",
-              justifyContent: "space-between",
+              justifyContent: "flex-start",
+              gap: 12,
+              transition: "border-color 0.2s",
             }}
           >
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              {frame >= identifySong3Frame ? (
-                <div
-                  style={{
-                    width: 22,
-                    height: 22,
-                    borderRadius: "50%",
-                    backgroundColor: successColor,
-                    color: "#000000",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontWeight: 900,
-                    fontSize: 13,
-                    transform: `scale(${song3Spring})`,
-                  }}
-                >
-                  ✓
-                </div>
-              ) : (
-                <div
-                  style={{
-                    width: 22,
-                    height: 22,
-                    borderRadius: "50%",
-                    border: "1.5px dashed #555566",
-                  }}
-                />
-              )}
-
-              <span
+            {frame >= identifySong3Frame ? (
+              <div
                 style={{
-                  fontSize: 13,
-                  fontWeight: 700,
-                  fontFamily: "system-ui, sans-serif",
-                  color: frame >= identifySong3Frame ? "#ffffff" : "#777788",
+                  width: 24,
+                  height: 24,
+                  borderRadius: "50%",
+                  backgroundColor: successColor,
+                  color: "#000000",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontWeight: 900,
+                  fontSize: 14,
+                  transform: `scale(${song3Spring})`,
+                  flexShrink: 0,
                 }}
               >
-                {song3Title}
-              </span>
-            </div>
+                ✓
+              </div>
+            ) : (
+              <div
+                style={{
+                  width: 24,
+                  height: 24,
+                  borderRadius: "50%",
+                  border: "1.5px dashed #444455",
+                  flexShrink: 0,
+                }}
+              />
+            )}
 
             <span
               style={{
-                fontSize: 11,
-                fontFamily: "monospace",
-                fontWeight: "bold",
-                color: frame >= identifySong3Frame ? successColor : "#555566",
+                fontSize: 14,
+                fontWeight: 700,
+                fontFamily: "system-ui, sans-serif",
+                color: frame >= identifySong3Frame ? "#ffffff" : "#666677",
+                letterSpacing: 0.5,
               }}
             >
-              {frame >= identifySong3Frame ? "ROZPOZNANA (SOLVED)" : "SZUKANIE..."}
+              {song3Title}
             </span>
           </div>
 
-          {/* ================= 5. TAJEMNICZA PIOSENKA 4 (ZNAK ZAPYTANIA) ================= */}
+          {/* ================= 5. TAJEMNICZA PIOSENKA 4 (ŚWIECI NA ŻÓŁTO, BEZ PULSOWANIA) ================= */}
           <div
             style={{
-              height: 48,
-              backgroundColor: frame >= mysteryQuestionFrame ? "#181400" : "#0d0d16",
-              border: `2px solid ${frame >= mysteryQuestionFrame ? dariusColor : "#555566"}`,
+              height: 44,
+              backgroundColor: isMysteryActive ? "#161400" : "#0d0d16",
+              border: `2px solid ${isMysteryActive ? dariusColor : "#444455"}`,
               borderRadius: 8,
               padding: "0 14px",
               display: "flex",
               alignItems: "center",
-              justifyContent: "space-between",
-              transform: frame >= mysteryQuestionFrame ? `scale(${mysteryPulse})` : "none",
-              transition: "transform 0.1s ease-out",
+              justifyContent: "flex-start",
+              gap: 12,
             }}
           >
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              {frame >= mysteryQuestionFrame ? (
-                <div
-                  style={{
-                    width: 28,
-                    height: 28,
-                    borderRadius: "50%",
-                    backgroundColor: dariusColor,
-                    color: "#000000",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontWeight: 900,
-                    fontSize: 18,
-                    transform: `scale(${mysterySpring})`,
-                    boxShadow: "none",
-                  }}
-                >
-                  ?
-                </div>
-              ) : (
-                <div
-                  style={{
-                    width: 28,
-                    height: 28,
-                    borderRadius: "50%",
-                    border: "2px solid #555566",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    color: "#777788",
-                    fontSize: 14,
-                    fontWeight: "bold",
-                  }}
-                >
-                  ?
-                </div>
-              )}
-
-              <div>
-                <span
-                  style={{
-                    fontSize: 13,
-                    fontWeight: 900,
-                    fontFamily: "system-ui, sans-serif",
-                    color: frame >= mysteryQuestionFrame ? dariusColor : "#888899",
-                    display: "block",
-                  }}
-                >
-                  {mysterySongTitle}
-                </span>
-                <span
-                  style={{
-                    fontSize: 9,
-                    fontFamily: "monospace",
-                    color: frame >= mysteryQuestionFrame ? "#fef08a" : "#666677",
-                  }}
-                >
-                  Nikt nie zna wykonawcy ani tytułu
-                </span>
-              </div>
-            </div>
-
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 6,
-                padding: "4px 10px",
-                borderRadius: 4,
-                backgroundColor: frame >= mysteryQuestionFrame ? "#000000" : "transparent",
-                border: `1.5px solid ${frame >= mysteryQuestionFrame ? dariusColor : "#444455"}`,
-              }}
-            >
-              <span
+            {isMysteryActive ? (
+              <div
                 style={{
-                  fontSize: 11,
-                  fontFamily: "monospace",
+                  width: 26,
+                  height: 26,
+                  borderRadius: "50%",
+                  backgroundColor: dariusColor,
+                  color: "#000000",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                   fontWeight: 900,
-                  color: frame >= mysteryQuestionFrame ? dariusColor : "#777788",
-                  letterSpacing: 1,
+                  fontSize: 17,
+                  transform: `scale(${mysterySpring})`,
+                  flexShrink: 0,
                 }}
               >
-                {frame >= mysteryQuestionFrame ? "NADAL ZAGADKA (!)" : "STATUS: ???"}
-              </span>
-            </div>
+                ?
+              </div>
+            ) : (
+              <div
+                style={{
+                  width: 26,
+                  height: 26,
+                  borderRadius: "50%",
+                  border: "2px solid #444455",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "#666677",
+                  fontSize: 14,
+                  fontWeight: "bold",
+                  flexShrink: 0,
+                }}
+              >
+                ?
+              </div>
+            )}
+
+            <span
+              style={{
+                fontSize: 14,
+                fontWeight: 900,
+                fontFamily: "system-ui, sans-serif",
+                color: isMysteryActive ? dariusColor : "#666677",
+                letterSpacing: 1,
+              }}
+            >
+              {mysterySongTitle}
+            </span>
           </div>
         </div>
       </div>
