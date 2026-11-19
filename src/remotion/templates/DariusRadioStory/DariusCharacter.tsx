@@ -1,6 +1,7 @@
 import React from "react";
 import { interpolate, spring, useVideoConfig } from "remotion";
 import { DariusRadioStoryProps } from "./schema";
+import { DARIUS_AVATAR_SVG } from "./darius-avatar";
 
 interface DariusCharacterProps {
   props: DariusRadioStoryProps;
@@ -11,7 +12,7 @@ export const DariusCharacter: React.FC<DariusCharacterProps> = ({ props, frame }
   const { fps } = useVideoConfig();
   const {
     characterName = "DARIUS",
-    avatarUrl,
+    avatarUrl = DARIUS_AVATAR_SVG,
     accentColor = "#facc15",
     lineColor = "#ffffff",
     circleSize = 220,
@@ -58,7 +59,7 @@ export const DariusCharacter: React.FC<DariusCharacterProps> = ({ props, frame }
   const heartOpacity = Math.max(0, heartSpring - heartExit);
   const heartPulse = 1 + 0.1 * Math.sin(frame * 0.22);
 
-  // 4. Faza Wielkiego Pytajnika (od questionMarkStartFrame)
+  // 4. Faza Pytajnika (od questionMarkStartFrame, ze zredukowanym subtelnym glowem)
   const questionSpring = spring({
     frame: frame - questionMarkStartFrame,
     fps,
@@ -69,6 +70,11 @@ export const DariusCharacter: React.FC<DariusCharacterProps> = ({ props, frame }
   if (frame < dariusEnterFrame) {
     return null;
   }
+
+  const isCustomImage =
+    Boolean(avatarUrl) &&
+    avatarUrl !== DARIUS_AVATAR_SVG &&
+    !avatarUrl.startsWith("data:image/svg+xml");
 
   return (
     <div
@@ -103,7 +109,7 @@ export const DariusCharacter: React.FC<DariusCharacterProps> = ({ props, frame }
           <div
             style={{
               transform: `scale(${heartSpring * heartPulse})`,
-              filter: `drop-shadow(0 0 10px ${accentColor}80)`,
+              filter: `drop-shadow(0 0 4px ${accentColor}40)`,
             }}
           >
             <svg width="48" height="48" viewBox="0 0 24 24" fill={accentColor}>
@@ -141,7 +147,7 @@ export const DariusCharacter: React.FC<DariusCharacterProps> = ({ props, frame }
         </div>
       )}
 
-      {/* ================= WYRAZISTY ŻÓŁTY ZNAK ZAPYTANIA (PUNKT KULMINACYJNY) ================= */}
+      {/* ================= WYRAZISTY ŻÓŁTY ZNAK ZAPYTANIA (ZREDUKOWANY GLOW) ================= */}
       {showQuestionMark && frame >= questionMarkStartFrame && (
         <div
           style={{
@@ -155,7 +161,7 @@ export const DariusCharacter: React.FC<DariusCharacterProps> = ({ props, frame }
             justifyContent: "center",
           }}
         >
-          {/* Czysty, wyrazisty żółty badge z dużym pytajnikiem */}
+          {/* Czysty, ostry żółty badge z pytajnikiem — bez oślepiającego glow */}
           <div
             style={{
               width: 64,
@@ -163,7 +169,7 @@ export const DariusCharacter: React.FC<DariusCharacterProps> = ({ props, frame }
               borderRadius: "50%",
               backgroundColor: "#000000",
               border: `3px solid ${accentColor}`,
-              boxShadow: `0 0 18px ${accentColor}80, 0 8px 24px rgba(0,0,0,0.85)`,
+              boxShadow: "0 6px 16px rgba(0, 0, 0, 0.8)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -185,7 +191,7 @@ export const DariusCharacter: React.FC<DariusCharacterProps> = ({ props, frame }
         </div>
       )}
 
-      {/* ================= KÓŁKO Z AVATAREM (CZYSTY JOY DIVISION STYLE) ================= */}
+      {/* ================= KÓŁKO Z AVATAREM (PÓŁKOLE TUŁÓW + KOŁO GŁOWA NA ŻÓŁTO) ================= */}
       <div
         style={{
           width: circleSize,
@@ -198,16 +204,27 @@ export const DariusCharacter: React.FC<DariusCharacterProps> = ({ props, frame }
           boxShadow: "0 20px 45px rgba(0, 0, 0, 0.9)",
         }}
       >
-        <img
-          src={avatarUrl}
-          alt={characterName}
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            display: "block",
-          }}
-        />
+        {isCustomImage ? (
+          <img
+            src={avatarUrl}
+            alt={characterName}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              display: "block",
+            }}
+          />
+        ) : (
+          /* Czyste geometryczne koło jako głowa i półkole jako tułów na żółto */
+          <svg viewBox="0 0 200 200" width="100%" height="100%">
+            <circle cx="100" cy="100" r="100" fill="#000000" />
+            {/* Głowa: koło na żółto */}
+            <circle cx="100" cy="62" r="32" fill={accentColor} />
+            {/* Tułów: półkole na żółto */}
+            <path d="M 35 185 A 65 65 0 0 1 165 185 Z" fill={accentColor} />
+          </svg>
+        )}
       </div>
 
       {/* ================= JEDYNY NAPIS NA EKRANIE: "DARIUS" ================= */}

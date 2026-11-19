@@ -107,11 +107,21 @@ export const DariusStoryControls: React.FC<DariusStoryControlsProps> = ({
             className="w-16 h-16 rounded-full border-2 border-yellow-400 overflow-hidden bg-black flex-shrink-0 shadow-lg"
             style={{ borderColor: props.accentColor }}
           >
-            <img
-              src={props.avatarUrl}
-              alt={props.characterName}
-              className="w-full h-full object-cover"
-            />
+            {props.avatarUrl &&
+            props.avatarUrl !== DARIUS_AVATAR_SVG &&
+            !props.avatarUrl.startsWith("data:image/svg+xml") ? (
+              <img
+                src={props.avatarUrl}
+                alt={props.characterName}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <svg viewBox="0 0 200 200" width="100%" height="100%">
+                <circle cx="100" cy="100" r="100" fill="#000000" />
+                <circle cx="100" cy="62" r="32" fill={props.accentColor || "#facc15"} />
+                <path d="M 35 185 A 65 65 0 0 1 165 185 Z" fill={props.accentColor || "#facc15"} />
+              </svg>
+            )}
           </div>
 
           <div className="flex-1 space-y-1.5">
@@ -141,7 +151,7 @@ export const DariusStoryControls: React.FC<DariusStoryControlsProps> = ({
               onChange={handleAvatarUpload}
             />
             <p className="text-[10px] text-zinc-500">
-              Minimalistyczny wektorowy profil ze słuchawkami.
+              Minimalistyczna ikona postaci: żółta głowa i półkolisty tułów.
             </p>
           </div>
         </div>

@@ -34,11 +34,6 @@ export const RadioCassetteDeck: React.FC<RadioCassetteDeckProps> = ({ props, fra
   // Obroty szpulek taśmy (kręcą się podczas nagrywania)
   const spoolSpinAngle = (frame * 3.8) % 360;
 
-  // Fale radiowe przemieszczające się z radia do kasety
-  const wave1 = ((frame * 0.08) % 1);
-  const wave2 = (((frame * 0.08) + 0.33) % 1);
-  const wave3 = (((frame * 0.08) + 0.66) % 1);
-
   // Dioda nagrywania migająca żółto
   const isRecBlink = Math.floor(frame / 12) % 2 === 0;
 
@@ -59,31 +54,43 @@ export const RadioCassetteDeck: React.FC<RadioCassetteDeckProps> = ({ props, fra
         pointerEvents: "none",
         display: "flex",
         alignItems: "center",
-        gap: 36,
+        gap: 38,
       }}
     >
       {/* ================= 1. MINIMALIST WIREFRAME RADIO ================= */}
       <div style={{ position: "relative" }}>
-        {/* Antenna with radio signal waves */}
-        <div style={{ position: "absolute", top: -38, right: 18 }}>
-          {/* Antena wznosząca się pod kątem */}
-          <svg width="60" height="42" viewBox="0 0 60 42" fill="none">
-            <line x1="12" y1="40" x2="48" y2="4" stroke={lineColor} strokeWidth={lineWidth} strokeLinecap="round" />
-            <circle cx="48" cy="4" r="3.5" fill={accentColor} />
+        {/* Antena i płynne, wyraźne fale radiowe propagujące w stronę kasety */}
+        <div style={{ position: "absolute", top: -48, right: 6, zIndex: 5, pointerEvents: "none" }}>
+          <svg width="140" height="70" viewBox="0 0 140 70" fill="none" style={{ overflow: "visible" }}>
+            {/* Pręt anteny */}
+            <line x1="10" y1="62" x2="52" y2="18" stroke={lineColor} strokeWidth={lineWidth} strokeLinecap="round" />
+            {/* Końcówka anteny (kulka) */}
+            <circle cx="52" cy="18" r="4" fill={accentColor} />
 
-            {/* Fale radiowe wychodzące z anteny w stronę kasety */}
-            {[wave1, wave2, wave3].map((w, idx) => (
-              <path
-                key={idx}
-                d="M 52 2 A 16 16 0 0 1 52 24"
-                stroke={accentColor}
-                strokeWidth={2}
-                strokeLinecap="round"
-                opacity={1 - w}
-                transform={`scale(${1 + w * 0.8})`}
-                transform-origin="48 4"
-              />
-            ))}
+            {/* Fale radiowe: 3 płynnie rozchodzące się łuki ')))' w stronę kasety */}
+            {[0, 0.33, 0.66].map((offset, idx) => {
+              const prog = ((frame * 0.05 + offset) % 1);
+              const r = 12 + prog * 44;
+              const ox = 52 + prog * 28;
+              const oy = 18;
+              const ang = (52 * Math.PI) / 180;
+              const sx = ox + r * Math.cos(ang);
+              const sy = oy - r * Math.sin(ang);
+              const ex = ox + r * Math.cos(ang);
+              const ey = oy + r * Math.sin(ang);
+              const fade = Math.sin(prog * Math.PI) * 0.95;
+
+              return (
+                <path
+                  key={idx}
+                  d={`M ${sx.toFixed(1)} ${sy.toFixed(1)} A ${r.toFixed(1)} ${r.toFixed(1)} 0 0 1 ${ex.toFixed(1)} ${ey.toFixed(1)}`}
+                  stroke={accentColor}
+                  strokeWidth={2.5}
+                  strokeLinecap="round"
+                  opacity={fade}
+                />
+              );
+            })}
           </svg>
         </div>
 
@@ -213,7 +220,7 @@ export const RadioCassetteDeck: React.FC<RadioCassetteDeckProps> = ({ props, fra
             height: 8,
             borderRadius: "50%",
             backgroundColor: isRecBlink ? accentColor : "transparent",
-            boxShadow: isRecBlink ? `0 0 10px ${accentColor}` : "none",
+            boxShadow: isRecBlink ? `0 0 8px ${accentColor}` : "none",
           }}
         />
 
