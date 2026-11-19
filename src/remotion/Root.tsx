@@ -51,6 +51,11 @@ import {
   DariusRadioStoryProps,
   defaultDariusRadioStoryProps,
 } from "./templates/DariusRadioStory/schema";
+import { DariusInternetQuest } from "./templates/DariusInternetQuest";
+import {
+  DariusInternetQuestProps,
+  defaultDariusInternetQuestProps,
+} from "./templates/DariusInternetQuest/schema";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -275,6 +280,67 @@ export const RemotionRoot: React.FC = () => {
         defaultProps={defaultDariusRadioStoryProps}
         calculateMetadata={async ({ props }) => {
           const customProps = props as DariusRadioStoryProps & {
+            customFps?: number;
+            customDuration?: number;
+          };
+          return {
+            durationInFrames: customProps.durationInFrames || customProps.customDuration || 360,
+            props: customProps,
+          };
+        }}
+      />
+
+      {/* 0D. DARIUS & LYDIA: PREZENT URODZINOWY & DOMENA INTERNETOWA */}
+      <Composition
+        id="DariusInternetQuest"
+        component={DariusInternetQuest}
+        durationInFrames={360}
+        fps={30}
+        width={1920}
+        height={1080}
+        defaultProps={defaultDariusInternetQuestProps}
+        calculateMetadata={async ({ props }) => {
+          const customProps = props as DariusInternetQuestProps & {
+            customFps?: number;
+            customDuration?: number;
+          };
+          return {
+            durationInFrames: customProps.durationInFrames || customProps.customDuration || 360,
+            props: customProps,
+          };
+        }}
+      />
+
+      <Composition
+        id="DariusInternetQuest-4K"
+        component={DariusInternetQuest}
+        durationInFrames={360}
+        fps={30}
+        width={3840}
+        height={2160}
+        defaultProps={defaultDariusInternetQuestProps}
+        calculateMetadata={async ({ props }) => {
+          const customProps = props as DariusInternetQuestProps & {
+            customFps?: number;
+            customDuration?: number;
+          };
+          return {
+            durationInFrames: customProps.durationInFrames || customProps.customDuration || 360,
+            props: customProps,
+          };
+        }}
+      />
+
+      <Composition
+        id="DariusInternetQuest-Shorts"
+        component={DariusInternetQuest}
+        durationInFrames={360}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={defaultDariusInternetQuestProps}
+        calculateMetadata={async ({ props }) => {
+          const customProps = props as DariusInternetQuestProps & {
             customFps?: number;
             customDuration?: number;
           };

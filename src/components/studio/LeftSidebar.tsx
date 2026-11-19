@@ -27,6 +27,8 @@ import { CharacterStageProps } from "../../remotion/templates/CharacterStage/sch
 import { CharacterStageControls } from "./CharacterStageControls";
 import { DariusRadioStoryProps } from "../../remotion/templates/DariusRadioStory/schema";
 import { DariusStoryControls } from "./DariusStoryControls";
+import { DariusInternetQuestProps } from "../../remotion/templates/DariusInternetQuest/schema";
+import { DariusInternetQuestControls } from "./DariusInternetQuestControls";
 import { MusicForumScrollProps } from "../../remotion/templates/MusicForumScroll/schema";
 import { MusicForumControls } from "./MusicForumControls";
 import { JoyDivisionCassetteMorphProps } from "../../remotion/templates/JoyDivisionCassetteMorph/schema";
@@ -66,6 +68,11 @@ interface LeftSidebarProps {
   updateDariusProp: <K extends keyof DariusRadioStoryProps>(
     key: K,
     val: DariusRadioStoryProps[K]
+  ) => void;
+  dariusQuestProps: DariusInternetQuestProps;
+  updateDariusQuestProp: <K extends keyof DariusInternetQuestProps>(
+    key: K,
+    val: DariusInternetQuestProps[K]
   ) => void;
   joyDivisionProps: JoyDivisionCassetteMorphProps;
   updateJoyDivisionProp: <K extends keyof JoyDivisionCassetteMorphProps>(
@@ -116,6 +123,8 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
   updateCharacterStageProp,
   dariusProps,
   updateDariusProp,
+  dariusQuestProps,
+  updateDariusQuestProp,
   joyDivisionProps,
   updateJoyDivisionProp,
   cassetteProps,
@@ -545,6 +554,17 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
             <DariusStoryControls
               props={dariusProps}
               updateProp={updateDariusProp}
+              durationFrames={durationFrames}
+              setDurationFrames={setDurationFrames}
+              fps={fps}
+            />
+          </div>
+        ) : selectedTemplateId === "darius-internet-quest" ? (
+          /* ================= 00C. DARIUS & LYDIA INTERNET QUEST CONTROLS ================= */
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <DariusInternetQuestControls
+              props={dariusQuestProps}
+              updateProp={updateDariusQuestProp}
               durationFrames={durationFrames}
               setDurationFrames={setDurationFrames}
               fps={fps}

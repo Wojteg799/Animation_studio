@@ -19,6 +19,10 @@ import {
   defaultDariusRadioStoryProps,
 } from "../remotion/templates/DariusRadioStory/schema";
 import {
+  DariusInternetQuestProps,
+  defaultDariusInternetQuestProps,
+} from "../remotion/templates/DariusInternetQuest/schema";
+import {
   MusicForumScrollProps,
   defaultMusicForumScrollProps,
   defaultMusicForum2007XPProps,
@@ -71,6 +75,9 @@ export default function StudioPage() {
   const [dariusProps, setDariusProps] = useState<DariusRadioStoryProps>(
     defaultDariusRadioStoryProps
   );
+  const [dariusQuestProps, setDariusQuestProps] = useState<DariusInternetQuestProps>(
+    defaultDariusInternetQuestProps
+  );
   const [musicForumProps, setMusicForumProps] = useState<MusicForumScrollProps>(
     defaultMusicForumScrollProps
   );
@@ -122,6 +129,8 @@ export default function StudioPage() {
         setDurationFrames(240); // 8 seconds @ 30fps
       } else if (templateId === "darius-radio-story") {
         setDurationFrames(dariusProps.durationInFrames || 360);
+      } else if (templateId === "darius-internet-quest") {
+        setDurationFrames(dariusQuestProps.durationInFrames || 360);
       } else if (templateId === "joy-division-cassette-morph") {
         setDurationFrames(joyDivisionProps.durationInFrames || 240);
       } else if (templateId === "retro-cassette-intro") {
@@ -189,6 +198,23 @@ export default function StudioPage() {
         val: DariusRadioStoryProps[K]
       ) => {
         setDariusProps((prev) => ({
+          ...prev,
+          [key]: val,
+        }));
+        if (key === "durationInFrames" && typeof val === "number") {
+          setDurationFrames(val);
+        }
+      },
+      []
+    );
+
+    // Update a single prop for Darius & Lydia Internet Quest
+    const updateDariusQuestProp = useCallback(
+      <K extends keyof DariusInternetQuestProps>(
+        key: K,
+        val: DariusInternetQuestProps[K]
+      ) => {
+        setDariusQuestProps((prev) => ({
           ...prev,
           [key]: val,
         }));
@@ -333,6 +359,12 @@ export default function StudioPage() {
               ...defaultDariusRadioStoryProps,
               ...dariusProps,
             };
+          } else if (selectedTemplateId === "darius-internet-quest") {
+            compositionId = "DariusInternetQuest";
+            inputProps = {
+              ...defaultDariusInternetQuestProps,
+              ...dariusQuestProps,
+            };
           } else if (selectedTemplateId === "joy-division-cassette-morph") {
             compositionId = "JoyDivisionCassetteMorph";
             inputProps = {
@@ -399,6 +431,8 @@ export default function StudioPage() {
         ? characterStageProps
         : selectedTemplateId === "darius-radio-story"
           ? dariusProps
+        : selectedTemplateId === "darius-internet-quest"
+          ? dariusQuestProps
         : selectedTemplateId === "joy-division-cassette-morph"
           ? joyDivisionProps
           : selectedTemplateId === "retro-cassette-intro"
@@ -446,6 +480,8 @@ export default function StudioPage() {
               updateCharacterStageProp={updateCharacterStageProp}
               dariusProps={dariusProps}
               updateDariusProp={updateDariusProp}
+              dariusQuestProps={dariusQuestProps}
+              updateDariusQuestProp={updateDariusQuestProp}
               joyDivisionProps={joyDivisionProps}
               updateJoyDivisionProp={updateJoyDivisionProp}
               cassetteProps={cassetteProps}
@@ -473,6 +509,8 @@ export default function StudioPage() {
               durationFrames={
                 selectedTemplateId === "darius-radio-story" && dariusProps.durationInFrames
                   ? dariusProps.durationInFrames
+                  : selectedTemplateId === "darius-internet-quest" && dariusQuestProps.durationInFrames
+                  ? dariusQuestProps.durationInFrames
                   : selectedTemplateId === "joy-division-cassette-morph" && joyDivisionProps.durationInFrames
                   ? joyDivisionProps.durationInFrames
                   : durationFrames

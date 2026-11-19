@@ -52,6 +52,11 @@ import {
   DariusRadioStoryProps,
   defaultDariusRadioStoryProps,
 } from "./DariusRadioStory/schema";
+import { DariusInternetQuest } from "./DariusInternetQuest";
+import {
+  DariusInternetQuestProps,
+  defaultDariusInternetQuestProps,
+} from "./DariusInternetQuest/schema";
 
 export type TemplateCategory =
   | "Archiwa & Fora (Forums)"
@@ -124,6 +129,19 @@ export const TEMPLATES: TemplateDefinition[] = [
     defaultProps: defaultDariusRadioStoryProps,
     defaultDurationInFrames: 360, // 12 seconds at 30fps (rozszerzalne)
     tags: ["Darius", "Postać", "Radio", "Kaseta", "Mixtape", "Tajemnicza Piosenka", "Pytajnik", "Alpha"],
+    isBackground: false,
+  },
+
+  // 0D. DARIUS & LYDIA: PREZENT URODZINOWY & DOMENA INTERNETOWA
+  {
+    id: "darius-internet-quest",
+    name: "Darius & Lydia: Domena Internetowa & Poszukiwania",
+    category: "Postacie & Relacje (Characters)",
+    description: "Lydia (niebieska) wręcza Dariusowi (żółty) domenę na urodziny, publikacja próbek piosenek na stronie, kolejne rozpoznane utwory (✓) i tajemniczy znak zapytania (?).",
+    component: DariusInternetQuest,
+    defaultProps: defaultDariusInternetQuestProps,
+    defaultDurationInFrames: 360, // 12 seconds at 30fps
+    tags: ["Darius", "Lydia", "Domena", "Urodziny", "Lostwave", "Internet", "Zagadka", "Alpha"],
     isBackground: false,
   },
 
