@@ -10,6 +10,8 @@ import {
   Upload,
   Heart,
   Palette,
+  Maximize2,
+  Sliders,
 } from "lucide-react";
 import { DariusRadioStoryProps } from "../../remotion/templates/DariusRadioStory/schema";
 import { DARIUS_AVATAR_SVG } from "../../remotion/templates/DariusRadioStory/darius-avatar";
@@ -56,6 +58,12 @@ export const DariusStoryControls: React.FC<DariusStoryControlsProps> = ({
     { id: "#ffffff", name: "Czysta Biel (Monochrom)", color: "#ffffff" },
   ];
 
+  const currentAvatarScale = props.avatarScale ?? 1.35;
+  const currentRadioScale = props.radioScale ?? 1.2;
+  const currentTracklistScale = props.tracklistScale ?? 1.15;
+  const currentHeartScale = props.heartScale ?? 1.25;
+  const currentQuestionMarkScale = props.questionMarkScale ?? 1.35;
+
   return (
     <div className="space-y-4">
       {/* Alpha Transparency Switcher */}
@@ -96,7 +104,7 @@ export const DariusStoryControls: React.FC<DariusStoryControlsProps> = ({
 
         <div className="flex items-center gap-3">
           <div
-            className="w-14 h-14 rounded-full border-2 border-yellow-400 overflow-hidden bg-black flex-shrink-0 shadow-lg"
+            className="w-16 h-16 rounded-full border-2 border-yellow-400 overflow-hidden bg-black flex-shrink-0 shadow-lg"
             style={{ borderColor: props.accentColor }}
           >
             <img
@@ -133,7 +141,7 @@ export const DariusStoryControls: React.FC<DariusStoryControlsProps> = ({
               onChange={handleAvatarUpload}
             />
             <p className="text-[10px] text-zinc-500">
-              Czarno-biały wektorowy profil ze słuchawkami.
+              Minimalistyczny wektorowy profil ze słuchawkami.
             </p>
           </div>
         </div>
@@ -152,7 +160,131 @@ export const DariusStoryControls: React.FC<DariusStoryControlsProps> = ({
         </div>
       </div>
 
-      {/* 2. KOLORYSTYKA CZARNO-BIAŁA Z ŻÓŁTYM AKCENTEM */}
+      {/* 2. ROZMIARY I SKALOWANIE POSZCZEGÓLNYCH ELEMENTÓW (NOWE!) */}
+      <div className="bg-[#12121a] p-3 rounded-xl border border-white/5 space-y-3.5">
+        <span className="text-xs font-semibold text-white block flex items-center gap-1.5">
+          <Maximize2 className="w-3.5 h-3.5 text-yellow-400" />
+          Rozmiary i Skalowanie Elementów:
+        </span>
+
+        {/* Avatar Dariusa Scale */}
+        <div className="space-y-1.5">
+          <div className="flex justify-between items-center text-[11px]">
+            <span className="text-zinc-200 font-medium">Wielkość Avatara Dariusa:</span>
+            <span className="font-mono text-yellow-400 font-bold bg-yellow-400/10 px-2 py-0.5 rounded">
+              {Math.round(currentAvatarScale * 100)}%
+            </span>
+          </div>
+          <input
+            type="range"
+            min="0.6"
+            max="2.5"
+            step="0.05"
+            value={currentAvatarScale}
+            onChange={(e) => updateProp("avatarScale", parseFloat(e.target.value))}
+            className="w-full accent-yellow-400"
+          />
+          <div className="flex gap-1.5 pt-1">
+            {[
+              { label: "100%", val: 1.0 },
+              { label: "135% (Domyślny)", val: 1.35 },
+              { label: "170% (Duży)", val: 1.7 },
+              { label: "210% (B. Duży)", val: 2.1 },
+            ].map((p) => (
+              <button
+                key={p.val}
+                type="button"
+                onClick={() => updateProp("avatarScale", p.val)}
+                className={`flex-1 py-1 rounded text-[10px] font-mono transition-all ${
+                  Math.abs(currentAvatarScale - p.val) < 0.04
+                    ? "bg-yellow-500 text-black font-bold"
+                    : "bg-[#181822] text-zinc-400 hover:text-white"
+                }`}
+              >
+                {p.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Radio & Kaseta Scale */}
+        <div className="space-y-1 pt-2 border-t border-white/5">
+          <div className="flex justify-between items-center text-[11px]">
+            <span className="text-zinc-200">Wielkość Radia i Kasety:</span>
+            <span className="font-mono text-yellow-400 font-bold bg-yellow-400/10 px-2 py-0.5 rounded">
+              {Math.round(currentRadioScale * 100)}%
+            </span>
+          </div>
+          <input
+            type="range"
+            min="0.6"
+            max="2.2"
+            step="0.05"
+            value={currentRadioScale}
+            onChange={(e) => updateProp("radioScale", parseFloat(e.target.value))}
+            className="w-full accent-yellow-400"
+          />
+        </div>
+
+        {/* Karta Notatek & Ołówek Scale */}
+        <div className="space-y-1 pt-2 border-t border-white/5">
+          <div className="flex justify-between items-center text-[11px]">
+            <span className="text-zinc-200">Wielkość Karty Notatek i Ołówka:</span>
+            <span className="font-mono text-yellow-400 font-bold bg-yellow-400/10 px-2 py-0.5 rounded">
+              {Math.round(currentTracklistScale * 100)}%
+            </span>
+          </div>
+          <input
+            type="range"
+            min="0.6"
+            max="2.0"
+            step="0.05"
+            value={currentTracklistScale}
+            onChange={(e) => updateProp("tracklistScale", parseFloat(e.target.value))}
+            className="w-full accent-yellow-400"
+          />
+        </div>
+
+        {/* Serce & Nutki Scale */}
+        <div className="space-y-1 pt-2 border-t border-white/5">
+          <div className="flex justify-between items-center text-[11px]">
+            <span className="text-zinc-200">Wielkość Serca i Nutek:</span>
+            <span className="font-mono text-yellow-400 font-bold bg-yellow-400/10 px-2 py-0.5 rounded">
+              {Math.round(currentHeartScale * 100)}%
+            </span>
+          </div>
+          <input
+            type="range"
+            min="0.6"
+            max="2.2"
+            step="0.05"
+            value={currentHeartScale}
+            onChange={(e) => updateProp("heartScale", parseFloat(e.target.value))}
+            className="w-full accent-yellow-400"
+          />
+        </div>
+
+        {/* Pytajnik Scale */}
+        <div className="space-y-1 pt-2 border-t border-white/5">
+          <div className="flex justify-between items-center text-[11px]">
+            <span className="text-zinc-200">Wielkość Znaku Zapytania (?):</span>
+            <span className="font-mono text-yellow-400 font-bold bg-yellow-400/10 px-2 py-0.5 rounded">
+              {Math.round(currentQuestionMarkScale * 100)}%
+            </span>
+          </div>
+          <input
+            type="range"
+            min="0.6"
+            max="2.5"
+            step="0.05"
+            value={currentQuestionMarkScale}
+            onChange={(e) => updateProp("questionMarkScale", parseFloat(e.target.value))}
+            className="w-full accent-yellow-400"
+          />
+        </div>
+      </div>
+
+      {/* 3. KOLORYSTYKA CZARNO-BIAŁA Z ŻÓŁTYM AKCENTEM */}
       <div className="bg-[#12121a] p-3 rounded-xl border border-white/5 space-y-2">
         <span className="text-xs font-semibold text-white block flex items-center gap-1.5">
           <Palette className="w-3.5 h-3.5 text-yellow-400" />
@@ -180,7 +312,7 @@ export const DariusStoryControls: React.FC<DariusStoryControlsProps> = ({
         </div>
       </div>
 
-      {/* 3. ELEMENTY SCENY (PROSTE PRZEŁĄCZNIKI) */}
+      {/* 4. ELEMENTY SCENY (PROSTE PRZEŁĄCZNIKI) */}
       <div className="bg-[#12121a] p-3 rounded-xl border border-white/5 space-y-2.5">
         <span className="text-xs font-semibold text-white block">
           Elementy Sceny:
@@ -255,7 +387,7 @@ export const DariusStoryControls: React.FC<DariusStoryControlsProps> = ({
         </div>
       </div>
 
-      {/* 4. CZASY I OŚ CZASU */}
+      {/* 5. CZASY I OŚ CZASU */}
       <div className="bg-[#12121a] p-3 rounded-xl border border-white/5 space-y-3">
         <span className="text-xs font-semibold text-white block flex items-center gap-1.5">
           <Clock className="w-3.5 h-3.5 text-yellow-400" />

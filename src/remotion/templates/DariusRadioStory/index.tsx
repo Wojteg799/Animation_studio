@@ -1,6 +1,6 @@
 import React from "react";
 import { useCurrentFrame } from "remotion";
-import { DariusRadioStoryProps } from "./schema";
+import { DariusRadioStoryProps, defaultDariusRadioStoryProps } from "./schema";
 import { DariusCharacter } from "./DariusCharacter";
 import { RadioCassetteDeck } from "./RadioCassetteDeck";
 import { CassetteTracklistCard } from "./CassetteTracklistCard";
@@ -9,6 +9,7 @@ export const DariusRadioStory: React.FC<DariusRadioStoryProps> = (rawProps) => {
   const frame = useCurrentFrame();
 
   const props: DariusRadioStoryProps = {
+    ...defaultDariusRadioStoryProps,
     ...rawProps,
   };
 

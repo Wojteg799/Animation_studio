@@ -15,6 +15,7 @@ export const RadioCassetteDeck: React.FC<RadioCassetteDeckProps> = ({ props, fra
     accentColor = "#facc15",
     lineColor = "#ffffff",
     lineWidth = 2.5,
+    radioScale = 1.2,
   } = props;
 
   // Wejście sprężyste radia i kasety
@@ -38,13 +39,13 @@ export const RadioCassetteDeck: React.FC<RadioCassetteDeckProps> = ({ props, fra
   const wave2 = (((frame * 0.08) + 0.33) % 1);
   const wave3 = (((frame * 0.08) + 0.66) % 1);
 
-  // Dioda nagrywania migająca żółto/czerwono
+  // Dioda nagrywania migająca żółto
   const isRecBlink = Math.floor(frame / 12) % 2 === 0;
 
-  // Płynne przesunięcie w lewo/górę gdy wchodzi faza pisania
+  // Płynne przesunięcie w górę gdy wchodzi faza pisania
   const writingProgress = Math.max(0, Math.min(1, (frame - (writingStartFrame - 5)) / 18));
   const writingEased = writingProgress * writingProgress * (3 - 2 * writingProgress);
-  const posY = 50 - writingEased * 8; // lekko do góry, by zrobić miejsce na notowanie
+  const posY = 50 - writingEased * 9; // lekko do góry, by zrobić miejsce na notowanie
 
   return (
     <div
@@ -52,7 +53,7 @@ export const RadioCassetteDeck: React.FC<RadioCassetteDeckProps> = ({ props, fra
         position: "absolute",
         left: "67%",
         top: `${posY}%`,
-        transform: `translate(-50%, -50%) scale(${clampedEnter})`,
+        transform: `translate(-50%, -50%) scale(${clampedEnter * radioScale})`,
         opacity: Math.min(1, clampedEnter * 1.5),
         zIndex: 15,
         pointerEvents: "none",
@@ -68,7 +69,7 @@ export const RadioCassetteDeck: React.FC<RadioCassetteDeckProps> = ({ props, fra
           {/* Antena wznosząca się pod kątem */}
           <svg width="60" height="42" viewBox="0 0 60 42" fill="none">
             <line x1="12" y1="40" x2="48" y2="4" stroke={lineColor} strokeWidth={lineWidth} strokeLinecap="round" />
-            <circle cx="48" cy="4" r="3" fill={accentColor} />
+            <circle cx="48" cy="4" r="3.5" fill={accentColor} />
 
             {/* Fale radiowe wychodzące z anteny w stronę kasety */}
             {[wave1, wave2, wave3].map((w, idx) => (
@@ -89,12 +90,12 @@ export const RadioCassetteDeck: React.FC<RadioCassetteDeckProps> = ({ props, fra
         {/* Radio Body (Wireframe) */}
         <div
           style={{
-            width: 140,
-            height: 100,
+            width: 144,
+            height: 104,
             backgroundColor: "#000000",
             border: `${lineWidth}px solid ${lineColor}`,
             borderRadius: 12,
-            boxShadow: "0 15px 35px rgba(0,0,0,0.8)",
+            boxShadow: "0 15px 35px rgba(0,0,0,0.85)",
             padding: 8,
             display: "flex",
             flexDirection: "column",
@@ -114,13 +115,15 @@ export const RadioCassetteDeck: React.FC<RadioCassetteDeckProps> = ({ props, fra
               alignItems: "center",
             }}
           >
-            {/* Minimalist scale tick marks */}
+            {/* Minimalist scale line */}
             <div
               style={{
                 position: "absolute",
-                inset: 0,
-                backgroundImage: `repeating-linear-gradient(90deg, ${lineColor} 0px, ${lineColor} 1px, transparent 1px, transparent 8px)`,
-                opacity: 0.35,
+                left: 6,
+                right: 6,
+                height: 1,
+                backgroundColor: lineColor,
+                opacity: 0.4,
               }}
             />
             {/* Yellow Tuning Needle */}
@@ -128,10 +131,11 @@ export const RadioCassetteDeck: React.FC<RadioCassetteDeckProps> = ({ props, fra
               style={{
                 position: "absolute",
                 left: "40%",
-                top: 0,
-                bottom: 0,
+                top: 2,
+                bottom: 2,
                 width: 2.5,
                 backgroundColor: accentColor,
+                borderRadius: 1,
                 boxShadow: `0 0 6px ${accentColor}`,
               }}
             />
@@ -141,9 +145,9 @@ export const RadioCassetteDeck: React.FC<RadioCassetteDeckProps> = ({ props, fra
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 4px" }}>
             {/* Minimalist Speaker Grille (3 horizontal slots) */}
             <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-              <div style={{ width: 48, height: 2.5, backgroundColor: lineColor, borderRadius: 2, opacity: 0.8 }} />
-              <div style={{ width: 48, height: 2.5, backgroundColor: lineColor, borderRadius: 2, opacity: 0.8 }} />
-              <div style={{ width: 48, height: 2.5, backgroundColor: lineColor, borderRadius: 2, opacity: 0.8 }} />
+              <div style={{ width: 48, height: 2.5, backgroundColor: lineColor, borderRadius: 2, opacity: 0.85 }} />
+              <div style={{ width: 48, height: 2.5, backgroundColor: lineColor, borderRadius: 2, opacity: 0.85 }} />
+              <div style={{ width: 48, height: 2.5, backgroundColor: lineColor, borderRadius: 2, opacity: 0.85 }} />
             </div>
 
             {/* Two Circular Knobs */}
@@ -198,7 +202,7 @@ export const RadioCassetteDeck: React.FC<RadioCassetteDeckProps> = ({ props, fra
 
       {/* ================= 2. MINIMALIST WIREFRAME CASSETTE (JOY DIVISION STYLE) ================= */}
       <div style={{ position: "relative" }}>
-        {/* Blinking Recording Dot ● (Yellow/Red) */}
+        {/* Blinking Recording Dot ● (Yellow) */}
         <div
           style={{
             position: "absolute",
@@ -216,12 +220,12 @@ export const RadioCassetteDeck: React.FC<RadioCassetteDeckProps> = ({ props, fra
         {/* Cassette Wireframe Body */}
         <div
           style={{
-            width: 175,
-            height: 110,
+            width: 178,
+            height: 112,
             backgroundColor: "#000000",
             border: `${lineWidth}px solid ${lineColor}`,
             borderRadius: 10,
-            boxShadow: "0 15px 35px rgba(0,0,0,0.8)",
+            boxShadow: "0 15px 35px rgba(0,0,0,0.85)",
             padding: 8,
             display: "flex",
             flexDirection: "column",
@@ -243,7 +247,7 @@ export const RadioCassetteDeck: React.FC<RadioCassetteDeckProps> = ({ props, fra
           {/* Central Tape Reel Window */}
           <div
             style={{
-              width: 120,
+              width: 122,
               height: 44,
               border: `1.5px solid ${lineColor}`,
               borderRadius: 6,

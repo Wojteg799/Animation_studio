@@ -14,7 +14,10 @@ export const DariusCharacter: React.FC<DariusCharacterProps> = ({ props, frame }
     avatarUrl,
     accentColor = "#facc15",
     lineColor = "#ffffff",
-    circleSize = 180,
+    circleSize = 220,
+    avatarScale = 1.35,
+    heartScale = 1.25,
+    questionMarkScale = 1.35,
     showHeartAndNotes = true,
     showQuestionMark = true,
     dariusEnterFrame = 5,
@@ -37,10 +40,10 @@ export const DariusCharacter: React.FC<DariusCharacterProps> = ({ props, frame }
 
   const clampedEnter = Math.max(0, Math.min(1, enterSpring));
 
-  // 2. Pozycja: Na początku na środku (X ~ 50%), a gdy wchodzi radio przesuwa się w lewo (X ~ 25%)
+  // 2. Pozycja: Na początku na środku (X ~ 50%), a gdy wchodzi radio przesuwa się w lewo (X ~ 22%)
   const shiftProgress = Math.max(0, Math.min(1, (frame - (radioStartFrame - 8)) / 20));
   const shiftEased = shiftProgress * shiftProgress * (3 - 2 * shiftProgress);
-  const posX = interpolate(shiftEased, [0, 1], [50, 24]);
+  const posX = interpolate(shiftEased, [0, 1], [50, 22]);
 
   // Delikatny naturalny oddech (idle bobbing)
   const bobY = Math.sin(frame * 0.08) * 3.5;
@@ -73,7 +76,7 @@ export const DariusCharacter: React.FC<DariusCharacterProps> = ({ props, frame }
         position: "absolute",
         left: `${posX}%`,
         top: "50%",
-        transform: `translate(-50%, -50%) translateY(${bobY}px) scale(${clampedEnter})`,
+        transform: `translate(-50%, -50%) translateY(${bobY}px) scale(${clampedEnter * avatarScale})`,
         opacity: Math.min(1, clampedEnter * 1.5),
         display: "flex",
         flexDirection: "column",
@@ -93,28 +96,29 @@ export const DariusCharacter: React.FC<DariusCharacterProps> = ({ props, frame }
             alignItems: "center",
             justifyContent: "center",
             pointerEvents: "none",
+            transform: `scale(${heartScale})`,
           }}
         >
           {/* Proste geometryczne serduszko w kolorze żółtym */}
           <div
             style={{
               transform: `scale(${heartSpring * heartPulse})`,
-              filter: `drop-shadow(0 0 12px ${accentColor}80)`,
+              filter: `drop-shadow(0 0 10px ${accentColor}80)`,
             }}
           >
-            <svg width="44" height="44" viewBox="0 0 24 24" fill={accentColor}>
+            <svg width="48" height="48" viewBox="0 0 24 24" fill={accentColor}>
               <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
             </svg>
           </div>
 
           {/* Minimalistyczne białe nutki unoszące się w górę */}
           {[
-            { symbol: "♪", x: -50, y: -10, delay: 0 },
-            { symbol: "♫", x: 50, y: -15, delay: 8 },
-            { symbol: "♩", x: -65, y: 25, delay: 14 },
+            { symbol: "♪", x: -55, y: -12, delay: 0 },
+            { symbol: "♫", x: 55, y: -16, delay: 8 },
+            { symbol: "♩", x: -70, y: 26, delay: 14 },
           ].map((n, i) => {
             const prog = ((frame - heartNotesStartFrame + n.delay * 2) % 40) / 40;
-            const floatY = n.y - prog * 30;
+            const floatY = n.y - prog * 32;
             const floatAlpha = Math.sin(prog * Math.PI) * heartOpacity;
 
             return (
@@ -124,11 +128,10 @@ export const DariusCharacter: React.FC<DariusCharacterProps> = ({ props, frame }
                   position: "absolute",
                   left: n.x,
                   top: floatY,
-                  fontSize: 24,
+                  fontSize: 26,
                   fontWeight: 900,
                   color: lineColor,
                   opacity: floatAlpha,
-                  textShadow: "0 0 8px rgba(255,255,255,0.6)",
                 }}
               >
                 {n.symbol}
@@ -145,22 +148,22 @@ export const DariusCharacter: React.FC<DariusCharacterProps> = ({ props, frame }
             position: "absolute",
             top: -circleSize * 0.45,
             right: -circleSize * 0.28,
-            transform: `translateY(${questionBob}px) scale(${questionSpring})`,
+            transform: `translateY(${questionBob}px) scale(${questionSpring * questionMarkScale})`,
             zIndex: 35,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
           }}
         >
-          {/* Prosty minimalistyczny żółty badge ze znakiem zapytania */}
+          {/* Czysty, wyrazisty żółty badge z dużym pytajnikiem */}
           <div
             style={{
-              width: 58,
-              height: 58,
+              width: 64,
+              height: 64,
               borderRadius: "50%",
               backgroundColor: "#000000",
               border: `3px solid ${accentColor}`,
-              boxShadow: `0 0 20px ${accentColor}90, 0 8px 24px rgba(0,0,0,0.8)`,
+              boxShadow: `0 0 18px ${accentColor}80, 0 8px 24px rgba(0,0,0,0.85)`,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -168,12 +171,11 @@ export const DariusCharacter: React.FC<DariusCharacterProps> = ({ props, frame }
           >
             <span
               style={{
-                fontSize: 38,
+                fontSize: 42,
                 fontWeight: 900,
                 fontFamily: "system-ui, -apple-system, sans-serif",
                 color: accentColor,
                 lineHeight: 1,
-                textShadow: `0 0 14px ${accentColor}`,
                 transform: "translateY(-1px)",
               }}
             >
@@ -183,70 +185,49 @@ export const DariusCharacter: React.FC<DariusCharacterProps> = ({ props, frame }
         </div>
       )}
 
-      {/* ================= KÓŁKO Z AVATAREM (MINIMALISTYCZNY JOY DIVISION STYLE) ================= */}
+      {/* ================= KÓŁKO Z AVATAREM (CZYSTY JOY DIVISION STYLE) ================= */}
       <div
         style={{
           width: circleSize,
           height: circleSize,
           position: "relative",
           borderRadius: "50%",
+          border: `3.5px solid ${lineColor}`,
+          overflow: "hidden",
+          backgroundColor: "#000000",
           boxShadow: "0 20px 45px rgba(0, 0, 0, 0.9)",
         }}
       >
-        {/* Subtle yellow accent ring */}
-        <div
+        <img
+          src={avatarUrl}
+          alt={characterName}
           style={{
-            position: "absolute",
-            inset: -4,
-            borderRadius: "50%",
-            border: `2px solid ${accentColor}`,
-            opacity: 0.9,
-            boxShadow: `0 0 15px ${accentColor}40`,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            display: "block",
           }}
         />
-
-        {/* Crisp white border */}
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            borderRadius: "50%",
-            border: `3px solid ${lineColor}`,
-            overflow: "hidden",
-            backgroundColor: "#000000",
-          }}
-        >
-          <img
-            src={avatarUrl}
-            alt={characterName}
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              display: "block",
-            }}
-          />
-        </div>
       </div>
 
       {/* ================= JEDYNY NAPIS NA EKRANIE: "DARIUS" ================= */}
       <div
         style={{
-          marginTop: 12,
+          marginTop: 14,
           backgroundColor: "#000000",
           border: `2px solid ${lineColor}`,
           borderRadius: 8,
-          padding: "4px 18px",
+          padding: "5px 22px",
           boxShadow: "0 6px 20px rgba(0,0,0,0.8)",
         }}
       >
         <span
           style={{
-            fontSize: 15,
+            fontSize: 16,
             fontWeight: 900,
             fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
             color: lineColor,
-            letterSpacing: 1.8,
+            letterSpacing: 2.5,
             textTransform: "uppercase",
           }}
         >

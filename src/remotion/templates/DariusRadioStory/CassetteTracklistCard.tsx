@@ -1,5 +1,5 @@
 import React from "react";
-import { interpolate, spring, useVideoConfig } from "remotion";
+import { spring, useVideoConfig } from "remotion";
 import { DariusRadioStoryProps } from "./schema";
 
 interface CassetteTracklistCardProps {
@@ -15,6 +15,7 @@ export const CassetteTracklistCard: React.FC<CassetteTracklistCardProps> = ({ pr
     accentColor = "#facc15",
     lineColor = "#ffffff",
     lineWidth = 2.5,
+    tracklistScale = 1.15,
   } = props;
 
   // Wejście karty z notatkami (sprężysty wjazd od dołu)
@@ -64,8 +65,8 @@ export const CassetteTracklistCard: React.FC<CassetteTracklistCardProps> = ({ pr
       style={{
         position: "absolute",
         left: "67%",
-        top: "68%",
-        transform: `translate(-50%, -50%) scale(${clampedEnter})`,
+        top: "72%",
+        transform: `translate(-50%, -50%) scale(${clampedEnter * tracklistScale})`,
         opacity: Math.min(1, clampedEnter * 1.5),
         zIndex: 25,
         pointerEvents: "none",
@@ -169,7 +170,7 @@ export const CassetteTracklistCard: React.FC<CassetteTracklistCardProps> = ({ pr
               width: 14,
               height: 14,
               borderRadius: "50%",
-              backgroundColor: isMysteryPhase ? "transparent" : "transparent",
+              backgroundColor: "transparent",
               border: `1.5px dashed ${isMysteryPhase ? accentColor : lineColor}`,
               flexShrink: 0,
             }}
