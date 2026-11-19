@@ -85,6 +85,7 @@ const getOrBuildBundle = async (forceFresh: boolean = false): Promise<string> =>
       console.log(`[Remotion Bundler] Bundling entry point: ${entryPoint}`);
       const bundleLocation = await bundle({
         entryPoint,
+        publicDir: path.join(process.cwd(), "public"),
         webpackOverride: (current) => current,
       });
       cachedBundleLocation = bundleLocation;
@@ -132,6 +133,61 @@ export const cleanupOldOutputs = async () => {
   } catch (err) {
     console.error("[Auto-Cleanup] Error cleaning outputs:", err);
   }
+};
+
+/**
+ * Automatically converts any local public asset path (e.g. /uploads/...)
+ * into a base64 Data URI so headless Chromium can load it instantly without network requests.
+ */
+const resolveLocalUrlsToBase64 = (obj: any): any => {
+  if (!obj) return obj;
+
+  if (typeof obj === "string") {
+    let cleanPath = obj;
+    if (cleanPath.startsWith("/")) {
+      cleanPath = cleanPath.slice(1);
+    }
+    if (cleanPath.startsWith("uploads/")) {
+      const fullPath = path.join(process.cwd(), "public", cleanPath);
+      if (fs.existsSync(fullPath)) {
+        try {
+          const ext = path.extname(fullPath).toLowerCase();
+          const mime =
+            ext === ".png"
+              ? "image/png"
+              : ext === ".jpg" || ext === ".jpeg"
+              ? "image/jpeg"
+              : ext === ".webp"
+              ? "image/webp"
+              : ext === ".gif"
+              ? "image/gif"
+              : ext === ".svg"
+              ? "image/svg+xml"
+              : "application/octet-stream";
+          const fileBuffer = fs.readFileSync(fullPath);
+          const b64 = fileBuffer.toString("base64");
+          return `data:${mime};base64,${b64}`;
+        } catch (err) {
+          console.warn(`[Render Engine] Failed to base64 encode asset ${fullPath}:`, err);
+        }
+      }
+    }
+    return obj;
+  }
+
+  if (Array.isArray(obj)) {
+    return obj.map(resolveLocalUrlsToBase64);
+  }
+
+  if (typeof obj === "object") {
+    const res: any = {};
+    for (const key of Object.keys(obj)) {
+      res[key] = resolveLocalUrlsToBase64(obj[key]);
+    }
+    return res;
+  }
+
+  return obj;
 };
 
 export const getJob = (id: string): RenderJobStatus | undefined => {
@@ -189,14 +245,14 @@ export const startRenderJob = async (params: StartRenderParams): Promise<RenderJ
       // 1. Bundle Remotion project
       let serveUrl = await getOrBuildBundle();
 
-      // 2. Select composition with dynamic props
-      const fullProps = {
+      // 2. Select composition with dynamic props (local upload paths resolved to base64 data URIs)
+      const fullProps = resolveLocalUrlsToBase64({
         ...inputProps,
         videoWidth: resConfig.width,
         videoHeight: resConfig.height,
         customFps: fps,
         customDuration,
-      };
+      });
 
       let composition;
       try {

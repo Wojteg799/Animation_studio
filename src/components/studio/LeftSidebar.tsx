@@ -156,8 +156,15 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const localUrl = URL.createObjectURL(file);
-    updateLowerThirdProp("photoUrl", localUrl);
+    // Instant base64 Data URL (guarantees preview in player AND works in server render)
+    const reader = new FileReader();
+    reader.onload = (uploadEv) => {
+      const dataUrl = uploadEv.target?.result as string;
+      if (dataUrl) {
+        updateLowerThirdProp("photoUrl", dataUrl);
+      }
+    };
+    reader.readAsDataURL(file);
 
     try {
       const formData = new FormData();

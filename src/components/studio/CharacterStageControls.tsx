@@ -51,10 +51,16 @@ export const CharacterStageControls: React.FC<CharacterStageControlsProps> = ({
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Fast local preview
-    const localUrl = URL.createObjectURL(file);
-    if (charNum === 1) updateProp("c1_photoUrl", localUrl);
-    else updateProp("c2_photoUrl", localUrl);
+    // Instant base64 Data URL (guarantees preview in player AND works in server render)
+    const reader = new FileReader();
+    reader.onload = (uploadEv) => {
+      const dataUrl = uploadEv.target?.result as string;
+      if (dataUrl) {
+        if (charNum === 1) updateProp("c1_photoUrl", dataUrl);
+        else updateProp("c2_photoUrl", dataUrl);
+      }
+    };
+    reader.readAsDataURL(file);
 
     try {
       const formData = new FormData();

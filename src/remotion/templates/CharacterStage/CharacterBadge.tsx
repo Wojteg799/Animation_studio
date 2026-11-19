@@ -1,5 +1,5 @@
 import React from "react";
-import { interpolate, spring, useVideoConfig } from "remotion";
+import { interpolate, spring, useVideoConfig, Img } from "remotion";
 
 export interface CharacterBadgeProps {
   frame: number;
@@ -239,7 +239,7 @@ export const CharacterBadge: React.FC<CharacterBadgeProps> = ({
         }}
       >
         {/* Photo / Silhouette image */}
-        <img
+        <Img
           src={photoUrl}
           alt={name}
           style={{

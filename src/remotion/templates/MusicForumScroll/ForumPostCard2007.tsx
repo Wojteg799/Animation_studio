@@ -1,4 +1,5 @@
 import React from "react";
+import { Img } from "remotion";
 import { Disc, FileAudio, Play, MessageSquare, Quote, Edit3, Volume2, Paperclip, Download } from "lucide-react";
 
 interface ForumPostCard2007Props {
@@ -159,7 +160,7 @@ export const ForumPostCard2007: React.FC<ForumPostCard2007Props> = ({
         >
           {/* Uploaded Avatar Photo or Retro Cassette Silhouette */}
           {avatarUrl ? (
-            <img
+            <Img
               src={avatarUrl}
               alt={author}
               style={{

@@ -54,9 +54,15 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Fast local preview immediately in Remotion Player
-    const localUrl = URL.createObjectURL(file);
-    updateProp(`post${postNum}_avatarUrl` as any, localUrl);
+    // Instant base64 Data URL (guarantees immediate preview in player AND instant render availability)
+    const reader = new FileReader();
+    reader.onload = (uploadEv) => {
+      const dataUrl = uploadEv.target?.result as string;
+      if (dataUrl) {
+        updateProp(`post${postNum}_avatarUrl` as any, dataUrl);
+      }
+    };
+    reader.readAsDataURL(file);
 
     try {
       setUploadingAvatar(true);

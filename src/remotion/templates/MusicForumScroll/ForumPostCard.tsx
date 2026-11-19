@@ -1,4 +1,5 @@
 import React from "react";
+import { Img } from "remotion";
 import { Music, Disc, Volume2, FileAudio, CornerDownRight, Paperclip, Download } from "lucide-react";
 
 export interface ForumPostCardProps {
@@ -139,7 +140,7 @@ export const ForumPostCard: React.FC<ForumPostCardProps> = ({
               flexShrink: 0,
             }}
           >
-            <img
+            <Img
               src={avatarUrl}
               alt={author}
               style={{ width: "100%", height: "100%", objectFit: "cover" }}
