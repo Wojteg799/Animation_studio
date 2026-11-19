@@ -11,588 +11,330 @@ export const RadioCassetteDeck: React.FC<RadioCassetteDeckProps> = ({ props, fra
   const { fps } = useVideoConfig();
   const {
     radioStartFrame = 75,
-    jcardStartFrame = 150,
-    radioStationName,
-    radioShowName,
-    radioHostName,
-    tapeLabel,
-    mixtapeTitle,
-    showRadioSignalWaves,
-    showRecBlinker,
-    accentColor,
+    writingStartFrame = 145,
+    accentColor = "#facc15",
+    lineColor = "#ffffff",
+    lineWidth = 2.5,
   } = props;
 
-  // Entrance spring animation
+  // Wejście sprężyste radia i kasety
   const enterSpring = spring({
     frame: frame - radioStartFrame,
     fps,
-    config: {
-      damping: 14,
-      stiffness: 90,
-      mass: 0.9,
-    },
+    config: { damping: 14, stiffness: 90, mass: 0.85 },
   });
 
   const clampedEnter = Math.max(0, Math.min(1, enterSpring));
-
-  // Exit / Shift when J-Card tracklist appears (shrinks or shifts slightly to leave room for the card)
-  const jcardProgress = Math.max(0, Math.min(1, (frame - (jcardStartFrame - 5)) / 20));
-  const jcardEased = jcardProgress * jcardProgress * (3 - 2 * jcardProgress);
-
-  // Position: centered on the right half of the canvas
-  const posX = 68 - jcardEased * 8; // shifts slightly left (68% -> 60%) to balance with tracklist
-  const posY = 50 - jcardEased * 4; // slight vertical adjustment
-  const scale = (0.75 + 0.25 * clampedEnter) * (1.0 - jcardEased * 0.12);
 
   if (frame < radioStartFrame) {
     return null;
   }
 
-  // Blinking REC diode (every 16 frames: 8 on, 8 off)
-  const isRecOn = showRecBlinker && (Math.floor(frame / 14) % 2 === 0);
+  // Obroty szpulek taśmy (kręcą się podczas nagrywania)
+  const spoolSpinAngle = (frame * 3.8) % 360;
 
-  // Spool spin angle (spinning tape spools)
-  const spoolSpinAngle = (frame * 3.6) % 360;
+  // Fale radiowe przemieszczające się z radia do kasety
+  const wave1 = ((frame * 0.08) % 1);
+  const wave2 = (((frame * 0.08) + 0.33) % 1);
+  const wave3 = (((frame * 0.08) + 0.66) % 1);
 
-  // VU-meter audio meter level simulation (reacting like 80s music is playing)
-  const vuLeft = 40 + Math.sin(frame * 0.35) * 25 + Math.cos(frame * 0.72) * 15;
-  const vuRight = 38 + Math.sin(frame * 0.42 + 1) * 24 + Math.cos(frame * 0.61) * 16;
+  // Dioda nagrywania migająca żółto/czerwono
+  const isRecBlink = Math.floor(frame / 12) % 2 === 0;
 
-  // Floating radio waves / transmission signal
-  const wavePulse1 = (frame * 0.1) % 1;
-  const wavePulse2 = ((frame * 0.1) + 0.5) % 1;
+  // Płynne przesunięcie w lewo/górę gdy wchodzi faza pisania
+  const writingProgress = Math.max(0, Math.min(1, (frame - (writingStartFrame - 5)) / 18));
+  const writingEased = writingProgress * writingProgress * (3 - 2 * writingProgress);
+  const posY = 50 - writingEased * 8; // lekko do góry, by zrobić miejsce na notowanie
 
   return (
     <div
       style={{
         position: "absolute",
-        left: `${posX}%`,
+        left: "67%",
         top: `${posY}%`,
-        transform: `translate(-50%, -50%) scale(${scale})`,
+        transform: `translate(-50%, -50%) scale(${clampedEnter})`,
         opacity: Math.min(1, clampedEnter * 1.5),
         zIndex: 15,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
         pointerEvents: "none",
+        display: "flex",
+        alignItems: "center",
+        gap: 36,
       }}
     >
-      {/* Radio Transmission Waves (FM Broadcast waves going from radio to cassette) */}
-      {showRadioSignalWaves && (
-        <div
-          style={{
-            position: "absolute",
-            top: -45,
-            left: 55,
-            display: "flex",
-            alignItems: "center",
-            gap: 6,
-            pointerEvents: "none",
-          }}
-        >
-          {/* Animated radio waves expanding outwards */}
-          <svg width="120" height="40" viewBox="0 0 120 40" fill="none">
-            {/* Wave arc 1 */}
-            <path
-              d="M 20 35 A 15 15 0 0 1 20 5"
-              stroke="#38bdf8"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              opacity={1 - wavePulse1}
-              transform={`scale(${1 + wavePulse1 * 0.4})`}
-              transform-origin="10 20"
-            />
-            {/* Wave arc 2 */}
-            <path
-              d="M 32 38 A 24 24 0 0 1 32 2"
-              stroke="#38bdf8"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              opacity={1 - wavePulse2}
-              transform={`scale(${1 + wavePulse2 * 0.4})`}
-              transform-origin="10 20"
-            />
-            {/* Signal text */}
-            <text
-              x="48"
-              y="24"
-              fill="#38bdf8"
-              fontFamily="monospace"
-              fontSize="11"
-              fontWeight="bold"
-              letterSpacing="1"
-            >
-              FM AUDIO SIGNAL 89.2 MHz
-            </text>
+      {/* ================= 1. MINIMALIST WIREFRAME RADIO ================= */}
+      <div style={{ position: "relative" }}>
+        {/* Antenna with radio signal waves */}
+        <div style={{ position: "absolute", top: -38, right: 18 }}>
+          {/* Antena wznosząca się pod kątem */}
+          <svg width="60" height="42" viewBox="0 0 60 42" fill="none">
+            <line x1="12" y1="40" x2="48" y2="4" stroke={lineColor} strokeWidth={lineWidth} strokeLinecap="round" />
+            <circle cx="48" cy="4" r="3" fill={accentColor} />
+
+            {/* Fale radiowe wychodzące z anteny w stronę kasety */}
+            {[wave1, wave2, wave3].map((w, idx) => (
+              <path
+                key={idx}
+                d="M 52 2 A 16 16 0 0 1 52 24"
+                stroke={accentColor}
+                strokeWidth={2}
+                strokeLinecap="round"
+                opacity={1 - w}
+                transform={`scale(${1 + w * 0.8})`}
+                transform-origin="48 4"
+              />
+            ))}
           </svg>
         </div>
-      )}
 
-      {/* Main Vintage Radio & Cassette Unit Enclosure */}
-      <div
-        style={{
-          width: 520,
-          backgroundColor: "#13141d",
-          borderRadius: 20,
-          border: "2px solid rgba(255, 255, 255, 0.16)",
-          boxShadow: "0 25px 60px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.2)",
-          padding: "16px 20px",
-          display: "flex",
-          flexDirection: "column",
-          gap: 12,
-        }}
-      >
-        {/* ================= UNIT TOP: RADIO TUNER & FREQUENCY DIAL ================= */}
+        {/* Radio Body (Wireframe) */}
         <div
           style={{
-            backgroundColor: "#0a0b10",
-            borderRadius: 14,
-            border: "1.5px solid rgba(255, 255, 255, 0.1)",
-            padding: "10px 14px",
+            width: 140,
+            height: 100,
+            backgroundColor: "#000000",
+            border: `${lineWidth}px solid ${lineColor}`,
+            borderRadius: 12,
+            boxShadow: "0 15px 35px rgba(0,0,0,0.8)",
+            padding: 8,
             display: "flex",
             flexDirection: "column",
-            gap: 8,
-            boxShadow: "inset 0 2px 8px rgba(0,0,0,0.9)",
+            justifyContent: "space-between",
           }}
         >
-          {/* Header Row: Station Name + Stereo Indicator + Antenna */}
+          {/* Radio Top Scale Window */}
           <div
             style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "between",
-              width: "100%",
-            }}
-          >
-            {/* Left: Station info */}
-            <div style={{ display: "flex", alignItems: "center", gap: 8, flex: 1 }}>
-              <div
-                style={{
-                  width: 8,
-                  height: 8,
-                  borderRadius: "50%",
-                  backgroundColor: "#22c55e",
-                  boxShadow: "0 0 8px #22c55e",
-                }}
-              />
-              <span
-                style={{
-                  fontSize: 12,
-                  fontFamily: "monospace",
-                  fontWeight: 800,
-                  color: "#ffffff",
-                  letterSpacing: 0.8,
-                }}
-              >
-                RADIO TUNER: {radioStationName}
-              </span>
-              <span
-                style={{
-                  fontSize: 9,
-                  fontFamily: "monospace",
-                  fontWeight: 700,
-                  backgroundColor: "rgba(56, 189, 248, 0.15)",
-                  color: "#38bdf8",
-                  padding: "1px 6px",
-                  borderRadius: 4,
-                  border: "1px solid rgba(56, 189, 248, 0.3)",
-                }}
-              >
-                FM STEREO
-              </span>
-            </div>
-
-            {/* Right: Show info */}
-            <div
-              style={{
-                fontSize: 10,
-                fontFamily: "monospace",
-                color: accentColor,
-                fontWeight: 700,
-              }}
-            >
-              {radioShowName}
-            </div>
-          </div>
-
-          {/* Tuner Frequency Glass Scale Bar */}
-          <div
-            style={{
-              height: 28,
-              backgroundColor: "#161824",
-              borderRadius: 6,
-              border: "1px solid rgba(255, 255, 255, 0.1)",
+              height: 22,
+              border: `1.5px solid ${lineColor}`,
+              borderRadius: 4,
+              backgroundColor: "#000000",
               position: "relative",
               overflow: "hidden",
               display: "flex",
               alignItems: "center",
-              padding: "0 10px",
             }}
           >
-            {/* Frequency Numbers */}
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                width: "100%",
-                fontSize: 9,
-                fontFamily: "monospace",
-                color: "rgba(255, 255, 255, 0.4)",
-                fontWeight: 600,
-                zIndex: 2,
-              }}
-            >
-              <span>88</span>
-              <span style={{ color: "#ffffff", fontWeight: 800 }}>89.2 MHz (NDR)</span>
-              <span>92</span>
-              <span>96</span>
-              <span>100</span>
-              <span>104</span>
-              <span>108</span>
-            </div>
-
-            {/* Orange Frequency Tuning Needle (tuned exactly to 89.2) */}
-            <div
-              style={{
-                position: "absolute",
-                left: "22%",
-                top: 0,
-                bottom: 0,
-                width: 2.5,
-                backgroundColor: "#f59e0b",
-                boxShadow: "0 0 8px #f59e0b",
-                zIndex: 3,
-              }}
-            />
-
-            {/* Frequency tick marks */}
+            {/* Minimalist scale tick marks */}
             <div
               style={{
                 position: "absolute",
                 inset: 0,
-                backgroundImage:
-                  "repeating-linear-gradient(90deg, rgba(255,255,255,0.08) 0px, rgba(255,255,255,0.08) 1px, transparent 1px, transparent 12px)",
-                zIndex: 1,
+                backgroundImage: `repeating-linear-gradient(90deg, ${lineColor} 0px, ${lineColor} 1px, transparent 1px, transparent 8px)`,
+                opacity: 0.35,
+              }}
+            />
+            {/* Yellow Tuning Needle */}
+            <div
+              style={{
+                position: "absolute",
+                left: "40%",
+                top: 0,
+                bottom: 0,
+                width: 2.5,
+                backgroundColor: accentColor,
+                boxShadow: `0 0 6px ${accentColor}`,
               }}
             />
           </div>
 
-          {/* Sub-row: DJ Host and VU Meters */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <span style={{ fontSize: 10, fontFamily: "monospace", color: "#94a3b8" }}>
-              Audycja prowadzona przez: <strong style={{ color: "#ffffff" }}>{radioHostName}</strong>
-            </span>
+          {/* Radio Bottom Row: Speaker Grille + Tuning Knobs */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 4px" }}>
+            {/* Minimalist Speaker Grille (3 horizontal slots) */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+              <div style={{ width: 48, height: 2.5, backgroundColor: lineColor, borderRadius: 2, opacity: 0.8 }} />
+              <div style={{ width: 48, height: 2.5, backgroundColor: lineColor, borderRadius: 2, opacity: 0.8 }} />
+              <div style={{ width: 48, height: 2.5, backgroundColor: lineColor, borderRadius: 2, opacity: 0.8 }} />
+            </div>
 
-            {/* Mini Dual VU Meters */}
-            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-              <span style={{ fontSize: 8, fontFamily: "monospace", color: "#64748b" }}>VU</span>
+            {/* Two Circular Knobs */}
+            <div style={{ display: "flex", gap: 8 }}>
               <div
                 style={{
-                  width: 60,
-                  height: 6,
+                  width: 22,
+                  height: 22,
+                  borderRadius: "50%",
+                  border: `2px solid ${lineColor}`,
                   backgroundColor: "#000000",
-                  borderRadius: 3,
-                  overflow: "hidden",
-                  display: "flex",
+                  position: "relative",
                 }}
               >
                 <div
                   style={{
-                    width: `${Math.min(100, vuLeft)}%`,
-                    backgroundColor: vuLeft > 75 ? "#ef4444" : vuLeft > 50 ? "#f59e0b" : "#22c55e",
-                    height: "100%",
+                    position: "absolute",
+                    top: 2,
+                    left: 9,
+                    width: 2,
+                    height: 6,
+                    backgroundColor: accentColor,
                   }}
                 />
               </div>
+
               <div
                 style={{
-                  width: 60,
-                  height: 6,
+                  width: 22,
+                  height: 22,
+                  borderRadius: "50%",
+                  border: `2px solid ${lineColor}`,
                   backgroundColor: "#000000",
-                  borderRadius: 3,
-                  overflow: "hidden",
-                  display: "flex",
+                  position: "relative",
                 }}
               >
                 <div
                   style={{
-                    width: `${Math.min(100, vuRight)}%`,
-                    backgroundColor: vuRight > 75 ? "#ef4444" : vuRight > 50 ? "#f59e0b" : "#22c55e",
-                    height: "100%",
+                    position: "absolute",
+                    top: 2,
+                    left: 9,
+                    width: 2,
+                    height: 6,
+                    backgroundColor: lineColor,
                   }}
                 />
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* ================= UNIT BOTTOM: CASSETTE RECORDER DECK ================= */}
+      {/* ================= 2. MINIMALIST WIREFRAME CASSETTE (JOY DIVISION STYLE) ================= */}
+      <div style={{ position: "relative" }}>
+        {/* Blinking Recording Dot ● (Yellow/Red) */}
         <div
           style={{
-            backgroundColor: "#0c0d14",
-            borderRadius: 14,
-            border: "1.5px solid rgba(255, 255, 255, 0.1)",
-            padding: "12px 16px",
+            position: "absolute",
+            top: -16,
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: 8,
+            height: 8,
+            borderRadius: "50%",
+            backgroundColor: isRecBlink ? accentColor : "transparent",
+            boxShadow: isRecBlink ? `0 0 10px ${accentColor}` : "none",
+          }}
+        />
+
+        {/* Cassette Wireframe Body */}
+        <div
+          style={{
+            width: 175,
+            height: 110,
+            backgroundColor: "#000000",
+            border: `${lineWidth}px solid ${lineColor}`,
+            borderRadius: 10,
+            boxShadow: "0 15px 35px rgba(0,0,0,0.8)",
+            padding: 8,
             display: "flex",
             flexDirection: "column",
-            gap: 10,
+            alignItems: "center",
+            justifyContent: "space-between",
           }}
         >
-          {/* Deck Header: REC indicator & Tape format */}
+          {/* Label Area (Wireframe rectangle) */}
           <div
             style={{
+              width: "100%",
+              height: 24,
+              border: `1.5px solid ${lineColor}`,
+              borderRadius: 4,
+              opacity: 0.6,
+            }}
+          />
+
+          {/* Central Tape Reel Window */}
+          <div
+            style={{
+              width: 120,
+              height: 44,
+              border: `1.5px solid ${lineColor}`,
+              borderRadius: 6,
+              backgroundColor: "#000000",
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
-            }}
-          >
-            {/* Blinking REC indicator */}
-            <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
-              <div
-                style={{
-                  width: 11,
-                  height: 11,
-                  borderRadius: "50%",
-                  backgroundColor: isRecOn ? "#ef4444" : "#450a0a",
-                  boxShadow: isRecOn ? "0 0 12px #ef4444, 0 0 20px #ef444480" : "none",
-                  transition: "all 0.1s ease",
-                }}
-              />
-              <span
-                style={{
-                  fontSize: 11,
-                  fontFamily: "monospace",
-                  fontWeight: 900,
-                  color: isRecOn ? "#ef4444" : "#991b1b",
-                  letterSpacing: 1.2,
-                }}
-              >
-                ● REC [NAGRYWANIE NA KASETĘ]
-              </span>
-            </div>
-
-            {/* Tape brand / label */}
-            <span
-              style={{
-                fontSize: 10,
-                fontFamily: "monospace",
-                fontWeight: 700,
-                color: "#e2e8f0",
-                backgroundColor: "rgba(255, 255, 255, 0.08)",
-                padding: "2px 8px",
-                borderRadius: 4,
-              }}
-            >
-              {tapeLabel}
-            </span>
-          </div>
-
-          {/* Realistic Cassette Well / Well Window with Spinning Spools */}
-          <div
-            style={{
-              height: 115,
-              backgroundColor: "#161722",
-              borderRadius: 10,
-              border: "1px solid rgba(255, 255, 255, 0.12)",
+              padding: "0 14px",
               position: "relative",
-              overflow: "hidden",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              boxShadow: "inset 0 4px 14px rgba(0,0,0,0.8)",
             }}
           >
-            {/* Cassette Shell Body */}
+            {/* Magnetic Tape Line */}
             <div
               style={{
-                width: 380,
-                height: 95,
-                backgroundColor: "#1c1e29",
-                borderRadius: 8,
-                border: "2px solid rgba(255, 255, 255, 0.18)",
+                position: "absolute",
+                left: 28,
+                right: 28,
+                height: 8,
+                backgroundColor: lineColor,
+                opacity: 0.25,
+              }}
+            />
+
+            {/* Left Spinning Reel */}
+            <div
+              style={{
+                width: 24,
+                height: 24,
+                borderRadius: "50%",
+                border: `2px solid ${lineColor}`,
                 position: "relative",
+                transform: `rotate(${spoolSpinAngle}deg)`,
                 display: "flex",
-                flexDirection: "column",
                 alignItems: "center",
-                padding: "8px 14px",
-                boxShadow: "0 8px 20px rgba(0,0,0,0.7)",
+                justifyContent: "center",
               }}
             >
-              {/* Cassette Label Header */}
-              <div
-                style={{
-                  width: "100%",
-                  backgroundColor: "#2a2d3d",
-                  borderRadius: 4,
-                  padding: "3px 10px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  marginBottom: 6,
-                }}
-              >
-                <span
-                  style={{
-                    fontSize: 10,
-                    fontFamily: "monospace",
-                    fontWeight: 800,
-                    color: accentColor,
-                    letterSpacing: 0.8,
-                  }}
-                >
-                  {mixtapeTitle}
-                </span>
-                <span
-                  style={{
-                    fontSize: 9,
-                    fontFamily: "monospace",
-                    fontWeight: 700,
-                    color: "#ffffff",
-                    backgroundColor: "rgba(0,0,0,0.5)",
-                    padding: "1px 6px",
-                    borderRadius: 3,
-                  }}
-                >
-                  SIDE A
-                </span>
-              </div>
-
-              {/* Center Window with Dual Spinning Reels */}
-              <div
-                style={{
-                  width: 220,
-                  height: 48,
-                  backgroundColor: "#0d0e15",
-                  borderRadius: 6,
-                  border: "1.5px solid rgba(255, 255, 255, 0.2)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  padding: "0 20px",
-                  position: "relative",
-                }}
-              >
-                {/* Magnetic tape connecting reels */}
+              {[0, 60, 120, 180, 240, 300].map((deg) => (
                 <div
+                  key={deg}
                   style={{
                     position: "absolute",
-                    left: 45,
-                    right: 45,
-                    height: 12,
-                    backgroundColor: "#3e2723",
-                    borderRadius: 2,
-                    opacity: 0.85,
+                    width: 2,
+                    height: 5,
+                    backgroundColor: accentColor,
+                    transform: `rotate(${deg}deg) translateY(-6px)`,
                   }}
                 />
+              ))}
+              <div style={{ width: 8, height: 8, borderRadius: "50%", backgroundColor: lineColor }} />
+            </div>
 
-                {/* Left Spool Reel (Spinning) */}
+            {/* Right Spinning Reel */}
+            <div
+              style={{
+                width: 24,
+                height: 24,
+                borderRadius: "50%",
+                border: `2px solid ${lineColor}`,
+                position: "relative",
+                transform: `rotate(${spoolSpinAngle}deg)`,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              {[0, 60, 120, 180, 240, 300].map((deg) => (
                 <div
+                  key={deg}
                   style={{
-                    width: 36,
-                    height: 36,
-                    borderRadius: "50%",
-                    backgroundColor: "#f8fafc",
-                    border: "3px solid #64748b",
-                    position: "relative",
-                    transform: `rotate(${spoolSpinAngle}deg)`,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    boxShadow: "0 2px 6px rgba(0,0,0,0.7)",
+                    position: "absolute",
+                    width: 2,
+                    height: 5,
+                    backgroundColor: accentColor,
+                    transform: `rotate(${deg}deg) translateY(-6px)`,
                   }}
-                >
-                  {/* Spool Teeth */}
-                  {[0, 60, 120, 180, 240, 300].map((deg) => (
-                    <div
-                      key={deg}
-                      style={{
-                        position: "absolute",
-                        width: 4,
-                        height: 8,
-                        backgroundColor: "#1e293b",
-                        transform: `rotate(${deg}deg) translateY(-10px)`,
-                        borderRadius: 1,
-                      }}
-                    />
-                  ))}
-                  {/* Center Hole */}
-                  <div
-                    style={{
-                      width: 14,
-                      height: 14,
-                      borderRadius: "50%",
-                      backgroundColor: "#0f172a",
-                    }}
-                  />
-                </div>
-
-                {/* Tape Counter in Center */}
-                <div
-                  style={{
-                    backgroundColor: "#000000",
-                    border: "1px solid rgba(255,255,255,0.2)",
-                    borderRadius: 3,
-                    padding: "2px 6px",
-                    fontFamily: "monospace",
-                    fontSize: 10,
-                    fontWeight: 800,
-                    color: "#ffffff",
-                    letterSpacing: 1,
-                    zIndex: 2,
-                  }}
-                >
-                  {String(Math.floor(frame * 0.4)).padStart(3, "0")}
-                </div>
-
-                {/* Right Spool Reel (Spinning) */}
-                <div
-                  style={{
-                    width: 36,
-                    height: 36,
-                    borderRadius: "50%",
-                    backgroundColor: "#f8fafc",
-                    border: "3px solid #64748b",
-                    position: "relative",
-                    transform: `rotate(${spoolSpinAngle}deg)`,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    boxShadow: "0 2px 6px rgba(0,0,0,0.7)",
-                  }}
-                >
-                  {/* Spool Teeth */}
-                  {[0, 60, 120, 180, 240, 300].map((deg) => (
-                    <div
-                      key={deg}
-                      style={{
-                        position: "absolute",
-                        width: 4,
-                        height: 8,
-                        backgroundColor: "#1e293b",
-                        transform: `rotate(${deg}deg) translateY(-10px)`,
-                        borderRadius: 1,
-                      }}
-                    />
-                  ))}
-                  {/* Center Hole */}
-                  <div
-                    style={{
-                      width: 14,
-                      height: 14,
-                      borderRadius: "50%",
-                      backgroundColor: "#0f172a",
-                    }}
-                  />
-                </div>
-              </div>
+                />
+              ))}
+              <div style={{ width: 8, height: 8, borderRadius: "50%", backgroundColor: lineColor }} />
             </div>
           </div>
+
+          {/* Bottom trapezoid notch wireframe */}
+          <div
+            style={{
+              width: 75,
+              height: 12,
+              borderTop: `1.5px solid ${lineColor}`,
+              opacity: 0.4,
+            }}
+          />
         </div>
       </div>
     </div>

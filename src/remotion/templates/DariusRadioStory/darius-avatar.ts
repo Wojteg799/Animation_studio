@@ -1,86 +1,33 @@
-// Built-in crisp SVG avatar for young 80s music enthusiast Darius S. with headphones
-export const DARIUS_AVATAR_SVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240">
-  <defs>
-    <radialGradient id="bgGrad" cx="50%" cy="40%" r="60%">
-      <stop offset="0%" stop-color="%231e2230"/>
-      <stop offset="100%" stop-color="%230c0e14"/>
-    </radialGradient>
-    <linearGradient id="hairGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="%233b2819"/>
-      <stop offset="100%" stop-color="%231a120b"/>
-    </linearGradient>
-    <linearGradient id="jacketGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="%232563eb"/>
-      <stop offset="100%" stop-color="%231e3a8a"/>
-    </linearGradient>
-    <linearGradient id="skinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="%23fed7aa"/>
-      <stop offset="100%" stop-color="%23fba96b"/>
-    </linearGradient>
-    <linearGradient id="phonesGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="%23f59e0b"/>
-      <stop offset="100%" stop-color="%23d97706"/>
-    </linearGradient>
-  </defs>
+// Minimalist monochrome line-art avatar of Darius with yellow retro headphones
+export const DARIUS_AVATAR_SVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Solid Dark/Black Circle Base -->
+  <circle cx="100" cy="100" r="98" fill="%2309090b" stroke="%23ffffff" stroke-width="3"/>
 
-  <!-- Background Circle -->
-  <circle cx="120" cy="120" r="118" fill="url(%23bgGrad)"/>
-  <circle cx="120" cy="120" r="116" fill="none" stroke="%23334155" stroke-width="2"/>
+  <!-- Minimalist Head & Neck Silhouette (Crisp White Line Art) -->
+  <path d="M45 190 C48 148 72 135 100 135 C128 135 152 148 155 190" fill="none" stroke="%23ffffff" stroke-width="3" stroke-linecap="round"/>
+  <rect x="90" y="112" width="20" height="26" rx="4" fill="none" stroke="%23ffffff" stroke-width="2.5"/>
 
-  <!-- Subtle 80s Sound Grid Lines in BG -->
-  <line x1="30" y1="120" x2="210" y2="120" stroke="%23ffffff" stroke-opacity="0.06" stroke-dasharray="4 4"/>
-  <line x1="120" y1="30" x2="120" y2="210" stroke="%23ffffff" stroke-opacity="0.06" stroke-dasharray="4 4"/>
+  <!-- Head Base Outline -->
+  <ellipse cx="100" cy="85" rx="30" ry="34" fill="%2309090b" stroke="%23ffffff" stroke-width="3"/>
 
-  <!-- Body / Denim Jacket -->
-  <path d="M40 236 C45 180 75 160 120 160 C165 160 195 180 200 236 Z" fill="url(%23jacketGrad)"/>
-  <!-- T-shirt collar -->
-  <path d="M96 160 C96 178 144 178 144 160 Z" fill="%23f8fafc"/>
-  <polygon points="120,166 112,192 128,192" fill="%23e2e8f0" opacity="0.6"/>
+  <!-- Minimalist 80s Wavy Hair -->
+  <path d="M68 80 C65 48 82 36 100 36 C118 36 135 48 132 80 C128 62 120 54 108 52 C95 50 88 56 80 54 C72 52 68 64 68 80 Z" fill="%23ffffff"/>
 
-  <!-- Neck -->
-  <rect x="106" y="132" width="28" height="34" rx="6" fill="url(%23skinGrad)"/>
+  <!-- Face details (Simple line art: nose, smile, eyes) -->
+  <circle cx="91" cy="84" r="3" fill="%23ffffff"/>
+  <circle cx="109" cy="84" r="3" fill="%23ffffff"/>
+  <path d="M98 86 L96 95 L102 96" fill="none" stroke="%23ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M93 103 Q100 108 107 103" fill="none" stroke="%23ffffff" stroke-width="2.5" stroke-linecap="round"/>
 
-  <!-- Head Base -->
-  <ellipse cx="120" cy="100" rx="36" ry="42" fill="url(%23skinGrad)"/>
+  <!-- RETRO 80s HEADPHONES (SIGNATURE YELLOW ACCENT) -->
+  <!-- Metal headband over head -->
+  <path d="M58 82 C58 38 142 38 142 82" fill="none" stroke="%23ffffff" stroke-width="3.5" stroke-linecap="round"/>
 
-  <!-- 80s Wavy Hair -->
-  <path d="M78 92 C74 54 94 40 120 40 C146 40 166 54 162 92 C158 72 150 64 136 62 C120 60 110 66 100 64 C88 62 82 74 78 92 Z" fill="url(%23hairGrad)"/>
-  <!-- Sideburns & bangs -->
-  <path d="M84 76 C94 72 110 74 116 78 C124 73 138 72 152 77 C144 68 132 64 120 64 C104 64 92 68 84 76 Z" fill="%232c1c11"/>
+  <!-- Left Yellow Earpad -->
+  <rect x="52" y="72" width="14" height="34" rx="7" fill="%23facc15" stroke="%23ffffff" stroke-width="2.5"/>
+  <line x1="59" y1="78" x2="59" y2="100" stroke="%2309090b" stroke-width="2" stroke-linecap="round"/>
 
-  <!-- Simple stylized facial features -->
-  <!-- Eyebrows -->
-  <path d="M96 90 Q106 88 114 91" stroke="%233b2819" stroke-width="3" stroke-linecap="round" fill="none"/>
-  <path d="M126 91 Q134 88 144 90" stroke="%233b2819" stroke-width="3" stroke-linecap="round" fill="none"/>
-  <!-- Eyes -->
-  <ellipse cx="106" cy="98" rx="3.5" ry="4" fill="%230f172a"/>
-  <ellipse cx="134" cy="98" rx="3.5" ry="4" fill="%230f172a"/>
-  <circle cx="107" cy="96.5" r="1.2" fill="%23ffffff"/>
-  <circle cx="135" cy="96.5" r="1.2" fill="%23ffffff"/>
-  <!-- Nose -->
-  <path d="M119 100 L117 110 L123 111" stroke="%23d97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.6"/>
-  <!-- Gentle Smile -->
-  <path d="M110 120 Q120 127 130 120" stroke="%239a3412" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-
-  <!-- RETRO 80s VINTAGE HEADPHONES -->
-  <!-- Metal Over-head band -->
-  <path d="M68 96 C68 44 172 44 172 96" fill="none" stroke="%2394a3b8" stroke-width="4.5" stroke-linecap="round"/>
-  <path d="M74 96 C74 52 166 52 166 96" fill="none" stroke="%23cbd5e1" stroke-width="2" stroke-linecap="round"/>
-  
-  <!-- Left Orange Foam Earpad -->
-  <g transform="translate(62, 84)">
-    <rect x="0" y="0" width="18" height="42" rx="9" fill="url(%23phonesGrad)"/>
-    <rect x="0" y="0" width="18" height="42" rx="9" fill="none" stroke="%23b45309" stroke-width="2"/>
-    <line x1="9" y1="8" x2="9" y2="34" stroke="%23fef3c7" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
-  </g>
-
-  <!-- Right Orange Foam Earpad -->
-  <g transform="translate(160, 84)">
-    <rect x="0" y="0" width="18" height="42" rx="9" fill="url(%23phonesGrad)"/>
-    <rect x="0" y="0" width="18" height="42" rx="9" fill="none" stroke="%23b45309" stroke-width="2"/>
-    <line x1="9" y1="8" x2="9" y2="34" stroke="%23fef3c7" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
-  </g>
-
-  <!-- Headphone Cable leading down -->
-  <path d="M70 126 C68 150 78 180 88 200 C94 212 98 226 96 240" fill="none" stroke="%231e293b" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Right Yellow Earpad -->
+  <rect x="134" y="72" width="14" height="34" rx="7" fill="%23facc15" stroke="%23ffffff" stroke-width="2.5"/>
+  <line x1="141" y1="78" x2="141" y2="100" stroke="%2309090b" stroke-width="2" stroke-linecap="round"/>
 </svg>`;
