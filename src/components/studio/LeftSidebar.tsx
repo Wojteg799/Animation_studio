@@ -20,6 +20,8 @@ import {
   MessageSquare,
   Tv,
   Radio,
+  Users,
+  Gift,
 } from "lucide-react";
 import { AnimatedPhotoFrameProps } from "../../remotion/templates/AnimatedPhotoFrame/schema";
 import { PhotoFrameControls } from "./PhotoFrameControls";
@@ -150,7 +152,8 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
     selectedTemplateId === "music-forum-2007-xp";
   const isCharacterCategory =
     selectedTemplateId === "character-stage" ||
-    selectedTemplateId === "darius-radio-story";
+    selectedTemplateId === "darius-radio-story" ||
+    selectedTemplateId === "darius-internet-quest";
 
   const isIntroCategory =
     selectedTemplateId === "joy-division-cassette-morph" ||
@@ -247,7 +250,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
 
           <button
             type="button"
-            onClick={() => onSelectTemplate("character-stage")}
+            onClick={() => onSelectTemplate("darius-internet-quest")}
             className={`py-2 px-0.5 rounded-lg text-[9px] font-semibold flex flex-col items-center justify-center gap-1 transition-all ${
               isCharacterCategory
                 ? "bg-amber-500 text-black shadow-md font-bold"
@@ -341,28 +344,28 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
           </div>
         )}
 
-        {/* When in Character Category: 2-way template selector */}
+        {/* When in Character Category: 3-way template selector */}
         {isCharacterCategory && (
           <div className="space-y-1.5 pt-1">
             <div className="text-[10px] font-mono text-zinc-400 uppercase flex items-center justify-between">
               <span>Wybór Szablonu Postaci:</span>
-              <span className="text-amber-400 font-bold">2 Szablony</span>
+              <span className="text-amber-400 font-bold">3 Szablony</span>
             </div>
-            <div className="grid grid-cols-2 gap-1.5">
-              {/* Option 1: Character Stage (Kółka & Relacje) */}
+            <div className="grid grid-cols-3 gap-1.5">
+              {/* Option 1: Darius i Lydia 1 (Prezent & Domena Internetowa) */}
               <button
                 type="button"
-                onClick={() => onSelectTemplate("character-stage")}
+                onClick={() => onSelectTemplate("darius-internet-quest")}
                 className={`p-2 rounded-lg border text-center transition-all flex flex-col items-center gap-0.5 ${
-                  selectedTemplateId === "character-stage"
+                  selectedTemplateId === "darius-internet-quest"
                     ? "bg-amber-500/20 border-amber-500/70 shadow text-amber-300 font-bold"
                     : "bg-[#181822] hover:bg-[#20202e] border-white/5 text-zinc-400 hover:text-white"
                 }`}
-                title="Postacie w kółkach z podpisami, ruchem i nitkami śledczymi"
+                title="Darius i Lydia 1: Prezent urodzinowy (domena www), publikacja próbek w sieci, kolejne rozpoznania ✓ i pytajnik ?"
               >
-                <User className="w-3.5 h-3.5 text-amber-400" />
-                <span className="text-[10px] leading-tight font-bold">Studio Postaci</span>
-                <span className="text-[8px] font-mono text-zinc-400">Kółka & Relacje</span>
+                <Users className="w-3.5 h-3.5 text-sky-400" />
+                <span className="text-[10px] leading-tight font-bold">Darius i Lydia 1</span>
+                <span className="text-[8px] font-mono text-zinc-400">Prezent & Sieć</span>
               </button>
 
               {/* Option 2: Darius Radio & Mixtape Story */}
@@ -376,9 +379,25 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
                 }`}
                 title="Opowieść: Darius fan muzyki nagrywa piosenki z radia na kasetę, wkładka i znak zapytania"
               >
-                <Radio className="w-3.5 h-3.5 text-amber-400" />
+                <Radio className="w-3.5 h-3.5 text-yellow-400" />
                 <span className="text-[10px] leading-tight font-bold">Darius & Radio</span>
-                <span className="text-[8px] font-mono text-zinc-400">Mixtape & Pytajnik</span>
+                <span className="text-[8px] font-mono text-zinc-400">Mixtape & Kaseta</span>
+              </button>
+
+              {/* Option 3: Character Stage (Kółka & Relacje) */}
+              <button
+                type="button"
+                onClick={() => onSelectTemplate("character-stage")}
+                className={`p-2 rounded-lg border text-center transition-all flex flex-col items-center gap-0.5 ${
+                  selectedTemplateId === "character-stage"
+                    ? "bg-amber-500/20 border-amber-500/70 shadow text-amber-300 font-bold"
+                    : "bg-[#181822] hover:bg-[#20202e] border-white/5 text-zinc-400 hover:text-white"
+                }`}
+                title="Postacie w kółkach z podpisami, ruchem i nitkami śledczymi"
+              >
+                <User className="w-3.5 h-3.5 text-amber-400" />
+                <span className="text-[10px] leading-tight font-bold">Studio Postaci</span>
+                <span className="text-[8px] font-mono text-zinc-400">Kółka & Relacje</span>
               </button>
             </div>
           </div>

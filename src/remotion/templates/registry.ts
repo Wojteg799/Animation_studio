@@ -135,7 +135,7 @@ export const TEMPLATES: TemplateDefinition[] = [
   // 0D. DARIUS & LYDIA: PREZENT URODZINOWY & DOMENA INTERNETOWA
   {
     id: "darius-internet-quest",
-    name: "Darius & Lydia: Domena Internetowa & Poszukiwania",
+    name: "Darius i Lydia 1: Domena Internetowa & Poszukiwania",
     category: "Postacie & Relacje (Characters)",
     description: "Lydia (niebieska) wręcza Dariusowi (żółty) domenę na urodziny, publikacja próbek piosenek na stronie, kolejne rozpoznane utwory (✓) i tajemniczy znak zapytania (?).",
     component: DariusInternetQuest,

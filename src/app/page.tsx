@@ -57,13 +57,13 @@ import {
 import { AspectRatioType, RenderFormat } from "../lib/types";
 
 export default function StudioPage() {
-  // Domyślnie nowa animacja: Joy Division 25 Kaset -> Unknown Pleasures
+  // Domyślnie animacja: Darius i Lydia 1 (Prezent & Domena)
   const [selectedTemplateId, setSelectedTemplateId] = useState<string>(
-    "joy-division-cassette-morph"
+    "darius-internet-quest"
   );
   const [resolution, setResolution] = useState<AspectRatioType>("16:9");
   const [fps, setFps] = useState<number>(30);
-  const [durationFrames, setDurationFrames] = useState<number>(240); // 8 sekund dla Joy Division morph
+  const [durationFrames, setDurationFrames] = useState<number>(360); // 12 sekund dla Darius & Lydia
 
   // Props for templates
   const [photoFrameProps, setPhotoFrameProps] = useState<AnimatedPhotoFrameProps>(
