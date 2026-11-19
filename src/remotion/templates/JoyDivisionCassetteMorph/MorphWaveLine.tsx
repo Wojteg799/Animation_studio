@@ -244,11 +244,11 @@ export const MorphWaveLine: React.FC<MorphWaveLineProps> = ({
 
   // Occlusion mask (black fill underneath the wave to occlude lines behind it)
   const occlusionPathD = useMemo(() => {
-    if (!enableOcclusionFill || mountainT <= 0.01 || !wavePathD) return "";
+    if (!enableOcclusionFill || !wavePathD) return "";
     const rightX = waveStartLeft + targetBounds.width;
     const bottomCoverY = targetBounds.baselineY + 45;
     return `${wavePathD} L ${rightX.toFixed(1)} ${bottomCoverY.toFixed(1)} L ${waveStartLeft.toFixed(1)} ${bottomCoverY.toFixed(1)} Z`;
-  }, [enableOcclusionFill, mountainT, wavePathD, waveStartLeft, targetBounds.width, targetBounds.baselineY]);
+  }, [enableOcclusionFill, wavePathD, waveStartLeft, targetBounds.width, targetBounds.baselineY]);
 
   return (
     <g style={{ overflow: "visible" }}>
@@ -256,7 +256,7 @@ export const MorphWaveLine: React.FC<MorphWaveLineProps> = ({
       {isFlattened && (
         <g>
           {/* Black Occlusion Mask underneath the wave (creates iconic 3D layered mountain ridge) */}
-          {enableOcclusionFill && mountainT > 0.01 && (
+          {enableOcclusionFill && (
             <path
               d={occlusionPathD}
               fill="#000000"

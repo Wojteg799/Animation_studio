@@ -89,7 +89,7 @@ const getOrBuildBundle = async (forceFresh: boolean = false): Promise<string> =>
         webpackOverride: (current) => current,
       });
       cachedBundleLocation = bundleLocation;
-      cachedBundleTimestamp = Date.now();
+      cachedBundleTimestamp = latestSourceMtime;
       console.log(`[Remotion Bundler] Bundled successfully to: ${bundleLocation}`);
       return bundleLocation;
     } finally {
