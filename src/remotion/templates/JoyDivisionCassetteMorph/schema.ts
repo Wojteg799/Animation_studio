@@ -30,12 +30,13 @@ export const JoyDivisionCassetteMorphSchema = z.object({
   alignStyle: z.enum(["natural-stack", "adaptive-rows"]).default("natural-stack"),
 
   // Visual styling
+  transparentBackground: z.boolean().default(true),
   lineColor: z.string().default("#ffffff"),
   lineWidth: z.number().min(1).max(3.5).default(1.8),
   peakHeightMultiplier: z.number().min(0.5).max(2.0).default(1.15),
   noiseIntensity: z.number().min(0).max(2.0).default(1.0),
   enableGlow: z.boolean().default(false),
-  enableOcclusionFill: z.boolean().default(true), // black fill under each line for classic 3D contour
+  enableOcclusionFill: z.boolean().default(false), // czarna maska pod falami (wyłączona przy przezroczystym tle dla czystych wektorów)
 
   // Cassette mechanics
   spoolSpinSpeed: z.number().min(0.2).max(3.0).default(1.0),
@@ -61,12 +62,13 @@ export const defaultJoyDivisionCassetteMorphProps: JoyDivisionCassetteMorphProps
   alignStyle: "natural-stack",
   morphStartFrame: 50,
   morphDurationFrames: 70,
+  transparentBackground: true,
   lineColor: "#ffffff",
   lineWidth: 1.8,
   peakHeightMultiplier: 1.15,
   noiseIntensity: 1.0,
   enableGlow: false,
-  enableOcclusionFill: true,
+  enableOcclusionFill: false,
   spoolSpinSpeed: 1.0,
   durationInFrames: 240, // 8 seconds at 30fps
 };

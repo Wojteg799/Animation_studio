@@ -18,6 +18,7 @@ interface MorphWaveLineProps {
   };
   strokeColor: string;
   strokeWidth: number;
+  transparentBackground?: boolean;
   enableOcclusionFill: boolean;
   enableGlow: boolean;
   spoolSpinSpeed: number;
@@ -58,6 +59,7 @@ export const MorphWaveLine: React.FC<MorphWaveLineProps> = ({
   targetBounds,
   strokeColor,
   strokeWidth,
+  transparentBackground = true,
   enableOcclusionFill,
   enableGlow,
   spoolSpinSpeed,
@@ -255,7 +257,11 @@ export const MorphWaveLine: React.FC<MorphWaveLineProps> = ({
         <g>
           {/* Black Occlusion Mask underneath the wave (creates iconic 3D layered mountain ridge) */}
           {enableOcclusionFill && mountainT > 0.01 && (
-            <path d={occlusionPathD} fill="#000000" stroke="none" />
+            <path
+              d={occlusionPathD}
+              fill={transparentBackground ? "rgba(0, 0, 0, 0.7)" : "#000000"}
+              stroke="none"
+            />
           )}
 
           {/* White Pulsar Line Stroke */}
@@ -285,6 +291,7 @@ export const MorphWaveLine: React.FC<MorphWaveLineProps> = ({
             spoolRotation={spoolAngle}
             detailsOpacity={detailsOpacity}
             squashFactor={squashFactor}
+            chassisFill={transparentBackground ? "none" : "#000000"}
           />
         </g>
       )}

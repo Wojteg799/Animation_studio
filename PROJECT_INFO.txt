@@ -159,7 +159,8 @@ A. Joy Division: 25 Kaset → Unknown Pleasures (id: "joy-division-cassette-morp
    - Faza 3 (Spłaszczenie): Kasety rozciągają się w poziomie i spłaszczają w płaskie linie.
    - Faza 4 (Wyrastanie gór): Z płaskich linii wyrastają fale radiowe pulsarów.
    - Brak napisów na dole - czysty, minimalistyczny obraz.
-   - Pliki: MorphWaveLine.tsx, CassetteWireframe.tsx, pulsar-data.ts, schema.ts, index.tsx.
+   - Przezroczyste Tło (Alpha Channel): Domyślnie 100% przezroczyste tło (transparentBackground: true), przezroczyste wnętrza kaset (wireframe) oraz czyste wektory linii, idealne do nałożenia na film w DaVinci / Premiere Pro (eksport ProRes 4444). Opcja przełączenia jednym kliknięciem na klasyczną czerń okładki Unknown Pleasures.
+   - Pliki: MorphWaveLine.tsx, CassetteWireframe.tsx, pulsar-data.ts, schema.ts, index.tsx, JoyDivisionControls.tsx.
 
 B. Retro Kaseta Magnetofonowa Intro (id: "retro-cassette-intro")
    - Koncepcja: Napis "Horyzont Zdarzeń Prezentuje", wjeżdżająca vintage kaseta magnetofonowa

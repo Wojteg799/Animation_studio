@@ -17,12 +17,13 @@ export const JoyDivisionCassetteMorph: React.FC<JoyDivisionCassetteMorphProps> =
   alignStyle = "natural-stack",
   morphStartFrame = 50,
   morphDurationFrames = 70,
+  transparentBackground = true,
   lineColor = "#ffffff",
   lineWidth = 1.8,
   peakHeightMultiplier = 1.15,
   noiseIntensity = 1.0,
   enableGlow = false,
-  enableOcclusionFill = true,
+  enableOcclusionFill = false,
   spoolSpinSpeed = 1.0,
   durationInFrames = 240,
 }) => {
@@ -75,7 +76,7 @@ export const JoyDivisionCassetteMorph: React.FC<JoyDivisionCassetteMorphProps> =
         height: "100%",
         position: "relative",
         overflow: "hidden",
-        backgroundColor: "#000000", // 100% pitch black void
+        backgroundColor: transparentBackground ? "transparent" : "#000000",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -127,6 +128,7 @@ export const JoyDivisionCassetteMorph: React.FC<JoyDivisionCassetteMorphProps> =
               canvasHeight={height}
               strokeColor={lineColor}
               strokeWidth={lineWidth}
+              transparentBackground={transparentBackground}
               enableOcclusionFill={enableOcclusionFill}
               enableGlow={enableGlow}
               spoolSpinSpeed={spoolSpinSpeed}

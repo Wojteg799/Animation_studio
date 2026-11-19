@@ -114,6 +114,38 @@ export const JoyDivisionControls: React.FC<JoyDivisionControlsProps> = ({
 
   return (
     <div className="space-y-4">
+      {/* Transparency & Alpha Channel Switcher */}
+      <div className="bg-[#12121a] p-3 rounded-xl border border-white/10 space-y-2">
+        <div className="flex items-center justify-between">
+          <div>
+            <span className="text-xs font-semibold text-white block">
+              Przezroczyste Tło (Alpha Channel)
+            </span>
+            <span className="text-[10px] text-zinc-400">
+              {props.transparentBackground
+                ? "Brak czarnego tła – 100% przezroczyste linie na wideo (ProRes 4444)"
+                : "Głęboka czerń (oryginalna okładka Unknown Pleasures)"}
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={() => updateProp("transparentBackground", !(props.transparentBackground ?? true))}
+            className={`px-3 py-1 rounded text-xs font-mono font-bold transition-all ${
+              (props.transparentBackground ?? true)
+                ? "bg-emerald-500 text-black shadow-md shadow-emerald-500/20"
+                : "bg-zinc-800 text-zinc-400"
+            }`}
+          >
+            {(props.transparentBackground ?? true) ? "ALPHA (ON)" : "CZARNE TŁO"}
+          </button>
+        </div>
+        {(props.transparentBackground ?? true) && (
+          <p className="text-[10px] text-emerald-400/90 font-mono bg-emerald-500/10 p-2 rounded-lg border border-emerald-500/20">
+            ✓ Gotowe do nałożenia na film w DaVinci Resolve / Premiere Pro (eksport ProRes 4444).
+          </p>
+        )}
+      </div>
+
       {/* Sub-tabs switcher */}
       <div className="grid grid-cols-4 gap-1 bg-[#15151f] p-1 rounded-xl border border-white/10 text-xs">
         <button
@@ -566,10 +598,12 @@ export const JoyDivisionControls: React.FC<JoyDivisionControlsProps> = ({
             <div className="flex items-center justify-between">
               <div>
                 <span className="text-xs text-white font-semibold block">
-                  Zasłanianie 3D (Czarna Maska)
+                  Zasłanianie 3D (Maska Konturowa)
                 </span>
                 <span className="text-[10px] text-zinc-500">
-                  Dolne fale zasłaniają górne, tworząc granię
+                  {props.transparentBackground
+                    ? "Maska pod granią (wyłącz dla 100% przezroczystych linii)"
+                    : "Dolne fale zasłaniają górne, tworząc granię"}
                 </span>
               </div>
               <button
