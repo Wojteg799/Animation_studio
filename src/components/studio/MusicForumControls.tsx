@@ -102,11 +102,10 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
             Wersja Stylistyczna Forum:
           </label>
           <span
-            className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold border ${
-              props.forumThemeVariant === "retro-xp-2007"
-                ? "bg-blue-500/20 text-blue-300 border-blue-500/40"
-                : "bg-amber-500/20 text-amber-300 border-amber-500/40"
-            }`}
+            className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold border ${props.forumThemeVariant === "retro-xp-2007"
+              ? "bg-blue-500/20 text-blue-300 border-blue-500/40"
+              : "bg-amber-500/20 text-amber-300 border-amber-500/40"
+              }`}
           >
             {props.forumThemeVariant === "retro-xp-2007" ? "2007 ROK CORE" : "NOIR DARK"}
           </span>
@@ -117,11 +116,10 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
           <button
             type="button"
             onClick={() => updateProp("forumThemeVariant", "modern-dark")}
-            className={`p-2.5 rounded-lg border text-left transition-all flex flex-col gap-1 ${
-              props.forumThemeVariant !== "retro-xp-2007"
-                ? "bg-amber-500/20 border-amber-500/80 text-amber-300 font-bold shadow"
-                : "bg-[#181824] border-white/5 text-zinc-400 hover:text-white"
-            }`}
+            className={`p-2.5 rounded-lg border text-left transition-all flex flex-col gap-1 ${props.forumThemeVariant !== "retro-xp-2007"
+              ? "bg-amber-500/20 border-amber-500/80 text-amber-300 font-bold shadow"
+              : "bg-[#181824] border-white/5 text-zinc-400 hover:text-white"
+              }`}
           >
             <span className="text-[11px] font-bold leading-tight">1. Nowoczesny Noir</span>
             <span className="text-[9px] text-zinc-400 font-normal">
@@ -133,11 +131,10 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
           <button
             type="button"
             onClick={() => updateProp("forumThemeVariant", "retro-xp-2007")}
-            className={`p-2.5 rounded-lg border text-left transition-all flex flex-col gap-1 ${
-              props.forumThemeVariant === "retro-xp-2007"
-                ? "bg-blue-600/25 border-blue-500 text-blue-300 font-bold shadow"
-                : "bg-[#181824] border-white/5 text-zinc-400 hover:text-white"
-            }`}
+            className={`p-2.5 rounded-lg border text-left transition-all flex flex-col gap-1 ${props.forumThemeVariant === "retro-xp-2007"
+              ? "bg-blue-600/25 border-blue-500 text-blue-300 font-bold shadow"
+              : "bg-[#181824] border-white/5 text-zinc-400 hover:text-white"
+              }`}
           >
             <span className="text-[11px] font-bold text-blue-300 leading-tight">
               2. Retro 2007 (XP)
@@ -154,11 +151,10 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
         <button
           type="button"
           onClick={() => setActiveTab("posts")}
-          className={`py-2 rounded-lg font-medium transition-all flex flex-col items-center gap-1 ${
-            activeTab === "posts"
-              ? "bg-amber-500 text-black font-bold shadow"
-              : "text-zinc-400 hover:text-white"
-          }`}
+          className={`py-2 rounded-lg font-medium transition-all flex flex-col items-center gap-1 ${activeTab === "posts"
+            ? "bg-amber-500 text-black font-bold shadow"
+            : "text-zinc-400 hover:text-white"
+            }`}
         >
           <MessageSquare className="w-3.5 h-3.5" />
           <span className="text-[10px]">Forum & Posty</span>
@@ -167,11 +163,10 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
         <button
           type="button"
           onClick={() => setActiveTab("scroll")}
-          className={`py-2 rounded-lg font-medium transition-all flex flex-col items-center gap-1 ${
-            activeTab === "scroll"
-              ? "bg-amber-500 text-black font-bold shadow"
-              : "text-zinc-400 hover:text-white"
-          }`}
+          className={`py-2 rounded-lg font-medium transition-all flex flex-col items-center gap-1 ${activeTab === "scroll"
+            ? "bg-amber-500 text-black font-bold shadow"
+            : "text-zinc-400 hover:text-white"
+            }`}
         >
           <Move className="w-3.5 h-3.5" />
           <span className="text-[10px]">Scroll & Focus</span>
@@ -180,11 +175,10 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
         <button
           type="button"
           onClick={() => setActiveTab("lowpoly")}
-          className={`py-2 rounded-lg font-medium transition-all flex flex-col items-center gap-1 ${
-            activeTab === "lowpoly"
-              ? "bg-amber-500 text-black font-bold shadow"
-              : "text-zinc-400 hover:text-white"
-          }`}
+          className={`py-2 rounded-lg font-medium transition-all flex flex-col items-center gap-1 ${activeTab === "lowpoly"
+            ? "bg-amber-500 text-black font-bold shadow"
+            : "text-zinc-400 hover:text-white"
+            }`}
         >
           <Box className="w-3.5 h-3.5" />
           <span className="text-[10px]">3D & Tło</span>
@@ -193,11 +187,10 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
         <button
           type="button"
           onClick={() => setActiveTab("duration")}
-          className={`py-2 rounded-lg font-medium transition-all flex flex-col items-center gap-1 ${
-            activeTab === "duration"
-              ? "bg-amber-500 text-black font-bold shadow"
-              : "text-zinc-400 hover:text-white"
-          }`}
+          className={`py-2 rounded-lg font-medium transition-all flex flex-col items-center gap-1 ${activeTab === "duration"
+            ? "bg-amber-500 text-black font-bold shadow"
+            : "text-zinc-400 hover:text-white"
+            }`}
         >
           <Clock className="w-3.5 h-3.5" />
           <span className="text-[10px]">Oś Czasu & Blur</span>
@@ -354,11 +347,10 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
                     key={num}
                     type="button"
                     onClick={() => setSelectedPostTab(num as any)}
-                    className={`py-1.5 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1 ${
-                      selectedPostTab === num
-                        ? "bg-amber-500 text-black font-bold shadow"
-                        : "text-zinc-400 hover:text-white"
-                    }`}
+                    className={`py-1.5 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1 ${selectedPostTab === num
+                      ? "bg-amber-500 text-black font-bold shadow"
+                      : "text-zinc-400 hover:text-white"
+                      }`}
                   >
                     <span>Post #{num}</span>
                   </button>
@@ -449,9 +441,8 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
                         key={c}
                         type="button"
                         onClick={() => updateProp(`post${selectedPostTab}_avatarColor` as any, c)}
-                        className={`w-5 h-5 rounded-full transition-all border ${
-                          curAvatarColor === c ? "border-white scale-110 shadow" : "border-transparent opacity-70 hover:opacity-100"
-                        }`}
+                        className={`w-5 h-5 rounded-full transition-all border ${curAvatarColor === c ? "border-white scale-110 shadow" : "border-transparent opacity-70 hover:opacity-100"
+                          }`}
                         style={{ backgroundColor: c }}
                       />
                     ))}
@@ -553,11 +544,10 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
                   <button
                     type="button"
                     onClick={() => updateProp(`post${selectedPostTab}_hasQuote` as any, !curHasQuote)}
-                    className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold transition-all ${
-                      curHasQuote
-                        ? "bg-amber-500 text-black shadow-sm"
-                        : "bg-zinc-800 text-zinc-400"
-                    }`}
+                    className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold transition-all ${curHasQuote
+                      ? "bg-amber-500 text-black shadow-sm"
+                      : "bg-zinc-800 text-zinc-400"
+                      }`}
                   >
                     {curHasQuote ? "WŁĄCZONY" : "WYŁĄCZONY"}
                   </button>
@@ -633,11 +623,10 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
                       const propKey = `post${selectedPostTab}_hasAudio` as keyof MusicForumScrollProps;
                       updateProp(propKey, !(props as any)[propKey]);
                     }}
-                    className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold transition-all ${
-                      Boolean((props as any)[`post${selectedPostTab}_hasAudio`])
-                        ? "bg-cyan-500 text-black shadow-sm shadow-cyan-500/20"
-                        : "bg-zinc-800 text-zinc-400"
-                    }`}
+                    className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold transition-all ${Boolean((props as any)[`post${selectedPostTab}_hasAudio`])
+                      ? "bg-cyan-500 text-black shadow-sm shadow-cyan-500/20"
+                      : "bg-zinc-800 text-zinc-400"
+                      }`}
                   >
                     {Boolean((props as any)[`post${selectedPostTab}_hasAudio`]) ? "WŁĄCZONY" : "WYŁĄCZONY"}
                   </button>
@@ -681,9 +670,8 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
               <button
                 type="button"
                 onClick={() => updateProp("enableScroll", !props.enableScroll)}
-                className={`px-2.5 py-1 rounded text-xs font-mono font-bold transition-all ${
-                  props.enableScroll ? "bg-amber-500 text-black" : "bg-zinc-800 text-zinc-400"
-                }`}
+                className={`px-2.5 py-1 rounded text-xs font-mono font-bold transition-all ${props.enableScroll ? "bg-amber-500 text-black" : "bg-zinc-800 text-zinc-400"
+                  }`}
               >
                 {props.enableScroll ? "WŁĄCZONE" : "WYŁĄCZONE"}
               </button>
@@ -713,11 +701,10 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
                           updateProp("postsToSkip", s.skip);
                           updateProp("scrollDistance", s.px);
                         }}
-                        className={`p-2 rounded-lg border text-center transition-all ${
-                          props.postsToSkip === s.skip
-                            ? "bg-amber-500/20 border-amber-500 text-amber-300 font-bold"
-                            : "bg-[#181822] border-white/5 text-zinc-400 hover:text-white"
-                        }`}
+                        className={`p-2 rounded-lg border text-center transition-all ${props.postsToSkip === s.skip
+                          ? "bg-amber-500/20 border-amber-500 text-amber-300 font-bold"
+                          : "bg-[#181822] border-white/5 text-zinc-400 hover:text-white"
+                          }`}
                       >
                         <span className="text-[10px] block">{s.label}</span>
                       </button>
@@ -799,11 +786,10 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
               <button
                 type="button"
                 onClick={() => updateProp("enablePostFocus", !props.enablePostFocus)}
-                className={`px-2.5 py-1 rounded text-xs font-mono font-bold transition-all ${
-                  props.enablePostFocus
-                    ? "bg-amber-500 text-black shadow-md shadow-amber-500/20"
-                    : "bg-zinc-800 text-zinc-400"
-                }`}
+                className={`px-2.5 py-1 rounded text-xs font-mono font-bold transition-all ${props.enablePostFocus
+                  ? "bg-amber-500 text-black shadow-md shadow-amber-500/20"
+                  : "bg-zinc-800 text-zinc-400"
+                  }`}
               >
                 {props.enablePostFocus ? "WŁĄCZONY" : "WYŁĄCZONY"}
               </button>
@@ -827,11 +813,10 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
                         key={p.idx}
                         type="button"
                         onClick={() => updateProp("focusPostIndex", p.idx)}
-                        className={`p-2 rounded-lg border text-center transition-all ${
-                          props.focusPostIndex === p.idx
-                            ? "bg-amber-500/20 border-amber-500 text-amber-300 font-bold"
-                            : "bg-[#181822] border-white/5 text-zinc-400 hover:text-white"
-                        }`}
+                        className={`p-2 rounded-lg border text-center transition-all ${props.focusPostIndex === p.idx
+                          ? "bg-amber-500/20 border-amber-500 text-amber-300 font-bold"
+                          : "bg-[#181822] border-white/5 text-zinc-400 hover:text-white"
+                          }`}
                       >
                         <span className="text-[10px] block">{p.label}</span>
                       </button>
@@ -849,9 +834,8 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
                     <button
                       type="button"
                       onClick={() => updateProp("enableTextMarker", !props.enableTextMarker)}
-                      className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${
-                        props.enableTextMarker ? "bg-yellow-400 text-black" : "bg-zinc-800 text-zinc-400"
-                      }`}
+                      className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${props.enableTextMarker ? "bg-yellow-400 text-black" : "bg-zinc-800 text-zinc-400"
+                        }`}
                     >
                       {props.enableTextMarker ? "WŁĄCZONY" : "WYŁĄCZONY"}
                     </button>
@@ -940,9 +924,8 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
                     <button
                       type="button"
                       onClick={() => updateProp("dimOtherPosts", !props.dimOtherPosts)}
-                      className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${
-                        props.dimOtherPosts ? "bg-white/20 text-white" : "bg-zinc-800 text-zinc-400"
-                      }`}
+                      className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${props.dimOtherPosts ? "bg-white/20 text-white" : "bg-zinc-800 text-zinc-400"
+                        }`}
                     >
                       {props.dimOtherPosts ? "WŁ" : "WYŁ"}
                     </button>
@@ -1005,11 +988,10 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
                           key={c.color}
                           type="button"
                           onClick={() => updateProp("focusGlowColor", c.color)}
-                          className={`w-7 h-7 rounded-full border-2 transition-all ${
-                            props.focusGlowColor === c.color
-                              ? "scale-110 border-white shadow-md"
-                              : "border-transparent opacity-60 hover:opacity-100"
-                          }`}
+                          className={`w-7 h-7 rounded-full border-2 transition-all ${props.focusGlowColor === c.color
+                            ? "scale-110 border-white shadow-md"
+                            : "border-transparent opacity-60 hover:opacity-100"
+                            }`}
                           style={{ backgroundColor: c.color }}
                           title={c.label}
                         />
@@ -1031,11 +1013,10 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
                             !props.autoSyncFocusWithScroll
                           )
                         }
-                        className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${
-                          props.autoSyncFocusWithScroll
-                            ? "bg-emerald-500 text-black"
-                            : "bg-zinc-800 text-zinc-400"
-                        }`}
+                        className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${props.autoSyncFocusWithScroll
+                          ? "bg-emerald-500 text-black"
+                          : "bg-zinc-800 text-zinc-400"
+                          }`}
                       >
                         {props.autoSyncFocusWithScroll ? "AUTO (ZALECANE)" : "RĘCZNA KLATKA"}
                       </button>
@@ -1105,11 +1086,10 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
               <button
                 type="button"
                 onClick={() => updateProp("transparentBackground", !props.transparentBackground)}
-                className={`px-3 py-1 rounded text-xs font-mono font-bold transition-all ${
-                  props.transparentBackground
-                    ? "bg-emerald-500 text-black shadow-md shadow-emerald-500/20"
-                    : "bg-zinc-800 text-zinc-400"
-                }`}
+                className={`px-3 py-1 rounded text-xs font-mono font-bold transition-all ${props.transparentBackground
+                  ? "bg-emerald-500 text-black shadow-md shadow-emerald-500/20"
+                  : "bg-zinc-800 text-zinc-400"
+                  }`}
               >
                 {props.transparentBackground ? "ALPHA (ON)" : "CIEMNE TŁO"}
               </button>
@@ -1135,9 +1115,8 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
               <button
                 type="button"
                 onClick={() => updateProp("enable3DTilt", !props.enable3DTilt)}
-                className={`px-2.5 py-1 rounded text-xs font-mono font-bold transition-all ${
-                  props.enable3DTilt ? "bg-amber-500 text-black" : "bg-zinc-800 text-zinc-400"
-                }`}
+                className={`px-2.5 py-1 rounded text-xs font-mono font-bold transition-all ${props.enable3DTilt ? "bg-amber-500 text-black" : "bg-zinc-800 text-zinc-400"
+                  }`}
               >
                 {props.enable3DTilt ? "3D KĄT" : "PŁASKIE 2D"}
               </button>
@@ -1203,9 +1182,8 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
               <button
                 type="button"
                 onClick={() => updateProp("showFloatingPolygons", !props.showFloatingPolygons)}
-                className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${
-                  props.showFloatingPolygons ? "bg-amber-500 text-black" : "bg-zinc-800 text-zinc-400"
-                }`}
+                className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${props.showFloatingPolygons ? "bg-amber-500 text-black" : "bg-zinc-800 text-zinc-400"
+                  }`}
               >
                 {props.showFloatingPolygons ? "ON" : "OFF"}
               </button>
@@ -1245,9 +1223,8 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
               <button
                 type="button"
                 onClick={() => updateProp("showScanlines", !props.showScanlines)}
-                className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${
-                  props.showScanlines ? "bg-amber-500 text-black" : "bg-zinc-800 text-zinc-400"
-                }`}
+                className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${props.showScanlines ? "bg-amber-500 text-black" : "bg-zinc-800 text-zinc-400"
+                  }`}
               >
                 {props.showScanlines ? "ON" : "OFF"}
               </button>
@@ -1265,11 +1242,10 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
                   key={th.id}
                   type="button"
                   onClick={() => updateProp("colorTheme", th.id as any)}
-                  className={`p-2 rounded-lg border text-left transition-all flex items-center gap-2 ${
-                    props.colorTheme === th.id
-                      ? "bg-amber-500/15 border-amber-500 text-white font-bold"
-                      : "bg-[#181822] border-white/5 text-zinc-400"
-                  }`}
+                  className={`p-2 rounded-lg border text-left transition-all flex items-center gap-2 ${props.colorTheme === th.id
+                    ? "bg-amber-500/15 border-amber-500 text-white font-bold"
+                    : "bg-[#181822] border-white/5 text-zinc-400"
+                    }`}
                 >
                   <div
                     className="w-3.5 h-3.5 rounded-full border border-white/20"
@@ -1362,11 +1338,10 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
                     setDurationFrames(d.frames);
                     updateProp("durationInFrames", d.frames);
                   }}
-                  className={`py-1.5 px-2 rounded-lg border text-center transition-all ${
-                    props.durationInFrames === d.frames
-                      ? "bg-amber-500/20 border-amber-500 text-amber-300 font-bold"
-                      : "bg-[#181822] border-white/5 text-zinc-400 hover:text-white"
-                  }`}
+                  className={`py-1.5 px-2 rounded-lg border text-center transition-all ${props.durationInFrames === d.frames
+                    ? "bg-amber-500/20 border-amber-500 text-amber-300 font-bold"
+                    : "bg-[#181822] border-white/5 text-zinc-400 hover:text-white"
+                    }`}
                 >
                   <span className="text-[10px] block font-mono">{d.label}</span>
                 </button>
@@ -1448,9 +1423,8 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
               <button
                 type="button"
                 onClick={() => updateProp("enableInitialBlur", !props.enableInitialBlur)}
-                className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold transition-all ${
-                  props.enableInitialBlur ? "bg-cyan-500 text-black" : "bg-zinc-800 text-zinc-400"
-                }`}
+                className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold transition-all ${props.enableInitialBlur ? "bg-cyan-500 text-black" : "bg-zinc-800 text-zinc-400"
+                  }`}
               >
                 {props.enableInitialBlur ? "WŁĄCZONE" : "WYŁĄCZONE"}
               </button>

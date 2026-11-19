@@ -598,24 +598,22 @@ export const JoyDivisionControls: React.FC<JoyDivisionControlsProps> = ({
             <div className="flex items-center justify-between">
               <div>
                 <span className="text-xs text-white font-semibold block">
-                  Zasłanianie 3D (Maska Konturowa)
+                  Zasłanianie 3D (Czarna Maska Konturowa)
                 </span>
                 <span className="text-[10px] text-zinc-500">
-                  {props.transparentBackground
-                    ? "Maska pod granią (wyłącz dla 100% przezroczystych linii)"
-                    : "Dolne fale zasłaniają górne, tworząc granię"}
+                  Czarna maska pod granią – dolne fale zasłaniają górne, tworząc granię 3D
                 </span>
               </div>
               <button
                 type="button"
-                onClick={() => updateProp("enableOcclusionFill", !props.enableOcclusionFill)}
+                onClick={() => updateProp("enableOcclusionFill", !(props.enableOcclusionFill ?? true))}
                 className={`px-2.5 py-1 rounded text-xs font-mono font-bold transition-all ${
-                  props.enableOcclusionFill
-                    ? "bg-emerald-500 text-black"
+                  (props.enableOcclusionFill ?? true)
+                    ? "bg-emerald-500 text-black shadow-sm"
                     : "bg-zinc-800 text-zinc-400"
                 }`}
               >
-                {props.enableOcclusionFill ? "WŁĄCZONE" : "WYŁĄCZONE"}
+                {(props.enableOcclusionFill ?? true) ? "CZARNA MASKA (WŁ)" : "WYŁĄCZONA"}
               </button>
             </div>
 

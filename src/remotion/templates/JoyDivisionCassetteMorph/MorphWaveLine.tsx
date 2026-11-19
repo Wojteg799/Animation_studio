@@ -60,7 +60,7 @@ export const MorphWaveLine: React.FC<MorphWaveLineProps> = ({
   strokeColor,
   strokeWidth,
   transparentBackground = true,
-  enableOcclusionFill,
+  enableOcclusionFill = true,
   enableGlow,
   spoolSpinSpeed,
   alignStyle = "natural-stack",
@@ -259,7 +259,7 @@ export const MorphWaveLine: React.FC<MorphWaveLineProps> = ({
           {enableOcclusionFill && mountainT > 0.01 && (
             <path
               d={occlusionPathD}
-              fill={transparentBackground ? "rgba(0, 0, 0, 0.7)" : "#000000"}
+              fill="#000000"
               stroke="none"
             />
           )}
