@@ -14,73 +14,74 @@ function smootherStep(t: number): number {
 
 export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
   forumTitle = "LOSTWAVE.ARCHIVE // MUZYCZNE FORUM DYSKUSYJNE",
+  forumSubtitle = "Największe polskie archiwum zagadek radiowych i kasetowych z lat 80.",
   threadTitle = "Tajemnicza piosenka z radia NDR (1984) - poszukiwanie wykonawcy",
   threadCategory = "GŁÓWNA DYSKUSJA / IDENTYFIKACJA UTWORÓW",
   threadDate = "Wątek założony: 14.10.2007 • 142 odpowiedzi",
 
-  post1_author = "analog_master84",
-  post1_role = "Kolekcjoner Taśm",
-  post1_date = "14 paź 2007, 18:20",
-  post1_subject = "Tajemnicza piosenka z radia NDR (1984) - poszukiwanie wykonawcy",
-  post1_location = "Hamburg, Niemcy",
-  post1_joined = "Sie 2004",
-  post1_postsCount = "1,420",
-  post1_reputation = "Pomógł: 42 razy",
-  post1_warnings = "Ostrzeżenia: [ 0 / 3 ]",
+  post1_author = "bl4nk_tape",
+  post1_role = "Archiwista Kaset",
+  post1_date = "14 paź 2007, 21:40",
+  post1_content = "Znalazłem starą kasetę z nagraniem z niemieckiego radia NDR (ok. 1984). Ktoś rozpoznaje ten wokal i syntezator? Załączam zgrany fragment.",
+  post1_hasAudio = true,
+  post1_audioFile = "radio_rip_ndr_1984.mp3 [1.4 MB]",
+  post1_avatarColor = "#38bdf8",
+  post1_avatarUrl,
   post1_signature = 'Lostwave Archivist 2007 | "Taśmy z radia nigdy nie kłamią" // Yamaha DX7',
-  post1_editNote = "",
-  post1_content = "Przeglądam stare nagrania radiowe z lat 80. Czy ktoś ma jeszcze zgrane audycje z niemieckiego radia [b]NDR[/b] z tego okresu?\nSzukam autorskich audycji [i]Musik für junge Leute[/i]. [spoiler]Kolekcja zawiera taśmy oznaczone symbolem #X-84[/spoiler]",
-  post1_hasAudio = false,
-  post1_audioFile = "intro_tape.mp3 [0.8 MB]",
-  post1_avatarColor = "#64748b",
+  post1_joined = "Paź 2007",
+  post1_postsCount = "42",
+  post1_location = "Hamburg / Polska",
+  post1_hasQuote = false,
+  post1_quoteAuthor,
+  post1_quoteContent,
 
-  post2_author = "tape_collector",
-  post2_role = "Kolekcjoner Kaset",
-  post2_date = "14 paź 2007, 19:45",
-  post2_subject = "Re: Tajemnicza piosenka z radia NDR (1984)",
-  post2_location = "Bremen / Studio",
-  post2_joined = "Kwi 2006",
-  post2_postsCount = "389",
-  post2_reputation = "Pochwały: 18",
-  post2_warnings = "Ostrzeżenia: [ 1 / 3 ]",
-  post2_signature = 'tape_collector | "Stilon Gorzów to klasyka." | [s]Nie szukajcie w katalogu ZYX[/s]',
-  post2_editNote = "",
-  post2_content = "[quote=analog_master84]Czy ktoś ma jeszcze zgrane audycje z niemieckiego radia NDR?[/quote]\nMam kilkanaście kaset [b]BASF[/b] i [b]Stilon[/b] z lat 1982-1986. [s]To nie było zgrane z radia[/s] [color=#38bdf8]Jeden utwór nie pasuje do żadnego znanego zespołu![/color] :shock:\n\n[code]INDEX: TAPE_04 // FREQ: 10.45 kHz // BIAS: HIGH[/code]",
+  post2_author = "synth_seeker",
+  post2_role = "Ekspert Sprzętu 80s",
+  post2_date = "15 paź 2007, 00:15",
+  post2_content = "Syntezator w tle to klasyczny Yamaha DX7. Brzmienie perkusji wskazuje na LinnDrum. Styl post-punk / new wave z Europy Środkowej.",
   post2_hasAudio = false,
   post2_audioFile = "sample_snippet.mp3 [0.6 MB]",
-  post2_avatarColor = "#ef4444",
+  post2_avatarColor = "#eab308",
+  post2_avatarUrl,
+  post2_signature = 'tape_collector | "Stilon Gorzów to klasyka."',
+  post2_joined = "Wrz 2006",
+  post2_postsCount = "128",
+  post2_location = "Berlin",
+  post2_hasQuote = true,
+  post2_quoteAuthor = "bl4nk_tape",
+  post2_quoteContent = "Przeglądam stare nagrania radiowe z lat 80...",
 
-  post3_author = "bl4nk_tape",
-  post3_role = "Archiwista Kaset",
-  post3_date = "14 paź 2007, 21:40",
-  post3_subject = "PILNE: Znalazłem nagranie! Odsłuchajcie załącznik mp3",
-  post3_location = "Piwnica z kasetami",
-  post3_joined = "Paź 2007",
-  post3_postsCount = "14",
-  post3_reputation = "Nowy poszukiwacz",
-  post3_warnings = "Ostrzeżenia: [ 0 / 3 ]",
-  post3_signature = 'bl4nk_tape | "Kaseta BASF LH-EI 90 | Ostatnia nadzieja na identyfikację"',
-  post3_editNote = "Ostatnio zmieniony przez bl4nk_tape dnia 14 paź 2007, 22:04, łącznie zmieniany 2 razy. Powód: usunięto wzmiankę o taśmie nr 4",
-  post3_content = "Znalazłem na kasecie ten niesamowity utwór. Przeszukałem archiwa [u]GEMA[/u] i katalogi [b]ZYX Music[/b] – [color=#ef4444]ZERO WYNIKÓW[/color] :O\nZałączam surowy plik zgrany bezpośrednio z magnetofonu.\n[spoiler]POSZLAKA: W 0:38 słychać niemieckiego prezentera mówiącego o zespole z Hamburga[/spoiler]",
-  post3_hasAudio = true,
+  post3_author = "vinyl_hunter_99",
+  post3_role = "Poszukiwacz Winyli",
+  post3_date = "15 paź 2007, 10:22",
+  post3_content = "Sprawdziłem niemieckie archiwa GEMA i katalogi wytwórni ZYX. Żadnych oficjalnych wydań. To musiało być nagranie demo nadesłane bezpośrednio do stacji.",
+  post3_hasAudio = false,
   post3_audioFile = "radio_rip_ndr_1984.mp3 [1.4 MB]",
-  post3_avatarColor = "#38bdf8",
+  post3_avatarColor = "#ef4444",
+  post3_avatarUrl,
+  post3_signature = 'bl4nk_tape | "Taśmy z radia nigdy nie kłamią."',
+  post3_joined = "Lis 2005",
+  post3_postsCount = "312",
+  post3_location = "Warszawa",
+  post3_hasQuote = false,
+  post3_quoteAuthor,
+  post3_quoteContent,
 
-  post4_author = "synth_seeker",
-  post4_role = "Ekspert Sprzętu 80s",
-  post4_date = "14 paź 2007, 22:15",
-  post4_subject = "Re: Tajemnicza piosenka z radia NDR (1984) - Poszlaki",
-  post4_location = "Baza Danych NDR",
-  post4_joined = "Maj 2003",
-  post4_postsCount = "4,892",
-  post4_reputation = "Pomógł: 512 razy",
-  post4_warnings = "Czyste konto (MODERATOR)",
-  post4_signature = 'lostwave_mod | "Przestrzegaj regulaminu! Nie publikuj numerów telefonów." // [b]LOSTWAVE 2007[/b]',
-  post4_editNote = "",
-  post4_content = "[badge=ADMIN]MODERACJA[/badge] Podbijam temat. Sprawdziłem syntezator w tle – to klasyczny [b]Yamaha DX7[/b].\n[code]STATUS: ŚLEDZTWO W TOKU // PODEJRZANI WYKLUCZENI: 12[/code]\n[s]Nie piszcie do stacji radiowej[/s] Przesłuchujemy kolejne taśmy :D",
+  post4_author = "lostwave_mod",
+  post4_role = "Moderator Forum",
+  post4_date = "16 paź 2007, 18:05",
+  post4_content = "Podbijam temat. Przesłuchujemy audycje 'Musik für junge Leute'. Otwieramy oficjalny arkusz z poszlakami i wykluczonymi zespołami.",
   post4_hasAudio = false,
   post4_audioFile = "voice_note.mp3 [0.4 MB]",
   post4_avatarColor = "#10b981",
+  post4_avatarUrl,
+  post4_signature = 'synth_seeker | "Yamaha DX7 to król lat 80."',
+  post4_joined = "Sty 2006",
+  post4_postsCount = "684",
+  post4_location = "Kraków",
+  post4_hasQuote = false,
+  post4_quoteAuthor,
+  post4_quoteContent,
 
   enableScroll = true,
   postsToSkip = 2,
@@ -381,7 +382,7 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
                     marginTop: "1px",
                   }}
                 >
-                  Największe polskie archiwum zagadek radiowych i kasetowych z lat 80.
+                  {forumSubtitle}
                 </span>
               </div>
 
@@ -620,18 +621,17 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
                   author={post1_author}
                   role={post1_role}
                   date={post1_date}
-                  subject={post1_subject}
-                  location={post1_location}
-                  joined={post1_joined}
-                  postsCount={post1_postsCount}
-                  reputation={post1_reputation}
-                  warnings={post1_warnings}
-                  editNote={post1_editNote}
                   content={post1_content}
                   hasAudio={post1_hasAudio}
                   audioFile={post1_audioFile}
                   avatarColor={post1_avatarColor}
+                  avatarUrl={post1_avatarUrl}
+                  joined={post1_joined}
+                  postsCount={post1_postsCount}
+                  location={post1_location}
                   signature={post1_signature || signatureText}
+                  quoteAuthor={post1_hasQuote ? post1_quoteAuthor : undefined}
+                  quoteContent={post1_hasQuote ? post1_quoteContent : undefined}
                   isHighlighted={highlightPostIndex === 1}
                   frame={frame}
                   isFocused={isTargetPost(1)}
@@ -652,19 +652,16 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
                   author={post2_author}
                   role={post2_role}
                   date={post2_date}
-                  subject={post2_subject}
-                  location={post2_location}
-                  joined={post2_joined}
-                  postsCount={post2_postsCount}
-                  reputation={post2_reputation}
-                  warnings={post2_warnings}
-                  editNote={post2_editNote}
                   content={post2_content}
                   hasAudio={post2_hasAudio}
                   audioFile={post2_audioFile}
                   avatarColor={post2_avatarColor}
-                  quoteAuthor={post1_author}
-                  quoteContent="Przeglądam stare nagrania radiowe z lat 80..."
+                  avatarUrl={post2_avatarUrl}
+                  joined={post2_joined}
+                  postsCount={post2_postsCount}
+                  location={post2_location}
+                  quoteAuthor={post2_hasQuote ? post2_quoteAuthor : undefined}
+                  quoteContent={post2_hasQuote ? post2_quoteContent : undefined}
                   signature={post2_signature}
                   isHighlighted={highlightPostIndex === 2}
                   frame={frame}
@@ -686,18 +683,17 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
                   author={post3_author}
                   role={post3_role}
                   date={post3_date}
-                  subject={post3_subject}
-                  location={post3_location}
-                  joined={post3_joined}
-                  postsCount={post3_postsCount}
-                  reputation={post3_reputation}
-                  warnings={post3_warnings}
-                  editNote={post3_editNote}
                   content={post3_content}
                   hasAudio={post3_hasAudio}
                   audioFile={post3_audioFile}
                   avatarColor={post3_avatarColor}
+                  avatarUrl={post3_avatarUrl}
+                  joined={post3_joined}
+                  postsCount={post3_postsCount}
+                  location={post3_location}
                   signature={post3_signature}
+                  quoteAuthor={post3_hasQuote ? post3_quoteAuthor : undefined}
+                  quoteContent={post3_hasQuote ? post3_quoteContent : undefined}
                   isHighlighted={highlightPostIndex === 3}
                   frame={frame}
                   isFocused={isTargetPost(3)}
@@ -718,18 +714,17 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
                   author={post4_author}
                   role={post4_role}
                   date={post4_date}
-                  subject={post4_subject}
-                  location={post4_location}
-                  joined={post4_joined}
-                  postsCount={post4_postsCount}
-                  reputation={post4_reputation}
-                  warnings={post4_warnings}
-                  editNote={post4_editNote}
                   content={post4_content}
                   hasAudio={post4_hasAudio}
                   audioFile={post4_audioFile}
                   avatarColor={post4_avatarColor}
+                  avatarUrl={post4_avatarUrl}
+                  joined={post4_joined}
+                  postsCount={post4_postsCount}
+                  location={post4_location}
                   signature={post4_signature}
+                  quoteAuthor={post4_hasQuote ? post4_quoteAuthor : undefined}
+                  quoteContent={post4_hasQuote ? post4_quoteContent : undefined}
                   isHighlighted={highlightPostIndex === 4}
                   frame={frame}
                   isFocused={isTargetPost(4)}
@@ -752,18 +747,16 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
                   author={post1_author}
                   role={post1_role}
                   date={post1_date}
-                  subject={post1_subject}
-                  location={post1_location}
-                  joined={post1_joined}
-                  postsCount={post1_postsCount}
-                  reputation={post1_reputation}
-                  warnings={post1_warnings}
-                  editNote={post1_editNote}
-                  signature={post1_signature || signatureText}
                   content={post1_content}
                   hasAudio={post1_hasAudio}
                   audioFile={post1_audioFile}
                   avatarColor={post1_avatarColor}
+                  avatarUrl={post1_avatarUrl}
+                  joined={post1_joined}
+                  postsCount={post1_postsCount}
+                  signature={post1_signature || signatureText}
+                  quoteAuthor={post1_hasQuote ? post1_quoteAuthor : undefined}
+                  quoteContent={post1_hasQuote ? post1_quoteContent : undefined}
                   isHighlighted={highlightPostIndex === 1}
                   frame={frame}
                   isFocused={isTargetPost(1)}
@@ -784,18 +777,16 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
                   author={post2_author}
                   role={post2_role}
                   date={post2_date}
-                  subject={post2_subject}
-                  location={post2_location}
-                  joined={post2_joined}
-                  postsCount={post2_postsCount}
-                  reputation={post2_reputation}
-                  warnings={post2_warnings}
-                  editNote={post2_editNote}
-                  signature={post2_signature}
                   content={post2_content}
                   hasAudio={post2_hasAudio}
                   audioFile={post2_audioFile}
                   avatarColor={post2_avatarColor}
+                  avatarUrl={post2_avatarUrl}
+                  joined={post2_joined}
+                  postsCount={post2_postsCount}
+                  signature={post2_signature}
+                  quoteAuthor={post2_hasQuote ? post2_quoteAuthor : undefined}
+                  quoteContent={post2_hasQuote ? post2_quoteContent : undefined}
                   isHighlighted={highlightPostIndex === 2}
                   frame={frame}
                   isFocused={isTargetPost(2)}
@@ -816,18 +807,16 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
                   author={post3_author}
                   role={post3_role}
                   date={post3_date}
-                  subject={post3_subject}
-                  location={post3_location}
-                  joined={post3_joined}
-                  postsCount={post3_postsCount}
-                  reputation={post3_reputation}
-                  warnings={post3_warnings}
-                  editNote={post3_editNote}
-                  signature={post3_signature}
                   content={post3_content}
                   hasAudio={post3_hasAudio}
                   audioFile={post3_audioFile}
                   avatarColor={post3_avatarColor}
+                  avatarUrl={post3_avatarUrl}
+                  joined={post3_joined}
+                  postsCount={post3_postsCount}
+                  signature={post3_signature}
+                  quoteAuthor={post3_hasQuote ? post3_quoteAuthor : undefined}
+                  quoteContent={post3_hasQuote ? post3_quoteContent : undefined}
                   isHighlighted={highlightPostIndex === 3}
                   frame={frame}
                   isFocused={isTargetPost(3)}
@@ -848,18 +837,16 @@ export const MusicForumScroll: React.FC<MusicForumScrollProps> = ({
                   author={post4_author}
                   role={post4_role}
                   date={post4_date}
-                  subject={post4_subject}
-                  location={post4_location}
-                  joined={post4_joined}
-                  postsCount={post4_postsCount}
-                  reputation={post4_reputation}
-                  warnings={post4_warnings}
-                  editNote={post4_editNote}
-                  signature={post4_signature}
                   content={post4_content}
                   hasAudio={post4_hasAudio}
                   audioFile={post4_audioFile}
                   avatarColor={post4_avatarColor}
+                  avatarUrl={post4_avatarUrl}
+                  joined={post4_joined}
+                  postsCount={post4_postsCount}
+                  signature={post4_signature}
+                  quoteAuthor={post4_hasQuote ? post4_quoteAuthor : undefined}
+                  quoteContent={post4_hasQuote ? post4_quoteContent : undefined}
                   isHighlighted={highlightPostIndex === 4}
                   frame={frame}
                   isFocused={isTargetPost(4)}

@@ -107,6 +107,14 @@ c:\Users\...\Animation_studio\
      - Pasek narzędzi BBCode Toolbar w panelu bocznym z przyciskami szybkiego wstawiania oraz presetami poszlak (Spoiler, Hex Dump, Skreślenie).
      - Indywidualne pola dla każdego postu: Temat wiadomości (postX_subject), Notatka o edycji (postX_editNote), Sygnatura BBCode (postX_signature)
        oraz rozwijana sekcja profilu i statystyk: Skąd (postX_location), Dołączył (postX_joined), Posty (postX_postsCount), Pochwały (postX_reputation), Ostrzeżenia (postX_warnings).
+   - Wgrywanie Zdjęć Profilowych & Edycja Tekstów Forum:
+     - Wgrywanie własnych zdjęć profilowych (JPG, PNG, WebP) dla każdego z 4 użytkowników przez API /api/upload
+       z natychmiastowym podglądem w Remotion Playerze i opcją usunięcia zdjęcia (powrót do domyślnego wektora).
+     - Własne zdjęcia wyświetlają się w ramce avatara Windows XP (80x80px ze scanline CRT) oraz Noir (z poświatą i neonową ramką).
+     - Pełna edycja tekstów z panelu bocznego: Tytuł forum, Podtytuł/Hasło (forumSubtitle), Temat wątku,
+       Kategoria/Dział, Data i statystyki wątku (threadDate), Data i godzina każdego wpisu (postX_date),
+       Metadane profilowe w lewej kolumnie (Dołączył, Posty, Skąd), Cytaty (włącznik, autor cytatu, treść cytatu),
+       Treść wiadomości oraz Sygnatury / Podpisy postów (postX_signature).
    - Pliki: ForumPostCard.tsx, bbcode-renderer.tsx, lowpoly-mesh.ts, schema.ts, index.tsx, MusicForumControls.tsx.
 
 0A-2. Muzyczne Forum 2007: Windows XP & phpBB (id: "music-forum-2007-xp")

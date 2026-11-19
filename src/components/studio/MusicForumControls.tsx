@@ -19,22 +19,10 @@ import {
   Paperclip,
   Eye,
   SlidersHorizontal,
-  Bold,
-  Italic,
-  Underline,
-  Strikethrough,
+  Upload,
+  Trash2,
+  Image as ImageIcon,
   Quote,
-  Code,
-  EyeOff,
-  Smile,
-  ShieldAlert,
-  ChevronDown,
-  ChevronUp,
-  Terminal,
-  MapPin,
-  Calendar,
-  Award,
-  AlertTriangle,
 } from "lucide-react";
 import { MusicForumScrollProps } from "../../remotion/templates/MusicForumScroll/schema";
 
@@ -58,67 +46,37 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<"posts" | "scroll" | "lowpoly" | "duration">("posts");
   const [selectedPostTab, setSelectedPostTab] = useState<1 | 2 | 3 | 4>(1);
-  const [showAuthorMeta, setShowAuthorMeta] = useState<boolean>(false);
-  const contentTextareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const insertBBCode = (openTag: string, closeTag: string = "", defaultText: string = "") => {
-    const key = `post${selectedPostTab}_content` as keyof MusicForumScrollProps;
-    const currentText = ((props as any)[key] as string) || "";
-    const textarea = contentTextareaRef.current;
+  const avatarInputRef = useRef<HTMLInputElement>(null);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
 
-    if (!textarea) {
-      updateProp(key, `${currentText}${currentText ? " " : ""}${openTag}${defaultText}${closeTag}`);
-      return;
-    }
+  const handleAvatarUpload = async (postNum: 1 | 2 | 3 | 4, e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    const selected = currentText.substring(start, end) || defaultText;
-    const newText =
-      currentText.substring(0, start) +
-      openTag +
-      selected +
-      closeTag +
-      currentText.substring(end);
+    // Fast local preview immediately in Remotion Player
+    const localUrl = URL.createObjectURL(file);
+    updateProp(`post${postNum}_avatarUrl` as any, localUrl);
 
-    updateProp(key, newText);
-
-    setTimeout(() => {
-      textarea.focus();
-      const newCursorPos = start + openTag.length + selected.length + closeTag.length;
-      textarea.setSelectionRange(newCursorPos, newCursorPos);
-    }, 10);
-  };
-
-  const insertEasterEggPreset = (preset: "spoiler" | "hex" | "strike" | "badge" | "quote") => {
-    switch (preset) {
-      case "spoiler":
-        insertBBCode(
-          "[spoiler]",
-          "[/spoiler]",
-          "POSZLAKA: W 0:38 słychać niemieckiego prezentera mówiącego o zespole z Hamburga"
-        );
-        break;
-      case "hex":
-        insertBBCode(
-          "\n[code]",
-          "[/code]\n",
-          "INDEX: TAPE_04 // FREQ: 10.45 kHz // BIAS: HIGH // STATUS: UNVERIFIED"
-        );
-        break;
-      case "strike":
-        insertBBCode("[s]", "[/s]", "To nagranie nigdy nie zostało wyemitowane");
-        break;
-      case "badge":
-        insertBBCode("[badge=ADMIN]", "[/badge]", "MODERACJA: WĄTEK POD OBSERWACJĄ");
-        break;
-      case "quote":
-        insertBBCode(
-          "[quote=analog_master84]",
-          "[/quote]\n",
-          "Czy ktoś ma jeszcze zgrane audycje z radia NDR?"
-        );
-        break;
+    try {
+      setUploadingAvatar(true);
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.url) {
+          updateProp(`post${postNum}_avatarUrl` as any, data.url);
+        }
+      }
+    } catch (err) {
+      console.warn("Avatar upload fallback to local preview", err);
+    } finally {
+      setUploadingAvatar(false);
+      if (e.target) e.target.value = "";
     }
   };
 
@@ -241,630 +199,465 @@ export const MusicForumControls: React.FC<MusicForumControlsProps> = ({
       </div>
 
       {/* ================= TAB 1: FORUM & TREŚĆ POSTÓW ================= */}
-      {activeTab === "posts" && (
-        <div className="space-y-4 animate-in fade-in">
-          {/* Forum Header Data */}
-          <div className="bg-[#12121a] p-3.5 rounded-xl border border-white/5 space-y-3">
-            <span className="text-xs font-bold text-white block border-b border-white/5 pb-1.5">
-              Nagłówek Forum & Wątku:
-            </span>
+      {activeTab === "posts" && (() => {
+        const curAvatarUrl = (props as any)[`post${selectedPostTab}_avatarUrl`] as string | undefined;
+        const curAuthor = ((props as any)[`post${selectedPostTab}_author`] as string) || "";
+        const curRole = ((props as any)[`post${selectedPostTab}_role`] as string) || "";
+        const curDate = ((props as any)[`post${selectedPostTab}_date`] as string) || "";
+        const curContent = ((props as any)[`post${selectedPostTab}_content`] as string) || "";
+        const curJoined = ((props as any)[`post${selectedPostTab}_joined`] as string) || "";
+        const curPostsCount = ((props as any)[`post${selectedPostTab}_postsCount`] as string) || "";
+        const curLocation = ((props as any)[`post${selectedPostTab}_location`] as string) || "";
+        const curSignature = ((props as any)[`post${selectedPostTab}_signature`] as string) || "";
+        const curHasQuote = Boolean((props as any)[`post${selectedPostTab}_hasQuote`]);
+        const curQuoteAuthor = ((props as any)[`post${selectedPostTab}_quoteAuthor`] as string) || "";
+        const curQuoteContent = ((props as any)[`post${selectedPostTab}_quoteContent`] as string) || "";
+        const curAvatarColor = ((props as any)[`post${selectedPostTab}_avatarColor`] as string) || "#38bdf8";
 
-            <div>
-              <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1">
-                Tytuł Forum:
-              </label>
-              <input
-                type="text"
-                value={props.forumTitle}
-                onChange={(e) => updateProp("forumTitle", e.target.value)}
-                className="w-full studio-input text-xs font-mono"
-              />
-            </div>
+        return (
+          <div className="space-y-4 animate-in fade-in">
+            {/* Hidden Avatar File Input */}
+            <input
+              type="file"
+              ref={avatarInputRef}
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => handleAvatarUpload(selectedPostTab, e)}
+            />
 
-            <div>
-              <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1">
-                Temat Wątku:
-              </label>
-              <input
-                type="text"
-                value={props.threadTitle}
-                onChange={(e) => updateProp("threadTitle", e.target.value)}
-                className="w-full studio-input text-xs font-bold"
-              />
-            </div>
-
-            <div>
-              <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1">
-                Dział / Kategoria:
-              </label>
-              <input
-                type="text"
-                value={props.threadCategory}
-                onChange={(e) => updateProp("threadCategory", e.target.value)}
-                className="w-full studio-input text-xs font-mono uppercase"
-              />
-            </div>
-
-            {props.forumThemeVariant === "retro-xp-2007" && (
-              <div className="pt-2 border-t border-white/5 space-y-3">
-                <span className="text-[10px] font-mono text-blue-400 uppercase font-bold block">
-                  Ustawienia Windows XP & 2007 Core:
-                </span>
-                <div>
-                  <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1">
-                    Tytuł Paska Windows XP:
-                  </label>
-                  <input
-                    type="text"
-                    value={props.xpWindowTitle}
-                    onChange={(e) => updateProp("xpWindowTitle", e.target.value)}
-                    className="w-full studio-input text-xs font-mono"
-                  />
-                </div>
-
-                <div>
-                  <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1">
-                    Adres Strony (Pasek URL):
-                  </label>
-                  <input
-                    type="text"
-                    value={props.xpUrl}
-                    onChange={(e) => updateProp("xpUrl", e.target.value)}
-                    className="w-full studio-input text-xs font-mono"
-                  />
-                </div>
-
-                <div>
-                  <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1">
-                    Sygnatura / Podpis Użytkownika:
-                  </label>
-                  <input
-                    type="text"
-                    value={props.signatureText}
-                    onChange={(e) => updateProp("signatureText", e.target.value)}
-                    className="w-full studio-input text-xs italic"
-                  />
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Posts Switcher (Post 1, Post 2, Post 3, Post 4) */}
-          <div className="space-y-2">
-            <label className="text-xs font-semibold text-white block">
-              Edycja Treści Postów:
-            </label>
-            <div className="grid grid-cols-4 gap-1 p-1 bg-[#12121a] rounded-xl border border-white/5">
-              {[1, 2, 3, 4].map((num) => (
-                <button
-                  key={num}
-                  type="button"
-                  onClick={() => setSelectedPostTab(num as any)}
-                  className={`py-1.5 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1 ${
-                    selectedPostTab === num
-                      ? "bg-amber-500 text-black font-bold shadow"
-                      : "text-zinc-400 hover:text-white"
-                  }`}
-                >
-                  <span>Post #{num}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Post Form */}
-          <div className="bg-[#12121a] p-3.5 rounded-xl border border-white/5 space-y-3">
-            <div className="flex items-center justify-between border-b border-white/5 pb-2">
-              <span className="text-xs font-bold text-white">
-                Parametry Postu #{selectedPostTab}
+            {/* Forum Header Data */}
+            <div className="bg-[#12121a] p-3.5 rounded-xl border border-white/5 space-y-3">
+              <span className="text-xs font-bold text-white block border-b border-white/5 pb-1.5">
+                Nagłówek Forum & Wątku:
               </span>
-              <span className="text-[10px] font-mono text-amber-400">
-                {selectedPostTab === 1 ? "Oryginalny wpis (OP)" : "Odpowiedź na forum"}
-              </span>
-            </div>
 
-            {/* Author & Role in 2 columns */}
-            <div className="grid grid-cols-2 gap-2">
               <div>
                 <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1">
-                  Autor (Nick):
+                  Tytuł Forum:
                 </label>
                 <input
                   type="text"
-                  value={
-                    selectedPostTab === 1
-                      ? props.post1_author
-                      : selectedPostTab === 2
-                      ? props.post2_author
-                      : selectedPostTab === 3
-                      ? props.post3_author
-                      : props.post4_author
-                  }
-                  onChange={(e) =>
-                    updateProp(
-                      `post${selectedPostTab}_author` as any,
-                      e.target.value
-                    )
-                  }
-                  className="w-full studio-input text-xs font-mono font-bold"
+                  value={props.forumTitle}
+                  onChange={(e) => updateProp("forumTitle", e.target.value)}
+                  className="w-full studio-input text-xs font-mono"
                 />
               </div>
 
               <div>
                 <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1">
-                  Ranga / Tytuł:
+                  Podtytuł / Hasło Forum (np. phpBB):
                 </label>
                 <input
                   type="text"
-                  value={
-                    selectedPostTab === 1
-                      ? props.post1_role
-                      : selectedPostTab === 2
-                      ? props.post2_role
-                      : selectedPostTab === 3
-                      ? props.post3_role
-                      : props.post4_role
-                  }
-                  onChange={(e) =>
-                    updateProp(`post${selectedPostTab}_role` as any, e.target.value)
-                  }
-                  className="w-full studio-input text-xs"
+                  value={props.forumSubtitle || ""}
+                  onChange={(e) => updateProp("forumSubtitle", e.target.value)}
+                  className="w-full studio-input text-xs font-mono"
+                  placeholder="np. Największe polskie archiwum zagadek radiowych..."
                 />
+              </div>
+
+              <div>
+                <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1">
+                  Temat Wątku:
+                </label>
+                <input
+                  type="text"
+                  value={props.threadTitle}
+                  onChange={(e) => updateProp("threadTitle", e.target.value)}
+                  className="w-full studio-input text-xs font-bold"
+                />
+              </div>
+
+              <div>
+                <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1">
+                  Dział / Kategoria:
+                </label>
+                <input
+                  type="text"
+                  value={props.threadCategory}
+                  onChange={(e) => updateProp("threadCategory", e.target.value)}
+                  className="w-full studio-input text-xs font-mono uppercase"
+                />
+              </div>
+
+              <div>
+                <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1">
+                  Data Wątku & Liczba Odpowiedzi:
+                </label>
+                <input
+                  type="text"
+                  value={props.threadDate || ""}
+                  onChange={(e) => updateProp("threadDate", e.target.value)}
+                  className="w-full studio-input text-xs font-mono"
+                  placeholder="np. Wątek założony: 14.10.2007 • 142 odpowiedzi"
+                />
+              </div>
+
+              {props.forumThemeVariant === "retro-xp-2007" && (
+                <div className="pt-2 border-t border-white/5 space-y-3">
+                  <span className="text-[10px] font-mono text-blue-400 uppercase font-bold block">
+                    Ustawienia Windows XP & 2007 Core:
+                  </span>
+                  <div>
+                    <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1">
+                      Tytuł Paska Windows XP:
+                    </label>
+                    <input
+                      type="text"
+                      value={props.xpWindowTitle}
+                      onChange={(e) => updateProp("xpWindowTitle", e.target.value)}
+                      className="w-full studio-input text-xs font-mono"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1">
+                      Adres Strony (Pasek URL):
+                    </label>
+                    <input
+                      type="text"
+                      value={props.xpUrl}
+                      onChange={(e) => updateProp("xpUrl", e.target.value)}
+                      className="w-full studio-input text-xs font-mono"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1">
+                      Domyślna Sygnatura Użytkownika:
+                    </label>
+                    <input
+                      type="text"
+                      value={props.signatureText}
+                      onChange={(e) => updateProp("signatureText", e.target.value)}
+                      className="w-full studio-input text-xs italic"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Posts Switcher (Post 1, Post 2, Post 3, Post 4) */}
+            <div className="space-y-2">
+              <label className="text-xs font-semibold text-white block">
+                Wybór Postu do Edycji:
+              </label>
+              <div className="grid grid-cols-4 gap-1 p-1 bg-[#12121a] rounded-xl border border-white/5">
+                {[1, 2, 3, 4].map((num) => (
+                  <button
+                    key={num}
+                    type="button"
+                    onClick={() => setSelectedPostTab(num as any)}
+                    className={`py-1.5 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1 ${
+                      selectedPostTab === num
+                        ? "bg-amber-500 text-black font-bold shadow"
+                        : "text-zinc-400 hover:text-white"
+                    }`}
+                  >
+                    <span>Post #{num}</span>
+                  </button>
+                ))}
               </div>
             </div>
 
-            {/* Subject (Temat postu) */}
-            <div>
-              <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1">
-                Temat wiadomości (Nagłówek wpisu):
-              </label>
-              <input
-                type="text"
-                value={
-                  selectedPostTab === 1
-                    ? props.post1_subject
-                    : selectedPostTab === 2
-                    ? props.post2_subject
-                    : selectedPostTab === 3
-                    ? props.post3_subject
-                    : props.post4_subject
-                }
-                onChange={(e) =>
-                  updateProp(`post${selectedPostTab}_subject` as any, e.target.value)
-                }
-                className="w-full studio-input text-xs font-semibold"
-                placeholder="np. Re: Tajemnicza piosenka z radia NDR (1984)"
-              />
-            </div>
-
-            {/* Content & BBCode Editor Toolbar */}
-            <div className="space-y-1.5 pt-1">
-              <div className="flex items-center justify-between">
-                <label className="text-[10px] font-mono text-zinc-400 uppercase block">
-                  Treść Wiadomości (BBCode & Easter Eggi):
-                </label>
-                <span className="text-[9px] font-mono text-zinc-500">
-                  Tagi BBCode & emotki
+            {/* Post Form */}
+            <div className="bg-[#12121a] p-3.5 rounded-xl border border-white/5 space-y-3.5">
+              <div className="flex items-center justify-between border-b border-white/5 pb-2">
+                <span className="text-xs font-bold text-white">
+                  Edycja Postu #{selectedPostTab}
+                </span>
+                <span className="text-[10px] font-mono text-amber-400">
+                  {selectedPostTab === 1 ? "Oryginalny wpis (OP)" : `Odpowiedź #${selectedPostTab}`}
                 </span>
               </div>
 
-              {/* BBCode Toolbar */}
-              <div className="bg-[#181824] p-1.5 rounded-lg border border-white/10 space-y-1.5">
-                {/* Formatting Row */}
-                <div className="flex flex-wrap items-center gap-1">
-                  <button
-                    type="button"
-                    title="Pogrubienie [b]...[/b]"
-                    onClick={() => insertBBCode("[b]", "[/b]", "tekst pogrubiony")}
-                    className="p-1 rounded bg-[#202030] hover:bg-amber-500 hover:text-black text-zinc-300 text-[10px] font-bold transition-colors flex items-center gap-0.5 px-1.5 border border-white/5"
-                  >
-                    <Bold className="w-3 h-3" />
-                    <span>B</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    title="Kursywa [i]...[/i]"
-                    onClick={() => insertBBCode("[i]", "[/i]", "tekst pochylony")}
-                    className="p-1 rounded bg-[#202030] hover:bg-amber-500 hover:text-black text-zinc-300 text-[10px] italic transition-colors flex items-center gap-0.5 px-1.5 border border-white/5"
-                  >
-                    <Italic className="w-3 h-3" />
-                    <span>I</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    title="Podkreślenie [u]...[/u]"
-                    onClick={() => insertBBCode("[u]", "[/u]", "podkreślenie")}
-                    className="p-1 rounded bg-[#202030] hover:bg-amber-500 hover:text-black text-zinc-300 text-[10px] underline transition-colors flex items-center gap-0.5 px-1.5 border border-white/5"
-                  >
-                    <Underline className="w-3 h-3" />
-                    <span>U</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    title="Przekreślenie / Poszlaka [s]...[/s]"
-                    onClick={() => insertBBCode("[s]", "[/s]", "skreślona poszlaka")}
-                    className="p-1 rounded bg-red-950/40 hover:bg-red-500 hover:text-white text-red-300 text-[10px] line-through transition-colors flex items-center gap-0.5 px-1.5 border border-red-500/30"
-                  >
-                    <Strikethrough className="w-3 h-3 text-red-400" />
-                    <span>S</span>
-                  </button>
-
-                  <div className="h-3.5 w-px bg-white/10 mx-0.5" />
-
-                  <button
-                    type="button"
-                    title="Cytat forumowy [quote=Autor]...[/quote]"
-                    onClick={() => insertBBCode("[quote=analog_master84]", "[/quote]\n", "cytowany fragment wpisu")}
-                    className="p-1 rounded bg-[#202030] hover:bg-amber-500 hover:text-black text-zinc-300 text-[10px] transition-colors flex items-center gap-1 px-1.5 border border-white/5"
-                  >
-                    <Quote className="w-3 h-3 text-amber-400" />
-                    <span>CYTAT</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    title="Blok Kodu / Terminala [code]...[/code]"
-                    onClick={() => insertBBCode("\n[code]", "[/code]\n", "DANE HEX / KOD / PARAMETRY")}
-                    className="p-1 rounded bg-[#202030] hover:bg-emerald-500 hover:text-black text-zinc-300 text-[10px] font-mono transition-colors flex items-center gap-1 px-1.5 border border-white/5"
-                  >
-                    <Code className="w-3 h-3 text-emerald-400" />
-                    <span>KOD</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    title="Spoiler / Cenzura dossier [spoiler]...[/spoiler]"
-                    onClick={() => insertBBCode("[spoiler]", "[/spoiler]", "TAJNA INFORMACJA // ŚCIŚLE TAJNE")}
-                    className="p-1 rounded bg-[#202030] hover:bg-purple-500 hover:text-white text-zinc-300 text-[10px] font-mono transition-colors flex items-center gap-1 px-1.5 border border-purple-500/30"
-                  >
-                    <EyeOff className="w-3 h-3 text-purple-400" />
-                    <span>SPOILER</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    title="Kolor tekstu [color=#38bdf8]...[/color]"
-                    onClick={() => insertBBCode("[color=#38bdf8]", "[/color]", "kolorowy tekst")}
-                    className="p-1 rounded bg-[#202030] hover:bg-cyan-500 hover:text-black text-zinc-300 text-[10px] transition-colors flex items-center gap-1 px-1.5 border border-cyan-500/30"
-                  >
-                    <Palette className="w-3 h-3 text-cyan-400" />
-                    <span>KOLOR</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    title="Odznaka / Ranga [badge=ADMIN]...[/badge]"
-                    onClick={() => insertBBCode("[badge=ADMIN]", "[/badge]", "MODERACJA")}
-                    className="p-1 rounded bg-[#202030] hover:bg-red-500 hover:text-white text-zinc-300 text-[10px] font-bold transition-colors flex items-center gap-1 px-1.5 border border-red-500/30"
-                  >
-                    <ShieldAlert className="w-3 h-3 text-red-400" />
-                    <span>ODZNAKA</span>
-                  </button>
-                </div>
-
-                {/* Emoticons & Easter Egg Presets Row */}
-                <div className="flex flex-wrap items-center justify-between gap-1 pt-1 border-t border-white/5 text-[10px]">
-                  {/* Classic 2007 Smileys */}
-                  <div className="flex items-center gap-1">
-                    <span className="text-zinc-500 text-[9px] font-mono flex items-center gap-0.5">
-                      <Smile className="w-2.5 h-2.5" />
-                      Emotki:
+              {/* 1. ZDJĘCIE PROFILOWE (AVATAR) */}
+              <div className="p-3 bg-[#0b0c12] rounded-lg border border-white/5 space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-mono text-zinc-400 uppercase font-bold flex items-center gap-1.5">
+                    <ImageIcon className="w-3.5 h-3.5 text-amber-400" />
+                    Zdjęcie Profilowe Postu #{selectedPostTab}
+                  </span>
+                  {curAvatarUrl ? (
+                    <span className="text-[9px] font-mono text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                      WŁASNE ZDJĘCIE
                     </span>
-                    {[":D", ":O", ":P", ";)", ":roll:", ":shock:", ":evil:", "8-)"].map((s) => (
+                  ) : (
+                    <span className="text-[9px] font-mono text-zinc-400 bg-zinc-800/60 px-2 py-0.5 rounded">
+                      DOMYŚLNY WEKTOR
+                    </span>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <div
+                    className="w-14 h-14 rounded-lg overflow-hidden border-2 flex items-center justify-center flex-shrink-0 bg-black/50 shadow-inner"
+                    style={{ borderColor: curAvatarColor }}
+                  >
+                    {curAvatarUrl ? (
+                      <img
+                        src={curAvatarUrl}
+                        alt="Avatar preview"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <Disc className="w-7 h-7" style={{ color: curAvatarColor }} />
+                    )}
+                  </div>
+
+                  <div className="flex-1 space-y-1.5">
+                    <div className="flex items-center gap-2">
                       <button
-                        key={s}
                         type="button"
-                        onClick={() => insertBBCode(s, "", "")}
-                        className="px-1.5 py-0.5 rounded bg-[#12121a] hover:bg-amber-500/20 hover:text-amber-300 text-zinc-400 font-mono text-[9px] border border-white/5 transition-colors"
+                        disabled={uploadingAvatar}
+                        onClick={() => avatarInputRef.current?.click()}
+                        className="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-black text-xs font-bold rounded-lg transition-all flex items-center gap-1.5 shadow"
                       >
-                        {s}
+                        <Upload className="w-3.5 h-3.5" />
+                        <span>{curAvatarUrl ? "Zmień Zdjęcie" : "Wgraj Zdjęcie"}</span>
                       </button>
+
+                      {curAvatarUrl && (
+                        <button
+                          type="button"
+                          onClick={() => updateProp(`post${selectedPostTab}_avatarUrl` as any, "")}
+                          className="px-2.5 py-1.5 bg-red-500/15 hover:bg-red-500/25 text-red-400 border border-red-500/30 text-xs font-semibold rounded-lg transition-all flex items-center gap-1"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                          <span>Usuń</span>
+                        </button>
+                      )}
+                    </div>
+                    <p className="text-[9px] text-zinc-400">
+                      Widoczne w ramce Windows XP (80x80) oraz Noir (z neonową ramką).
+                    </p>
+                  </div>
+                </div>
+
+                {/* Kolor akcentu / obwódki avatara */}
+                <div className="pt-2 border-t border-white/5 flex items-center justify-between">
+                  <span className="text-[10px] font-mono text-zinc-400">Kolor akcentu avatara:</span>
+                  <div className="flex items-center gap-1.5">
+                    {["#38bdf8", "#ef4444", "#eab308", "#10b981", "#a855f7", "#64748b"].map((c) => (
+                      <button
+                        key={c}
+                        type="button"
+                        onClick={() => updateProp(`post${selectedPostTab}_avatarColor` as any, c)}
+                        className={`w-5 h-5 rounded-full transition-all border ${
+                          curAvatarColor === c ? "border-white scale-110 shadow" : "border-transparent opacity-70 hover:opacity-100"
+                        }`}
+                        style={{ backgroundColor: c }}
+                      />
                     ))}
                   </div>
-
-                  {/* Easter Egg quick snippets */}
-                  <div className="flex items-center gap-1">
-                    <span className="text-amber-400/80 text-[9px] font-mono font-bold flex items-center gap-0.5">
-                      <Sparkles className="w-2.5 h-2.5 text-amber-400" />
-                      Easter Eggi:
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => insertEasterEggPreset("spoiler")}
-                      className="px-1.5 py-0.5 rounded bg-purple-950/40 hover:bg-purple-900/60 text-purple-300 text-[9px] border border-purple-500/30"
-                      title="Wstaw ukryty spoiler ze śladem"
-                    >
-                      🕵️ Spoiler
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => insertEasterEggPreset("hex")}
-                      className="px-1.5 py-0.5 rounded bg-emerald-950/40 hover:bg-emerald-900/60 text-emerald-300 font-mono text-[9px] border border-emerald-500/30"
-                      title="Wstaw blok kodu taśmy / parametrów"
-                    >
-                      📟 Hex/Log
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => insertEasterEggPreset("strike")}
-                      className="px-1.5 py-0.5 rounded bg-red-950/40 hover:bg-red-900/60 text-red-300 text-[9px] border border-red-500/30"
-                      title="Wstaw skreśloną cenzurę"
-                    >
-                      🚫 Skreślenie
-                    </button>
-                  </div>
                 </div>
               </div>
 
-              {/* Textarea */}
-              <textarea
-                ref={contentTextareaRef}
-                rows={5}
-                value={
-                  selectedPostTab === 1
-                    ? props.post1_content
-                    : selectedPostTab === 2
-                    ? props.post2_content
-                    : selectedPostTab === 3
-                    ? props.post3_content
-                    : props.post4_content
-                }
-                onChange={(e) =>
-                  updateProp(
-                    `post${selectedPostTab}_content` as any,
-                    e.target.value
-                  )
-                }
-                className="w-full studio-input text-xs font-mono resize-y leading-relaxed"
-                placeholder="Wpisz treść postu... Używaj BBCode do tworzenia ukrytych poszlak!"
-              />
-            </div>
-
-            {/* Footnote Edit Note */}
-            <div>
-              <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1">
-                Notatka o edycji postu (Ostatnio zmieniony...):
-              </label>
-              <input
-                type="text"
-                value={
-                  selectedPostTab === 1
-                    ? props.post1_editNote
-                    : selectedPostTab === 2
-                    ? props.post2_editNote
-                    : selectedPostTab === 3
-                    ? props.post3_editNote
-                    : props.post4_editNote
-                }
-                onChange={(e) =>
-                  updateProp(`post${selectedPostTab}_editNote` as any, e.target.value)
-                }
-                className="w-full studio-input text-xs font-mono text-zinc-400"
-                placeholder="np. Ostatnio zmieniony przez bl4nk_tape dnia 14 paź 2007, 22:04, łącznie zmieniany 2 razy."
-              />
-              <span className="text-[9px] text-zinc-500 block mt-0.5">
-                Wyświetla się na dole postu kursywą (jak na forach phpBB / vBulletin). Znakomite na easter eggi o usuwaniu poszlak!
-              </span>
-            </div>
-
-            {/* Individual Signature */}
-            <div>
-              <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1">
-                Sygnatura / Podpis Użytkownika:
-              </label>
-              <input
-                type="text"
-                value={
-                  selectedPostTab === 1
-                    ? props.post1_signature
-                    : selectedPostTab === 2
-                    ? props.post2_signature
-                    : selectedPostTab === 3
-                    ? props.post3_signature
-                    : props.post4_signature
-                }
-                onChange={(e) =>
-                  updateProp(`post${selectedPostTab}_signature` as any, e.target.value)
-                }
-                className="w-full studio-input text-xs font-mono text-zinc-300"
-                placeholder='np. nick | "Ulubiony cytat" | [s]zaszyfrowany kod[/s]'
-              />
-              <span className="text-[9px] text-zinc-500 block mt-0.5">
-                Obsługuje tagi BBCode ([b], [i], [s], [color]).
-              </span>
-            </div>
-
-            {/* User Profile Stats & Easter Eggs (Collapsible Accordion) */}
-            <div className="pt-2 border-t border-white/5 space-y-2">
-              <button
-                type="button"
-                onClick={() => setShowAuthorMeta(!showAuthorMeta)}
-                className="w-full flex items-center justify-between p-2 rounded-lg bg-[#181824] hover:bg-[#202030] text-zinc-300 text-xs font-semibold border border-white/5 transition-colors"
-              >
-                <span className="flex items-center gap-1.5 text-amber-400 font-bold">
-                  <Award className="w-3.5 h-3.5" />
-                  Profil & Statystyki Autora (Easter Eggi lewej kolumny)
-                </span>
-                {showAuthorMeta ? (
-                  <ChevronUp className="w-4 h-4 text-zinc-400" />
-                ) : (
-                  <ChevronDown className="w-4 h-4 text-zinc-400" />
-                )}
-              </button>
-
-              {showAuthorMeta && (
-                <div className="p-3 bg-[#161622] rounded-lg border border-white/5 space-y-2.5 animate-in fade-in">
-                  <div className="grid grid-cols-2 gap-2">
-                    <div>
-                      <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1 flex items-center gap-1">
-                        <MapPin className="w-3 h-3 text-blue-400" />
-                        Skąd (Lokalizacja):
-                      </label>
-                      <input
-                        type="text"
-                        value={
-                          selectedPostTab === 1
-                            ? props.post1_location
-                            : selectedPostTab === 2
-                            ? props.post2_location
-                            : selectedPostTab === 3
-                            ? props.post3_location
-                            : props.post4_location
-                        }
-                        onChange={(e) =>
-                          updateProp(`post${selectedPostTab}_location` as any, e.target.value)
-                        }
-                        className="w-full studio-input text-xs font-mono"
-                        placeholder="np. Hamburg, Niemcy"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1 flex items-center gap-1">
-                        <Calendar className="w-3 h-3 text-emerald-400" />
-                        Dołączył (Data rejestracji):
-                      </label>
-                      <input
-                        type="text"
-                        value={
-                          selectedPostTab === 1
-                            ? props.post1_joined
-                            : selectedPostTab === 2
-                            ? props.post2_joined
-                            : selectedPostTab === 3
-                            ? props.post3_joined
-                            : props.post4_joined
-                        }
-                        onChange={(e) =>
-                          updateProp(`post${selectedPostTab}_joined` as any, e.target.value)
-                        }
-                        className="w-full studio-input text-xs font-mono"
-                        placeholder="np. Sie 2004"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-3 gap-2">
-                    <div>
-                      <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1">
-                        Liczba postów:
-                      </label>
-                      <input
-                        type="text"
-                        value={
-                          selectedPostTab === 1
-                            ? props.post1_postsCount
-                            : selectedPostTab === 2
-                            ? props.post2_postsCount
-                            : selectedPostTab === 3
-                            ? props.post3_postsCount
-                            : props.post4_postsCount
-                        }
-                        onChange={(e) =>
-                          updateProp(`post${selectedPostTab}_postsCount` as any, e.target.value)
-                        }
-                        className="w-full studio-input text-xs font-mono"
-                        placeholder="np. 1,420"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1">
-                        Pochwały / Reputacja:
-                      </label>
-                      <input
-                        type="text"
-                        value={
-                          selectedPostTab === 1
-                            ? props.post1_reputation
-                            : selectedPostTab === 2
-                            ? props.post2_reputation
-                            : selectedPostTab === 3
-                            ? props.post3_reputation
-                            : props.post4_reputation
-                        }
-                        onChange={(e) =>
-                          updateProp(`post${selectedPostTab}_reputation` as any, e.target.value)
-                        }
-                        className="w-full studio-input text-xs font-mono"
-                        placeholder="np. Pomógł: 42 razy"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1 flex items-center gap-1">
-                        <AlertTriangle className="w-3 h-3 text-amber-400" />
-                        Ostrzeżenia:
-                      </label>
-                      <input
-                        type="text"
-                        value={
-                          selectedPostTab === 1
-                            ? props.post1_warnings
-                            : selectedPostTab === 2
-                            ? props.post2_warnings
-                            : selectedPostTab === 3
-                            ? props.post3_warnings
-                            : props.post4_warnings
-                        }
-                        onChange={(e) =>
-                          updateProp(`post${selectedPostTab}_warnings` as any, e.target.value)
-                        }
-                        className="w-full studio-input text-xs font-mono"
-                        placeholder="np. Ostrzeżenia: [ 0 / 3 ]"
-                      />
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Surowy załącznik pliku (Dla aktualnie wybranego postu) */}
-            <div className="pt-2 border-t border-white/5 space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-zinc-300 font-semibold flex items-center gap-1.5">
-                  <Paperclip className="w-3.5 h-3.5 text-cyan-400" />
-                  Załącznik Pliku dla Postu #{selectedPostTab} (Surowy plik)
-                </span>
-                <button
-                  type="button"
-                  onClick={() => {
-                    const propKey = `post${selectedPostTab}_hasAudio` as keyof MusicForumScrollProps;
-                    updateProp(propKey, !(props as any)[propKey]);
-                  }}
-                  className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold transition-all ${
-                    Boolean((props as any)[`post${selectedPostTab}_hasAudio`])
-                      ? "bg-cyan-500 text-black shadow-sm shadow-cyan-500/20"
-                      : "bg-zinc-800 text-zinc-400"
-                  }`}
-                >
-                  {Boolean((props as any)[`post${selectedPostTab}_hasAudio`]) ? "WŁĄCZONY" : "WYŁĄCZONY"}
-                </button>
-              </div>
-
-              {Boolean((props as any)[`post${selectedPostTab}_hasAudio`]) && (
-                <div className="animate-in fade-in space-y-1">
-                  <label className="text-[10px] font-mono text-zinc-400 uppercase block">
-                    Nazwa Pliku Audio:
+              {/* 2. AUTOR & RANGA & DATA */}
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1">
+                    Autor (Nick):
                   </label>
                   <input
                     type="text"
-                    value={((props as any)[`post${selectedPostTab}_audioFile`] as string) || ""}
-                    onChange={(e) =>
-                      updateProp(`post${selectedPostTab}_audioFile` as any, e.target.value)
-                    }
-                    className="w-full studio-input text-xs font-mono"
-                    placeholder="np. radio_rip_ndr_1984.mp3 [1.4 MB]"
+                    value={curAuthor}
+                    onChange={(e) => updateProp(`post${selectedPostTab}_author` as any, e.target.value)}
+                    className="w-full studio-input text-xs font-mono font-bold"
                   />
                 </div>
-              )}
+                <div>
+                  <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1">
+                    Ranga / Tytuł:
+                  </label>
+                  <input
+                    type="text"
+                    value={curRole}
+                    onChange={(e) => updateProp(`post${selectedPostTab}_role` as any, e.target.value)}
+                    className="w-full studio-input text-xs"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1">
+                  Data Wpisu:
+                </label>
+                <input
+                  type="text"
+                  value={curDate}
+                  onChange={(e) => updateProp(`post${selectedPostTab}_date` as any, e.target.value)}
+                  className="w-full studio-input text-xs font-mono"
+                  placeholder="np. 14 paź 2007, 21:40"
+                />
+              </div>
+
+              {/* 3. METADANE PROFILU (KOLUMNA LEWA) */}
+              <div className="p-3 bg-[#0b0c12] rounded-lg border border-white/5 space-y-2">
+                <span className="text-[10px] font-mono text-zinc-400 uppercase font-bold block">
+                  Metadane Profilu (Kolumna Użytkownika):
+                </span>
+                <div className="grid grid-cols-3 gap-2">
+                  <div>
+                    <label className="text-[9px] font-mono text-zinc-500 uppercase block mb-0.5">
+                      Dołączył:
+                    </label>
+                    <input
+                      type="text"
+                      value={curJoined}
+                      onChange={(e) => updateProp(`post${selectedPostTab}_joined` as any, e.target.value)}
+                      className="w-full studio-input text-[11px] font-mono"
+                      placeholder="np. Paź 2007"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[9px] font-mono text-zinc-500 uppercase block mb-0.5">
+                      Postów:
+                    </label>
+                    <input
+                      type="text"
+                      value={curPostsCount}
+                      onChange={(e) => updateProp(`post${selectedPostTab}_postsCount` as any, e.target.value)}
+                      className="w-full studio-input text-[11px] font-mono"
+                      placeholder="np. 42"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[9px] font-mono text-zinc-500 uppercase block mb-0.5">
+                      Skąd / Miasto:
+                    </label>
+                    <input
+                      type="text"
+                      value={curLocation}
+                      onChange={(e) => updateProp(`post${selectedPostTab}_location` as any, e.target.value)}
+                      className="w-full studio-input text-[11px] font-mono"
+                      placeholder="np. Hamburg"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* 4. CYTAT Z INNEGO UŻYTKOWNIKA */}
+              <div className="p-3 bg-[#0b0c12] rounded-lg border border-white/5 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-mono text-zinc-400 uppercase font-bold flex items-center gap-1.5">
+                    <Quote className="w-3.5 h-3.5 text-amber-400" />
+                    Cytat w Poście #{selectedPostTab}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => updateProp(`post${selectedPostTab}_hasQuote` as any, !curHasQuote)}
+                    className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold transition-all ${
+                      curHasQuote
+                        ? "bg-amber-500 text-black shadow-sm"
+                        : "bg-zinc-800 text-zinc-400"
+                    }`}
+                  >
+                    {curHasQuote ? "WŁĄCZONY" : "WYŁĄCZONY"}
+                  </button>
+                </div>
+
+                {curHasQuote && (
+                  <div className="space-y-2 pt-1 animate-in fade-in">
+                    <div>
+                      <label className="text-[9px] font-mono text-zinc-500 uppercase block mb-0.5">
+                        Autor Cytowanego Postu:
+                      </label>
+                      <input
+                        type="text"
+                        value={curQuoteAuthor}
+                        onChange={(e) => updateProp(`post${selectedPostTab}_quoteAuthor` as any, e.target.value)}
+                        className="w-full studio-input text-xs font-mono"
+                        placeholder="np. bl4nk_tape"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[9px] font-mono text-zinc-500 uppercase block mb-0.5">
+                        Treść Cytatu:
+                      </label>
+                      <textarea
+                        rows={2}
+                        value={curQuoteContent}
+                        onChange={(e) => updateProp(`post${selectedPostTab}_quoteContent` as any, e.target.value)}
+                        className="w-full studio-input text-xs resize-none"
+                        placeholder="np. Przeglądam stare nagrania radiowe z lat 80..."
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* 5. TREŚĆ WIADOMOŚCI */}
+              <div>
+                <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1">
+                  Treść Wiadomości:
+                </label>
+                <textarea
+                  rows={3}
+                  value={curContent}
+                  onChange={(e) => updateProp(`post${selectedPostTab}_content` as any, e.target.value)}
+                  className="w-full studio-input text-xs resize-none"
+                />
+              </div>
+
+              {/* 6. SYGNATURA / PODPIS POSTU */}
+              <div>
+                <label className="text-[10px] font-mono text-zinc-400 uppercase block mb-1">
+                  Sygnatura / Podpis Użytkownika (Stopka Postu #{selectedPostTab}):
+                </label>
+                <input
+                  type="text"
+                  value={curSignature}
+                  onChange={(e) => updateProp(`post${selectedPostTab}_signature` as any, e.target.value)}
+                  className="w-full studio-input text-xs italic font-mono"
+                  placeholder='np. bl4nk_tape | "Taśmy z radia nigdy nie kłamią."'
+                />
+              </div>
+
+              {/* 7. SUROWY ZAŁĄCZNIK PLIKU */}
+              <div className="pt-2 border-t border-white/5 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-zinc-300 font-semibold flex items-center gap-1.5">
+                    <Paperclip className="w-3.5 h-3.5 text-cyan-400" />
+                    Załącznik Pliku dla Postu #{selectedPostTab} (Surowy plik)
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const propKey = `post${selectedPostTab}_hasAudio` as keyof MusicForumScrollProps;
+                      updateProp(propKey, !(props as any)[propKey]);
+                    }}
+                    className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold transition-all ${
+                      Boolean((props as any)[`post${selectedPostTab}_hasAudio`])
+                        ? "bg-cyan-500 text-black shadow-sm shadow-cyan-500/20"
+                        : "bg-zinc-800 text-zinc-400"
+                    }`}
+                  >
+                    {Boolean((props as any)[`post${selectedPostTab}_hasAudio`]) ? "WŁĄCZONY" : "WYŁĄCZONY"}
+                  </button>
+                </div>
+
+                {Boolean((props as any)[`post${selectedPostTab}_hasAudio`]) && (
+                  <div className="animate-in fade-in space-y-1">
+                    <label className="text-[10px] font-mono text-zinc-400 uppercase block">
+                      Nazwa Pliku Audio:
+                    </label>
+                    <input
+                      type="text"
+                      value={((props as any)[`post${selectedPostTab}_audioFile`] as string) || ""}
+                      onChange={(e) =>
+                        updateProp(`post${selectedPostTab}_audioFile` as any, e.target.value)
+                      }
+                      className="w-full studio-input text-xs font-mono"
+                      placeholder="np. radio_rip_ndr_1984.mp3 [1.4 MB]"
+                    />
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
 
       {/* ================= TAB 2: PRZEWIJANIE (SCROLL) ================= */}
       {activeTab === "scroll" && (

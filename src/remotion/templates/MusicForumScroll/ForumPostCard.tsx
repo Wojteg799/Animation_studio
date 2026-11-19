@@ -1,24 +1,21 @@
 import React from "react";
 import { Music, Disc, Volume2, FileAudio, CornerDownRight, Paperclip, Download } from "lucide-react";
-import { RenderBBCode } from "./bbcode-renderer";
 
 export interface ForumPostCardProps {
   postNumber: number;
   author: string;
   role: string;
   date: string;
-  subject?: string;
-  location?: string;
-  joined?: string;
-  postsCount?: string;
-  reputation?: string;
-  warnings?: string;
-  editNote?: string;
-  signature?: string;
   content: string;
   hasAudio?: boolean;
   audioFile?: string;
   avatarColor: string;
+  avatarUrl?: string;
+  quoteAuthor?: string;
+  quoteContent?: string;
+  signature?: string;
+  joined?: string;
+  postsCount?: string | number;
   isHighlighted?: boolean;
   frame: number;
   isFocused?: boolean;
@@ -38,18 +35,16 @@ export const ForumPostCard: React.FC<ForumPostCardProps> = ({
   author,
   role,
   date,
-  subject,
-  location,
-  joined,
-  postsCount,
-  reputation,
-  warnings,
-  editNote,
-  signature,
   content,
   hasAudio,
   audioFile,
   avatarColor,
+  avatarUrl,
+  quoteAuthor,
+  quoteContent,
+  signature,
+  joined,
+  postsCount,
   isHighlighted = false,
   frame,
   isFocused = false,
@@ -130,44 +125,65 @@ export const ForumPostCard: React.FC<ForumPostCardProps> = ({
           flexShrink: 0,
         }}
       >
-        {/* Low-Poly Faceted Avatar SVG */}
-        <div
-          style={{
-            width: "56px",
-            height: "56px",
-            position: "relative",
-            marginBottom: "8px",
-          }}
-        >
-          <svg
-            viewBox="0 0 60 60"
-            width="56"
-            height="56"
+        {/* Uploaded Avatar Photo or Low-Poly Faceted Avatar SVG */}
+        {avatarUrl ? (
+          <div
             style={{
-              filter: `drop-shadow(0 2px 6px ${avatarColor}44)`,
+              width: "52px",
+              height: "52px",
+              borderRadius: "10px",
+              overflow: "hidden",
+              border: `2px solid ${avatarColor}`,
+              boxShadow: `0 0 15px ${avatarColor}44`,
+              marginBottom: "8px",
+              flexShrink: 0,
             }}
           >
-            {/* Low-poly geometric facets */}
-            <polygon points="30,2 58,18 48,52 12,52 2,18" fill="rgba(255,255,255,0.06)" stroke={avatarColor} strokeWidth="1.5" />
-            <polygon points="30,2 58,18 30,30" fill={avatarColor} fillOpacity="0.4" />
-            <polygon points="58,18 48,52 30,30" fill={avatarColor} fillOpacity="0.25" />
-            <polygon points="48,52 12,52 30,30" fill={avatarColor} fillOpacity="0.15" />
-            <polygon points="12,52 2,18 30,30" fill={avatarColor} fillOpacity="0.3" />
-            <polygon points="2,18 30,2 30,30" fill={avatarColor} fillOpacity="0.5" />
-            <text
-              x="30"
-              y="35"
-              fill="#ffffff"
-              fontFamily="monospace"
-              fontSize="14"
-              fontWeight="900"
-              textAnchor="middle"
-              letterSpacing="1"
+            <img
+              src={avatarUrl}
+              alt={author}
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            />
+          </div>
+        ) : (
+          <div
+            style={{
+              width: "56px",
+              height: "56px",
+              position: "relative",
+              marginBottom: "8px",
+            }}
+          >
+            <svg
+              viewBox="0 0 60 60"
+              width="56"
+              height="56"
+              style={{
+                filter: `drop-shadow(0 2px 6px ${avatarColor}44)`,
+              }}
             >
-              {initials}
-            </text>
-          </svg>
-        </div>
+              {/* Low-poly geometric facets */}
+              <polygon points="30,2 58,18 48,52 12,52 2,18" fill="rgba(255,255,255,0.06)" stroke={avatarColor} strokeWidth="1.5" />
+              <polygon points="30,2 58,18 30,30" fill={avatarColor} fillOpacity="0.4" />
+              <polygon points="58,18 48,52 30,30" fill={avatarColor} fillOpacity="0.25" />
+              <polygon points="48,52 12,52 30,30" fill={avatarColor} fillOpacity="0.15" />
+              <polygon points="12,52 2,18 30,30" fill={avatarColor} fillOpacity="0.3" />
+              <polygon points="2,18 30,2 30,30" fill={avatarColor} fillOpacity="0.5" />
+              <text
+                x="30"
+                y="35"
+                fill="#ffffff"
+                fontFamily="monospace"
+                fontSize="14"
+                fontWeight="900"
+                textAnchor="middle"
+                letterSpacing="1"
+              >
+                {initials}
+              </text>
+            </svg>
+          </div>
+        )}
 
         {/* Username */}
         <div
@@ -210,31 +226,11 @@ export const ForumPostCard: React.FC<ForumPostCardProps> = ({
             fontSize: "9px",
             color: "#64748b",
             fontFamily: "monospace",
-            lineHeight: 1.45,
-            display: "flex",
-            flexDirection: "column",
-            gap: "2px",
+            lineHeight: 1.4,
           }}
         >
           <div>Dołączył: {joined || "2006"}</div>
-          <div>Posty: {postsCount || (120 + postNumber * 37)}</div>
-          {location && <div>Skąd: {location}</div>}
-          {reputation && (
-            <div style={{ color: "#38bdf8", fontWeight: "700", marginTop: "2px" }}>
-              {reputation}
-            </div>
-          )}
-          {warnings && (
-            <div
-              style={{
-                color: warnings.includes("BAN") ? "#ef4444" : "#f59e0b",
-                fontWeight: "700",
-                fontSize: "8.5px",
-              }}
-            >
-              {warnings}
-            </div>
-          )}
+          <div>Posty: {postsCount || String(120 + postNumber * 37)}</div>
         </div>
       </div>
 
@@ -271,12 +267,6 @@ export const ForumPostCard: React.FC<ForumPostCardProps> = ({
               }}
             >
               <span style={{ color: "#e2e8f0" }}>Wysłano: {date}</span>
-              {subject && (
-                <>
-                  <span style={{ opacity: 0.4 }}>•</span>
-                  <span style={{ color: "#38bdf8", fontWeight: 700 }}>{subject}</span>
-                </>
-              )}
             </div>
 
             <div
@@ -335,7 +325,42 @@ export const ForumPostCard: React.FC<ForumPostCardProps> = ({
             </div>
           )}
 
-          {/* Post Text Content with BBCode & Easter Eggs */}
+          {/* Optional Quote Block */}
+          {quoteContent && (
+            <div
+              style={{
+                backgroundColor: "rgba(255, 255, 255, 0.04)",
+                borderLeft: `3px solid ${avatarColor || "#38bdf8"}`,
+                borderRadius: "0 6px 6px 0",
+                padding: "8px 12px",
+                marginBottom: "12px",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "10px",
+                  fontWeight: 700,
+                  color: "#94a3b8",
+                  fontFamily: "monospace",
+                  marginBottom: "3px",
+                }}
+              >
+                💬 {quoteAuthor ? `${quoteAuthor} napisał(a):` : "Cytat:"}
+              </div>
+              <div
+                style={{
+                  fontSize: "12px",
+                  fontStyle: "italic",
+                  color: "#cbd5e1",
+                  lineHeight: 1.4,
+                }}
+              >
+                „{quoteContent}”
+              </div>
+            </div>
+          )}
+
+          {/* Post Text Content */}
           <div
             style={{
               fontSize: "13px",
@@ -345,7 +370,7 @@ export const ForumPostCard: React.FC<ForumPostCardProps> = ({
               letterSpacing: "0.2px",
             }}
           >
-            <RenderBBCode text={content} isXP={false} />
+            {content}
           </div>
 
           {/* Modern Noir Raw Static File Attachment Box (Statyczny załącznik, bez ruchów i fal) */}
@@ -439,39 +464,6 @@ export const ForumPostCard: React.FC<ForumPostCardProps> = ({
                 <Download className="w-3 h-3 text-cyan-400" />
                 <span>POBIERZ</span>
               </div>
-            </div>
-          )}
-
-          {/* Edit Note Footnote */}
-          {editNote && (
-            <div
-              style={{
-                fontSize: "10px",
-                color: "#64748b",
-                fontStyle: "italic",
-                fontFamily: "monospace",
-                marginTop: "10px",
-                paddingTop: "4px",
-                borderTop: "1px dashed rgba(255, 255, 255, 0.06)",
-              }}
-            >
-              {editNote}
-            </div>
-          )}
-
-          {/* User Signature */}
-          {signature && (
-            <div
-              style={{
-                marginTop: "14px",
-                paddingTop: "6px",
-                borderTop: "1px dashed rgba(255, 255, 255, 0.08)",
-                fontSize: "10px",
-                color: "#64748b",
-                fontStyle: "italic",
-              }}
-            >
-              <RenderBBCode text={signature} isXP={false} />
             </div>
           )}
         </div>
