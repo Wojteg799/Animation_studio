@@ -16,6 +16,10 @@ export const DariusCharacter: React.FC<DariusCharacterProps> = ({ props, frame }
     accentColor = "#facc15",
     lineColor = "#ffffff",
     circleSize = 220,
+    avatarHeadSize = 42,
+    avatarBodySize = 75,
+    avatarHeadY = 55,
+    avatarBodyY = 168,
     avatarScale = 1.35,
     heartScale = 1.25,
     questionMarkScale = 1.35,
@@ -190,7 +194,7 @@ export const DariusCharacter: React.FC<DariusCharacterProps> = ({ props, frame }
         </div>
       )}
 
-      {/* ================= KÓŁKO Z AVATAREM (PÓŁKOLE TUŁÓW + KOŁO GŁOWA NA ŻÓŁTO) ================= */}
+      {/* ================= KÓŁKO Z AVATAREM (POWIĘKSZONE KOŁO GŁOWA + KOŁO TUŁÓW NA ŻÓŁTO) ================= */}
       <div
         style={{
           width: circleSize,
@@ -215,13 +219,13 @@ export const DariusCharacter: React.FC<DariusCharacterProps> = ({ props, frame }
             }}
           />
         ) : (
-          /* Czyste geometryczne koło jako głowa i półkole jako tułów na żółto */
+          /* Czyste geometryczne koła: tułów i głowa na żółto, dotykające się bez odcięcia od dołu */
           <svg viewBox="0 0 200 200" width="100%" height="100%">
             <circle cx="100" cy="100" r="100" fill="#000000" />
-            {/* Głowa: koło na żółto */}
-            <circle cx="100" cy="62" r="32" fill={accentColor} />
-            {/* Tułów: półkole na żółto */}
-            <path d="M 35 185 A 65 65 0 0 1 165 185 Z" fill={accentColor} />
+            {/* Kółko tułowia — płynnie wypełnia dół */}
+            <circle cx="100" cy={avatarBodyY} r={avatarBodySize} fill={accentColor} />
+            {/* Kółko głowy — dotyka tułowia */}
+            <circle cx="100" cy={avatarHeadY} r={avatarHeadSize} fill={accentColor} />
           </svg>
         )}
       </div>

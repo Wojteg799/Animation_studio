@@ -68,6 +68,11 @@ export const DariusStoryControls: React.FC<DariusStoryControlsProps> = ({
   const currentHeartScale = props.heartScale ?? 1.25;
   const currentQuestionMarkScale = props.questionMarkScale ?? 1.35;
 
+  const currentHeadSize = props.avatarHeadSize ?? 42;
+  const currentBodySize = props.avatarBodySize ?? 75;
+  const currentHeadY = props.avatarHeadY ?? 55;
+  const currentBodyY = props.avatarBodyY ?? 168;
+
   const currentDuration = props.durationInFrames ?? durationFrames ?? 360;
 
   const handleSetDuration = (frames: number) => {
@@ -181,8 +186,8 @@ export const DariusStoryControls: React.FC<DariusStoryControlsProps> = ({
             ) : (
               <svg viewBox="0 0 200 200" width="100%" height="100%">
                 <circle cx="100" cy="100" r="100" fill="#000000" />
-                <circle cx="100" cy="62" r="32" fill={props.accentColor || "#facc15"} />
-                <path d="M 35 185 A 65 65 0 0 1 165 185 Z" fill={props.accentColor || "#facc15"} />
+                <circle cx="100" cy={currentBodyY} r={currentBodySize} fill={props.accentColor || "#facc15"} />
+                <circle cx="100" cy={currentHeadY} r={currentHeadSize} fill={props.accentColor || "#facc15"} />
               </svg>
             )}
           </div>
@@ -214,9 +219,103 @@ export const DariusStoryControls: React.FC<DariusStoryControlsProps> = ({
               onChange={handleAvatarUpload}
             />
             <p className="text-[10px] text-zinc-500">
-              Minimalistyczna ikona postaci: żółta głowa i półkolisty tułów.
+              Powiększone kółka: żółta głowa i tułów dotykające się bez odcięć.
             </p>
           </div>
+        </div>
+
+        {/* Rozmiary Kółek Avatara (Głowa & Tułów) */}
+        <div className="bg-black/30 p-2.5 rounded-lg border border-white/5 space-y-2.5">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-semibold text-white">
+              Rozmiary i Pozycja Kółek (Głowa & Tułów):
+            </span>
+            <button
+              type="button"
+              onClick={() => {
+                updateProp("avatarHeadSize", 42);
+                updateProp("avatarBodySize", 75);
+                updateProp("avatarHeadY", 55);
+                updateProp("avatarBodyY", 168);
+              }}
+              className="text-[9px] text-yellow-400 hover:underline font-mono"
+            >
+              Resetuj Kółka
+            </button>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2 text-[10px]">
+            {/* Głowa: Rozmiar */}
+            <div className="space-y-1">
+              <div className="flex justify-between text-zinc-300">
+                <span>Głowa (promień):</span>
+                <span className="font-mono text-yellow-400">{currentHeadSize}px</span>
+              </div>
+              <input
+                type="range"
+                min="20"
+                max="65"
+                step="1"
+                value={currentHeadSize}
+                onChange={(e) => updateProp("avatarHeadSize", parseInt(e.target.value))}
+                className="w-full accent-yellow-400"
+              />
+            </div>
+
+            {/* Tułów: Rozmiar */}
+            <div className="space-y-1">
+              <div className="flex justify-between text-zinc-300">
+                <span>Tułów (promień):</span>
+                <span className="font-mono text-yellow-400">{currentBodySize}px</span>
+              </div>
+              <input
+                type="range"
+                min="40"
+                max="110"
+                step="1"
+                value={currentBodySize}
+                onChange={(e) => updateProp("avatarBodySize", parseInt(e.target.value))}
+                className="w-full accent-yellow-400"
+              />
+            </div>
+
+            {/* Głowa: Pozycja Y */}
+            <div className="space-y-1">
+              <div className="flex justify-between text-zinc-300">
+                <span>Głowa (pozycja Y):</span>
+                <span className="font-mono text-yellow-400">{currentHeadY}px</span>
+              </div>
+              <input
+                type="range"
+                min="30"
+                max="85"
+                step="1"
+                value={currentHeadY}
+                onChange={(e) => updateProp("avatarHeadY", parseInt(e.target.value))}
+                className="w-full accent-yellow-400"
+              />
+            </div>
+
+            {/* Tułów: Pozycja Y */}
+            <div className="space-y-1">
+              <div className="flex justify-between text-zinc-300">
+                <span>Tułów (pozycja Y):</span>
+                <span className="font-mono text-yellow-400">{currentBodyY}px</span>
+              </div>
+              <input
+                type="range"
+                min="120"
+                max="210"
+                step="1"
+                value={currentBodyY}
+                onChange={(e) => updateProp("avatarBodyY", parseInt(e.target.value))}
+                className="w-full accent-yellow-400"
+              />
+            </div>
+          </div>
+          <p className="text-[9px] text-zinc-500">
+            Kółka stykają się ze sobą, a tułów płynnie wypełnia dolny łuk bez poziomego odcięcia.
+          </p>
         </div>
 
         <div>

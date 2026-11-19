@@ -7,6 +7,12 @@ export const DariusRadioStorySchema = z.object({
   avatarUrl: z.string().default(DARIUS_AVATAR_SVG),
   circleSize: z.number().min(120).max(400).default(220),
 
+  // Geometria kółek avatara (głowa i tułów — pełna kontrola rozmiarów i pozycji)
+  avatarHeadSize: z.number().min(15).max(75).default(42), // promień kółka głowy
+  avatarBodySize: z.number().min(30).max(130).default(75), // promień kółka tułowia
+  avatarHeadY: z.number().min(20).max(95).default(55), // pozycja Y głowy
+  avatarBodyY: z.number().min(100).max(220).default(168), // pozycja Y tułowia
+
   // Skalowanie poszczególnych elementów animacji (zwiększanie / zmniejszanie)
   avatarScale: z.number().min(0.5).max(3.0).default(1.35), // Większy avatar Dariusa
   radioScale: z.number().min(0.5).max(2.5).default(1.2), // Większe radio i kaseta
@@ -44,6 +50,11 @@ export const defaultDariusRadioStoryProps: DariusRadioStoryProps = {
   characterName: "DARIUS",
   avatarUrl: DARIUS_AVATAR_SVG,
   circleSize: 220,
+
+  avatarHeadSize: 42,
+  avatarBodySize: 75,
+  avatarHeadY: 55,
+  avatarBodyY: 168,
 
   avatarScale: 1.35,
   radioScale: 1.2,
