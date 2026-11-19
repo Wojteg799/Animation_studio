@@ -47,6 +47,11 @@ import {
   DarkParchmentBackgroundProps,
   defaultDarkParchmentBackgroundProps,
 } from "./DarkParchmentBackground/schema";
+import { DariusRadioStory } from "./DariusRadioStory";
+import {
+  DariusRadioStoryProps,
+  defaultDariusRadioStoryProps,
+} from "./DariusRadioStory/schema";
 
 export type TemplateCategory =
   | "Archiwa & Fora (Forums)"
@@ -106,6 +111,19 @@ export const TEMPLATES: TemplateDefinition[] = [
     defaultProps: defaultCharacterStageProps,
     defaultDurationInFrames: 240, // 8 seconds at 30fps
     tags: ["Postacie", "Bohaterowie", "Śledztwo", "Vox Style", "Relacje", "Kółka", "Animacja"],
+    isBackground: false,
+  },
+
+  // 0C. OPOWIEŚĆ DARIUSA: NAGRYWANIE Z RADIA NA KASETE (MIXTAPE)
+  {
+    id: "darius-radio-story",
+    name: "Darius: Nagrywanie z Radia & Tajemnicza Kaseta",
+    category: "Postacie & Relacje (Characters)",
+    description: "Animacja narracyjna: wejście Dariusa ze statusem fana muzyki (serce i nuty), nagrywanie audycji z radia NDR 1 na kasetę, spisywanie tytułów na wkładce J-Card oraz znak zapytania przy nieznanym utworze.",
+    component: DariusRadioStory,
+    defaultProps: defaultDariusRadioStoryProps,
+    defaultDurationInFrames: 300, // 10 seconds at 30fps
+    tags: ["Darius", "Postać", "Radio", "Kaseta", "Mixtape", "Tajemnicza Piosenka", "Pytajnik", "Alpha"],
     isBackground: false,
   },
 

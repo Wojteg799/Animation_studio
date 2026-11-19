@@ -46,6 +46,11 @@ import {
   DarkParchmentBackgroundProps,
   defaultDarkParchmentBackgroundProps,
 } from "./templates/DarkParchmentBackground/schema";
+import { DariusRadioStory } from "./templates/DariusRadioStory";
+import {
+  DariusRadioStoryProps,
+  defaultDariusRadioStoryProps,
+} from "./templates/DariusRadioStory/schema";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -212,6 +217,52 @@ export const RemotionRoot: React.FC = () => {
           c2_endX: 50,
           c2_endY: 70,
         }}
+      />
+
+      {/* 0C. SEKCJA: OPOWIEŚĆ DARIUSA (RADIO & KASETA) */}
+      <Composition
+        id="DariusRadioStory"
+        component={DariusRadioStory}
+        durationInFrames={300} // 10 sekund przy 30fps
+        fps={30}
+        width={1920}
+        height={1080}
+        defaultProps={defaultDariusRadioStoryProps}
+        calculateMetadata={async ({ props }) => {
+          const customProps = props as DariusRadioStoryProps & {
+            videoWidth?: number;
+            videoHeight?: number;
+            customFps?: number;
+            customDuration?: number;
+          };
+          return {
+            width: customProps.videoWidth || 1920,
+            height: customProps.videoHeight || 1080,
+            fps: customProps.customFps || 30,
+            durationInFrames: customProps.durationInFrames || customProps.customDuration || 300,
+            props: customProps,
+          };
+        }}
+      />
+
+      <Composition
+        id="DariusRadioStory-4K"
+        component={DariusRadioStory}
+        durationInFrames={300}
+        fps={30}
+        width={3840}
+        height={2160}
+        defaultProps={defaultDariusRadioStoryProps}
+      />
+
+      <Composition
+        id="DariusRadioStory-Shorts"
+        component={DariusRadioStory}
+        durationInFrames={300}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={defaultDariusRadioStoryProps}
       />
 
       {/* 1. SEKCJA: JOY DIVISION 25 KASET -> UNKNOWN PLEASURES */}

@@ -15,6 +15,10 @@ import {
   defaultCharacterStageProps,
 } from "../remotion/templates/CharacterStage/schema";
 import {
+  DariusRadioStoryProps,
+  defaultDariusRadioStoryProps,
+} from "../remotion/templates/DariusRadioStory/schema";
+import {
   MusicForumScrollProps,
   defaultMusicForumScrollProps,
   defaultMusicForum2007XPProps,
@@ -63,6 +67,9 @@ export default function StudioPage() {
   );
   const [characterStageProps, setCharacterStageProps] = useState<CharacterStageProps>(
     defaultCharacterStageProps
+  );
+  const [dariusProps, setDariusProps] = useState<DariusRadioStoryProps>(
+    defaultDariusRadioStoryProps
   );
   const [musicForumProps, setMusicForumProps] = useState<MusicForumScrollProps>(
     defaultMusicForumScrollProps
@@ -113,6 +120,8 @@ export default function StudioPage() {
         setMusicForumProps((prev) => ({ ...prev, forumThemeVariant: "retro-xp-2007" }));
       } else if (templateId === "character-stage") {
         setDurationFrames(240); // 8 seconds @ 30fps
+      } else if (templateId === "darius-radio-story") {
+        setDurationFrames(300); // 10 seconds @ 30fps
       } else if (templateId === "joy-division-cassette-morph") {
         setDurationFrames(240); // 8 seconds @ 30fps
       } else if (templateId === "retro-cassette-intro") {
@@ -166,6 +175,20 @@ export default function StudioPage() {
         val: CharacterStageProps[K]
       ) => {
         setCharacterStageProps((prev) => ({
+          ...prev,
+          [key]: val,
+        }));
+      },
+      []
+    );
+
+    // Update a single prop for Darius Radio Story
+    const updateDariusProp = useCallback(
+      <K extends keyof DariusRadioStoryProps>(
+        key: K,
+        val: DariusRadioStoryProps[K]
+      ) => {
+        setDariusProps((prev) => ({
           ...prev,
           [key]: val,
         }));
@@ -298,6 +321,12 @@ export default function StudioPage() {
               ...defaultCharacterStageProps,
               ...characterStageProps,
             };
+          } else if (selectedTemplateId === "darius-radio-story") {
+            compositionId = "DariusRadioStory";
+            inputProps = {
+              ...defaultDariusRadioStoryProps,
+              ...dariusProps,
+            };
           } else if (selectedTemplateId === "joy-division-cassette-morph") {
             compositionId = "JoyDivisionCassetteMorph";
             inputProps = {
@@ -362,6 +391,8 @@ export default function StudioPage() {
           ? musicForumProps
           : selectedTemplateId === "character-stage"
         ? characterStageProps
+        : selectedTemplateId === "darius-radio-story"
+          ? dariusProps
         : selectedTemplateId === "joy-division-cassette-morph"
           ? joyDivisionProps
           : selectedTemplateId === "retro-cassette-intro"
@@ -407,6 +438,8 @@ export default function StudioPage() {
               updateMusicForumProp={updateMusicForumProp}
               characterStageProps={characterStageProps}
               updateCharacterStageProp={updateCharacterStageProp}
+              dariusProps={dariusProps}
+              updateDariusProp={updateDariusProp}
               joyDivisionProps={joyDivisionProps}
               updateJoyDivisionProp={updateJoyDivisionProp}
               cassetteProps={cassetteProps}

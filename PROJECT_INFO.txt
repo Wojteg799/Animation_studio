@@ -147,6 +147,17 @@ c:\Users\...\Animation_studio\
      czerwone przekreślenie X (eliminacja śledcza) oraz pieczęć "ŚCIŚLE TAJNE".
    - Pliki: CharacterBadge.tsx, ConnectionLine.tsx, default-avatars.ts, schema.ts, index.tsx.
 
+0C. Opowieść Dariusa: Nagrywanie z Radia & Tajemnicza Kaseta (id: "darius-radio-story")
+   - Koncepcja: Animacja narracyjna stworzona do zdania:
+     "Darius jest wielkim fanem muzyki, nagrywa piosenki z radia na kasety i tworzy własne składanki, przy nagraniach zapisując tytuły i wykonawców. Jednak w tym konkretnym przypadku nie notuje nazwy piosenki ani zespołu."
+   - 4 Fazy Sceny:
+     1. Faza 1: Wejście postaci Dariusa w słuchawkach z podpisem w stylu Vox, pulsujące serduszko oraz unoszące się tańczące nuty muzyczne (wielki fan muzyki).
+     2. Faza 2: Nuty i serduszko znikają; pojawia się retro tuner radiowy z lat 80. (NDR 1 • 89.2 MHz, skala częstotliwości, VU-meter) połączony falami sygnału z magnetofonem kasetowym z wirującymi szpulami i pulsującą czerwoną diodą ● REC (nagrywanie składanki Mixtape #4).
+     3. Faza 3: Płynne wysunięcie papierowej wkładki J-Card do kasety z liniami i sekwencyjnym wpisywaniem tytułów i wykonawców (The Cure, Depeche Mode, New Order).
+     4. Faza 4: Przy Dariusie wyrasta duży, ekspresyjny znak zapytania `?` z neonową poświatą, a na wkładce linijka 4. zostaje pusta z migającym kursorem `[ ??? — ??? ]` i ostrzeżeniem o braku zapowiedzi DJ-a.
+   - Transparentność: Domyślnie 100% przezroczyste tło (Alpha Channel) z opcją przełączenia na ciemne tło kinowe.
+   - Pliki: DariusCharacter.tsx, RadioCassetteDeck.tsx, CassetteTracklistCard.tsx, darius-avatar.ts, schema.ts, index.tsx, DariusStoryControls.tsx.
+
 A. Joy Division: 25 Kaset → Unknown Pleasures (id: "joy-division-cassette-morph")
    - Koncepcja: 25 kaset magnetofonowych w minimalistycznym białym outline, które
      przeistaczają się w 25 linii pulsara PSR B1919+21 z okładki Unknown Pleasures.

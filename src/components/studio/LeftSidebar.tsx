@@ -19,11 +19,14 @@ import {
   Disc,
   MessageSquare,
   Tv,
+  Radio,
 } from "lucide-react";
 import { AnimatedPhotoFrameProps } from "../../remotion/templates/AnimatedPhotoFrame/schema";
 import { PhotoFrameControls } from "./PhotoFrameControls";
 import { CharacterStageProps } from "../../remotion/templates/CharacterStage/schema";
 import { CharacterStageControls } from "./CharacterStageControls";
+import { DariusRadioStoryProps } from "../../remotion/templates/DariusRadioStory/schema";
+import { DariusStoryControls } from "./DariusStoryControls";
 import { MusicForumScrollProps } from "../../remotion/templates/MusicForumScroll/schema";
 import { MusicForumControls } from "./MusicForumControls";
 import { JoyDivisionCassetteMorphProps } from "../../remotion/templates/JoyDivisionCassetteMorph/schema";
@@ -58,6 +61,11 @@ interface LeftSidebarProps {
   updateCharacterStageProp: <K extends keyof CharacterStageProps>(
     key: K,
     val: CharacterStageProps[K]
+  ) => void;
+  dariusProps: DariusRadioStoryProps;
+  updateDariusProp: <K extends keyof DariusRadioStoryProps>(
+    key: K,
+    val: DariusRadioStoryProps[K]
   ) => void;
   joyDivisionProps: JoyDivisionCassetteMorphProps;
   updateJoyDivisionProp: <K extends keyof JoyDivisionCassetteMorphProps>(
@@ -106,6 +114,8 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
   updateMusicForumProp,
   characterStageProps,
   updateCharacterStageProp,
+  dariusProps,
+  updateDariusProp,
   joyDivisionProps,
   updateJoyDivisionProp,
   cassetteProps,
@@ -129,7 +139,9 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
   const isForumCategory =
     selectedTemplateId === "music-forum-scroll" ||
     selectedTemplateId === "music-forum-2007-xp";
-  const isCharacterCategory = selectedTemplateId === "character-stage";
+  const isCharacterCategory =
+    selectedTemplateId === "character-stage" ||
+    selectedTemplateId === "darius-radio-story";
 
   const isIntroCategory =
     selectedTemplateId === "joy-division-cassette-morph" ||
@@ -320,6 +332,49 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
           </div>
         )}
 
+        {/* When in Character Category: 2-way template selector */}
+        {isCharacterCategory && (
+          <div className="space-y-1.5 pt-1">
+            <div className="text-[10px] font-mono text-zinc-400 uppercase flex items-center justify-between">
+              <span>Wybór Szablonu Postaci:</span>
+              <span className="text-amber-400 font-bold">2 Szablony</span>
+            </div>
+            <div className="grid grid-cols-2 gap-1.5">
+              {/* Option 1: Character Stage (Kółka & Relacje) */}
+              <button
+                type="button"
+                onClick={() => onSelectTemplate("character-stage")}
+                className={`p-2 rounded-lg border text-center transition-all flex flex-col items-center gap-0.5 ${
+                  selectedTemplateId === "character-stage"
+                    ? "bg-amber-500/20 border-amber-500/70 shadow text-amber-300 font-bold"
+                    : "bg-[#181822] hover:bg-[#20202e] border-white/5 text-zinc-400 hover:text-white"
+                }`}
+                title="Postacie w kółkach z podpisami, ruchem i nitkami śledczymi"
+              >
+                <User className="w-3.5 h-3.5 text-amber-400" />
+                <span className="text-[10px] leading-tight font-bold">Studio Postaci</span>
+                <span className="text-[8px] font-mono text-zinc-400">Kółka & Relacje</span>
+              </button>
+
+              {/* Option 2: Darius Radio & Mixtape Story */}
+              <button
+                type="button"
+                onClick={() => onSelectTemplate("darius-radio-story")}
+                className={`p-2 rounded-lg border text-center transition-all flex flex-col items-center gap-0.5 ${
+                  selectedTemplateId === "darius-radio-story"
+                    ? "bg-amber-500/20 border-amber-500/70 shadow text-amber-300 font-bold"
+                    : "bg-[#181822] hover:bg-[#20202e] border-white/5 text-zinc-400 hover:text-white"
+                }`}
+                title="Opowieść: Darius fan muzyki nagrywa piosenki z radia na kasetę, wkładka i znak zapytania"
+              >
+                <Radio className="w-3.5 h-3.5 text-amber-400" />
+                <span className="text-[10px] leading-tight font-bold">Darius & Radio</span>
+                <span className="text-[8px] font-mono text-zinc-400">Mixtape & Pytajnik</span>
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* When in Intro Category: 2-way template selector */}
         {isIntroCategory && (
           <div className="space-y-1.5 pt-1">
@@ -479,6 +534,17 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
             <CharacterStageControls
               props={characterStageProps}
               updateProp={updateCharacterStageProp}
+              durationFrames={durationFrames}
+              setDurationFrames={setDurationFrames}
+              fps={fps}
+            />
+          </div>
+        ) : selectedTemplateId === "darius-radio-story" ? (
+          /* ================= 00B. OPOWIEŚĆ DARIUSA (RADIO & KASETA) CONTROLS ================= */
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <DariusStoryControls
+              props={dariusProps}
+              updateProp={updateDariusProp}
               durationFrames={durationFrames}
               setDurationFrames={setDurationFrames}
               fps={fps}
