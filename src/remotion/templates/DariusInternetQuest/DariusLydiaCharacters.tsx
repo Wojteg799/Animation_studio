@@ -86,28 +86,59 @@ export const DariusLydiaCharacters: React.FC<DariusLydiaCharactersProps> = ({
   const giftExit = Math.max(0, Math.min(1, (frame - (giftEndFrame - 8)) / 14));
   const giftOpacity = Math.max(0, giftEnter - giftExit);
 
-  // Otwarcie pudełka i wyskok domeny internetowej
-  const giftOpenSpring = spring({
+  // Otwarcie pudełka
+  const lidSpring = spring({
     frame: frame - giftOpenFrame,
     fps,
-    config: { damping: 12, stiffness: 110 },
+    config: { damping: 10, stiffness: 120, mass: 0.7 },
   });
-  const clampedGiftOpen = Math.max(0, Math.min(1, giftOpenSpring));
+  const clampedLid = Math.max(0, Math.min(1.2, lidSpring));
 
-  // Lot paska domeny od prezentu do Dariusa
-  const domainFlyProgress = Math.max(
+  // Animacja wyskakiwania i lotu domeny internetowej
+  const domainPopSpring = spring({
+    frame: frame - (giftOpenFrame + 2),
+    fps,
+    config: { damping: 11, stiffness: 120, mass: 0.7 },
+  });
+  const clampedPop = Math.max(0, domainPopSpring);
+
+  const glideProgress = Math.max(
     0,
-    Math.min(1, (frame - (giftOpenFrame + 6)) / 24)
+    Math.min(1, (frame - (giftEndFrame - 15)) / 22)
   );
-  const domainFlyEased =
-    domainFlyProgress * domainFlyProgress * (3 - 2 * domainFlyProgress);
-  const domainX = interpolate(domainFlyEased, [0, 1], [50, 64]);
-  const domainY = interpolate(
-    domainFlyEased,
-    [0, 0.45, 1],
-    [-70, -110, -75]
+  const glideEased = glideProgress * glideProgress * (3 - 2 * glideProgress);
+
+  const initialY = 52;
+  const targetPopY = 34;
+  const targetWebY = 27;
+
+  const currentDomainY =
+    glideProgress > 0
+      ? interpolate(glideEased, [0, 1], [targetPopY, targetWebY])
+      : interpolate(Math.min(1, clampedPop), [0, 1], [initialY, targetPopY]);
+
+  const currentDomainX = interpolate(glideEased, [0, 1], [50, 68]);
+
+  const domainRot =
+    glideProgress > 0
+      ? interpolate(glideEased, [0, 1], [0, 2])
+      : interpolate(Math.min(1, clampedPop), [0, 0.5, 1], [-6, 3, 0]);
+
+  const domainScale =
+    (clampedPop > 0 ? Math.min(1.15, clampedPop * 1.05) : 0) *
+    interpolate(glideEased, [0, 1], [1, 0.95]);
+
+  const domainFloatY =
+    frame >= giftOpenFrame + 15 && glideProgress < 0.9
+      ? Math.sin((frame - giftOpenFrame) * 0.1) * 4
+      : 0;
+
+  const fadeToWeb = Math.max(
+    0,
+    Math.min(1, (frame - (websiteStartFrame - 6)) / 10)
   );
-  const domainScale = interpolate(domainFlyEased, [0, 1], [0.85, 1.05]);
+  const popOpacity = Math.min(1, Math.max(0, (frame - (giftOpenFrame + 2)) / 5));
+  const currentDomainOpacity = popOpacity * (1 - fadeToWeb);
 
   // 4. Żółty znak zapytania przy Dariusie w fazie tajemnicy
   const questionSpring = spring({
@@ -206,7 +237,7 @@ export const DariusLydiaCharacters: React.FC<DariusLydiaCharactersProps> = ({
           style={{
             position: "absolute",
             left: "50%",
-            top: "50%",
+            top: "52%",
             transform: `translate(-50%, -50%) scale(${
               giftEnter * giftBoxScale
             })`,
@@ -239,12 +270,11 @@ export const DariusLydiaCharacters: React.FC<DariusLydiaCharactersProps> = ({
                 backgroundColor: "#000000",
                 border: `3px solid ${lineColor}`,
                 borderRadius: 4,
-                transform: `translateY(${-clampedGiftOpen * 32}px) rotate(${
-                  clampedGiftOpen * -8
+                transform: `translate(${-clampedLid * 35}px, ${-clampedLid * 75}px) rotate(${
+                  -clampedLid * 25
                 }deg)`,
                 transformOrigin: "bottom left",
-                transition: "transform 0.1s ease-out",
-                zIndex: 3,
+                zIndex: 4,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -288,6 +318,40 @@ export const DariusLydiaCharacters: React.FC<DariusLydiaCharactersProps> = ({
               />
             </div>
 
+            {/* Błyski/promyki radości przy otwarciu pudełka */}
+            {frame >= giftOpenFrame && frame < giftOpenFrame + 22 && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: 25,
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  pointerEvents: "none",
+                  zIndex: 2,
+                }}
+              >
+                {[-45, -15, 15, 45].map((deg, i) => {
+                  const sparkProgress = Math.min(1, (frame - giftOpenFrame) / 18);
+                  const sparkDist = interpolate(sparkProgress, [0, 1], [10, 55]);
+                  const sparkOpacity = interpolate(sparkProgress, [0, 0.4, 1], [0, 1, 0]);
+                  return (
+                    <div
+                      key={i}
+                      style={{
+                        position: "absolute",
+                        width: 14,
+                        height: 2.5,
+                        backgroundColor: dariusColor,
+                        borderRadius: 2,
+                        transform: `rotate(${deg}deg) translate(${sparkDist}px, 0)`,
+                        opacity: sparkOpacity,
+                      }}
+                    />
+                  );
+                })}
+              </div>
+            )}
+
             {/* Korpus pudełka */}
             <div
               style={{
@@ -327,57 +391,59 @@ export const DariusLydiaCharacters: React.FC<DariusLydiaCharactersProps> = ({
                 }}
               />
             </div>
-
-            {/* Wyskakujący z pudełka globus i domena internetowa */}
-            {frame >= giftOpenFrame && (
-              <div
-                style={{
-                  position: "absolute",
-                  left: `${domainX - 50}%`,
-                  top: `${domainY}px`,
-                  transform: `scale(${clampedGiftOpen * domainScale})`,
-                  opacity: Math.min(1, clampedGiftOpen * 1.4),
-                  zIndex: 30,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  backgroundColor: "#000000",
-                  border: `2.5px solid ${dariusColor}`,
-                  borderRadius: 24,
-                  padding: "7px 18px",
-                  boxShadow: "none",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {/* Ikona globu internetowego (SVG) */}
-                <svg
-                  width="22"
-                  height="22"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke={dariusColor}
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <line x1="2" y1="12" x2="22" y2="12" />
-                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-                </svg>
-                <span
-                  style={{
-                    fontSize: 14,
-                    fontWeight: 900,
-                    fontFamily: "monospace",
-                    color: "#ffffff",
-                    letterSpacing: 1.2,
-                  }}
-                >
-                  {domainText}
-                </span>
-              </div>
-            )}
           </div>
+        </div>
+      )}
+
+
+      {/* ================= 2B. DOMENA INTERNETOWA WYSKAKUJĄCA Z PREZENTU ================= */}
+      {showGift && currentDomainOpacity > 0.001 && (
+        <div
+          style={{
+            position: "absolute",
+            left: `${currentDomainX}%`,
+            top: `${currentDomainY}%`,
+            transform: `translate(-50%, -50%) translateY(${domainFloatY}px) scale(${domainScale}) rotate(${domainRot}deg)`,
+            opacity: currentDomainOpacity,
+            zIndex: 35,
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            backgroundColor: "#000000",
+            border: `2.5px solid ${dariusColor}`,
+            borderRadius: 24,
+            padding: "8px 20px",
+            boxShadow: "none",
+            whiteSpace: "nowrap",
+            pointerEvents: "none",
+          }}
+        >
+          {/* Ikona globu internetowego (SVG) */}
+          <svg
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke={dariusColor}
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <line x1="2" y1="12" x2="22" y2="12" />
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1 4-10z" />
+          </svg>
+          <span
+            style={{
+              fontSize: 15,
+              fontWeight: 900,
+              fontFamily: "monospace",
+              color: "#ffffff",
+              letterSpacing: 1.2,
+            }}
+          >
+            {domainText}
+          </span>
         </div>
       )}
 

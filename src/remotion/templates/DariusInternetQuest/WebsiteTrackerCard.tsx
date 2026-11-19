@@ -615,7 +615,7 @@ export const WebsiteTrackerCard: React.FC<WebsiteTrackerCardProps> = ({
                 display: "inline-block",
               }}
             >
-              {displayMysteryTitle}
+              ????
             </span>
           </div>
         </div>
