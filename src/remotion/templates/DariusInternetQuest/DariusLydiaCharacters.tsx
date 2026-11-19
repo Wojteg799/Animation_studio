@@ -29,7 +29,9 @@ export const DariusLydiaCharacters: React.FC<DariusLydiaCharactersProps> = ({
     lydiaHeadY = 55,
     lydiaBodyY = 168,
 
-    charactersScale = 1.15,
+    charactersScale = 1.35,
+    dariusScale = 1.0,
+    lydiaScale = 1.0,
     giftBoxScale = 1.2,
     questionMarkScale = 1.35,
 
@@ -162,7 +164,7 @@ export const DariusLydiaCharacters: React.FC<DariusLydiaCharactersProps> = ({
             left: `${lydiaX}%`,
             top: "50%",
             transform: `translate(-50%, -50%) translateY(${lydiaBob}px) scale(${
-              clampedEnter * charactersScale
+              clampedEnter * charactersScale * lydiaScale
             })`,
             opacity: Math.min(1, clampedEnter * 1.5) * lydiaOpacity,
             display: "flex",
@@ -454,7 +456,7 @@ export const DariusLydiaCharacters: React.FC<DariusLydiaCharactersProps> = ({
           left: `${dariusX}%`,
           top: "50%",
           transform: `translate(-50%, -50%) translateY(${dariusBob}px) scale(${
-            clampedEnter * charactersScale
+            clampedEnter * charactersScale * dariusScale
           })`,
           opacity: Math.min(1, clampedEnter * 1.5),
           display: "flex",

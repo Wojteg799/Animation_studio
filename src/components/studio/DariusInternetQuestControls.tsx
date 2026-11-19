@@ -13,6 +13,7 @@ import {
   HelpCircle,
   Layout,
   Music,
+  Maximize2,
 } from "lucide-react";
 import { DariusInternetQuestProps } from "../../remotion/templates/DariusInternetQuest/schema";
 
@@ -482,6 +483,119 @@ export const DariusInternetQuestControls: React.FC<
       {/* ================= TAB 2: POSTACIE ================= */}
       {activeTab === "characters" && (
         <div className="space-y-4 animate-in fade-in">
+          {/* GŁÓWNA KONTROLA ROZMIARU I SKALI POSTACI */}
+          <div className="bg-[#12121a] p-3.5 rounded-xl border border-yellow-500/30 space-y-3">
+            <div className="flex justify-between items-center text-xs">
+              <span className="text-white font-semibold flex items-center gap-1.5">
+                <Maximize2 className="w-3.5 h-3.5 text-yellow-400" />
+                Główny Rozmiar Postaci (Darius & Lydia):
+              </span>
+              <span className="text-yellow-400 font-mono font-bold text-sm">
+                {((props.charactersScale ?? 1.35) * 100).toFixed(0)}%
+              </span>
+            </div>
+
+            {/* Suwak głównej skali */}
+            <input
+              type="range"
+              min="0.7"
+              max="2.5"
+              step="0.05"
+              value={props.charactersScale ?? 1.35}
+              onChange={(e) =>
+                updateProp("charactersScale", parseFloat(e.target.value))
+              }
+              className="w-full accent-yellow-400"
+            />
+
+            {/* Szybkie presety powiększenia */}
+            <div className="grid grid-cols-5 gap-1 pt-0.5">
+              {[
+                { label: "100%", val: 1.0 },
+                { label: "120%", val: 1.2 },
+                { label: "135% (Opt)", val: 1.35 },
+                { label: "160%", val: 1.6 },
+                { label: "200% (Duże)", val: 2.0 },
+              ].map((p) => (
+                <button
+                  key={p.val}
+                  type="button"
+                  onClick={() => updateProp("charactersScale", p.val)}
+                  className={`py-1 text-[10px] rounded font-mono font-semibold transition-all ${
+                    Math.abs((props.charactersScale ?? 1.35) - p.val) < 0.03
+                      ? "bg-yellow-400 text-black font-bold"
+                      : "bg-[#181824] hover:bg-white/10 text-zinc-300 border border-white/5"
+                  }`}
+                >
+                  {p.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Średnica bazowego koła */}
+            <div className="pt-2 border-t border-white/5 space-y-1">
+              <div className="flex justify-between text-[10px]">
+                <span className="text-zinc-400">Średnica bazowa koła avatara:</span>
+                <span className="text-yellow-400 font-mono">
+                  {props.circleSize ?? 230}px
+                </span>
+              </div>
+              <input
+                type="range"
+                min="140"
+                max="360"
+                step="5"
+                value={props.circleSize ?? 230}
+                onChange={(e) =>
+                  updateProp("circleSize", parseInt(e.target.value))
+                }
+                className="w-full accent-yellow-400"
+              />
+            </div>
+
+            {/* Niezależne skalowanie Dariusa i Lydii */}
+            <div className="grid grid-cols-2 gap-2 pt-2 border-t border-white/5">
+              <div className="space-y-1">
+                <div className="flex justify-between text-[10px]">
+                  <span className="text-yellow-400 font-semibold">Skala Dariusa:</span>
+                  <span className="text-yellow-400 font-mono">
+                    {((props.dariusScale ?? 1.0) * 100).toFixed(0)}%
+                  </span>
+                </div>
+                <input
+                  type="range"
+                  min="0.6"
+                  max="2.0"
+                  step="0.05"
+                  value={props.dariusScale ?? 1.0}
+                  onChange={(e) =>
+                    updateProp("dariusScale", parseFloat(e.target.value))
+                  }
+                  className="w-full accent-yellow-400"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <div className="flex justify-between text-[10px]">
+                  <span className="text-sky-400 font-semibold">Skala Lydii:</span>
+                  <span className="text-sky-400 font-mono">
+                    {((props.lydiaScale ?? 1.0) * 100).toFixed(0)}%
+                  </span>
+                </div>
+                <input
+                  type="range"
+                  min="0.6"
+                  max="2.0"
+                  step="0.05"
+                  value={props.lydiaScale ?? 1.0}
+                  onChange={(e) =>
+                    updateProp("lydiaScale", parseFloat(e.target.value))
+                  }
+                  className="w-full accent-sky-400"
+                />
+              </div>
+            </div>
+          </div>
           {/* Postać Dariusa */}
           <div className="bg-[#12121a] p-3.5 rounded-xl border border-white/5 space-y-3">
             <span className="text-xs font-semibold text-white block flex items-center gap-1.5">
@@ -654,27 +768,6 @@ export const DariusInternetQuestControls: React.FC<
                 />
               </div>
             </div>
-          </div>
-
-          {/* Skala postaci */}
-          <div className="bg-[#12121a] p-3.5 rounded-xl border border-white/5 space-y-2">
-            <div className="flex justify-between items-center text-xs">
-              <span className="text-white font-semibold">Skala Postaci:</span>
-              <span className="text-yellow-400 font-mono font-bold">
-                {((props.charactersScale ?? 1.15) * 100).toFixed(0)}%
-              </span>
-            </div>
-            <input
-              type="range"
-              min="0.6"
-              max="2.0"
-              step="0.05"
-              value={props.charactersScale ?? 1.15}
-              onChange={(e) =>
-                updateProp("charactersScale", parseFloat(e.target.value))
-              }
-              className="w-full accent-yellow-400"
-            />
           </div>
         </div>
       )}

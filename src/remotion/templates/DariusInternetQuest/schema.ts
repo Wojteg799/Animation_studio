@@ -6,7 +6,7 @@ export const DariusInternetQuestSchema = z.object({
   lydiaName: z.string().default("LYDIA"),
   dariusColor: z.string().default("#facc15"), // charakterystyczny żółty
   lydiaColor: z.string().default("#38bdf8"), // błękitny Lydii
-  circleSize: z.number().min(120).max(320).default(200),
+  circleSize: z.number().min(120).max(400).default(230),
 
   // Geometria avatara Dariusa
   dariusHeadSize: z.number().min(15).max(75).default(42),
@@ -21,7 +21,9 @@ export const DariusInternetQuestSchema = z.object({
   lydiaBodyY: z.number().min(100).max(220).default(168),
 
   // Skalowanie elementów (zwiększanie / zmniejszanie)
-  charactersScale: z.number().min(0.5).max(2.5).default(1.15),
+  charactersScale: z.number().min(0.5).max(3.0).default(1.35),
+  dariusScale: z.number().min(0.5).max(3.0).default(1.0),
+  lydiaScale: z.number().min(0.5).max(3.0).default(1.0),
   giftBoxScale: z.number().min(0.5).max(2.5).default(1.2),
   websiteScale: z.number().min(0.5).max(2.5).default(1.15),
   tracklistScale: z.number().min(0.5).max(2.5).default(1.15),
@@ -67,7 +69,7 @@ export const defaultDariusInternetQuestProps: DariusInternetQuestProps = {
   lydiaName: "LYDIA",
   dariusColor: "#facc15",
   lydiaColor: "#38bdf8",
-  circleSize: 200,
+  circleSize: 230,
 
   dariusHeadSize: 42,
   dariusBodySize: 75,
@@ -79,7 +81,9 @@ export const defaultDariusInternetQuestProps: DariusInternetQuestProps = {
   lydiaHeadY: 55,
   lydiaBodyY: 168,
 
-  charactersScale: 1.15,
+  charactersScale: 1.35,
+  dariusScale: 1.0,
+  lydiaScale: 1.0,
   giftBoxScale: 1.2,
   websiteScale: 1.15,
   tracklistScale: 1.15,
