@@ -8,40 +8,46 @@ interface DariusCharacterProps {
   frame: number;
 }
 
-// Czyste, wyraziste wektorowe nutki w stylu line-art
-const NoteSingle = ({ color = "#ffffff", size = 24 }: { color?: string; size?: number }) => (
+// Czyste, wyraziste wektorowe nutki w stylu line-art (z cieniem dla doskonałej widoczności)
+const NoteSingle = ({ color = "#ffffff", size = 32 }: { color?: string; size?: number }) => (
   <svg
     width={size}
     height={size}
     viewBox="0 0 24 24"
     fill="none"
     stroke={color}
-    strokeWidth="2.4"
+    strokeWidth="2.8"
     strokeLinecap="round"
     strokeLinejoin="round"
-    style={{ overflow: "visible" }}
+    style={{
+      overflow: "visible",
+      filter: "drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8))",
+    }}
   >
     <ellipse cx="7.5" cy="17.5" rx="4.5" ry="3.2" fill={color} stroke="none" transform="rotate(-20 7.5 17.5)" />
     <path d="M10.8 17V3.5c0 0 1.2-0.5 4.5 1.5c2 1.2 2.7 3.2 2.7 3.2" />
   </svg>
 );
 
-const NoteDouble = ({ color = "#ffffff", size = 26 }: { color?: string; size?: number }) => (
+const NoteDouble = ({ color = "#ffffff", size = 34 }: { color?: string; size?: number }) => (
   <svg
     width={size}
     height={size}
     viewBox="0 0 24 24"
     fill="none"
     stroke={color}
-    strokeWidth="2.4"
+    strokeWidth="2.8"
     strokeLinecap="round"
     strokeLinejoin="round"
-    style={{ overflow: "visible" }}
+    style={{
+      overflow: "visible",
+      filter: "drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8))",
+    }}
   >
     <ellipse cx="6" cy="18" rx="4" ry="2.8" fill={color} stroke="none" transform="rotate(-20 6 18)" />
     <ellipse cx="17.5" cy="15" rx="4" ry="2.8" fill={color} stroke="none" transform="rotate(-20 17.5 15)" />
     <path d="M9 17.5V4.5l11.5-3V14.5" />
-    <path d="M9 7.5l11.5-3" strokeWidth="2.8" />
+    <path d="M9 7.5l11.5-3" strokeWidth="3" />
   </svg>
 );
 
@@ -157,7 +163,7 @@ export const DariusCharacter: React.FC<DariusCharacterProps> = ({ props, frame }
         pointerEvents: "none",
       }}
     >
-      {/* ================= PROSTE SERCE & NUTY (ZERO GLOW) ================= */}
+      {/* ================= PROSTE SERCE (NAD GŁOWĄ DARIUSA) ================= */}
       {showHeartAndNotes && heartOpacity > 0.001 && (
         <div
           style={{
@@ -169,6 +175,7 @@ export const DariusCharacter: React.FC<DariusCharacterProps> = ({ props, frame }
             justifyContent: "center",
             pointerEvents: "none",
             transform: `scale(${heartScale})`,
+            zIndex: 30,
           }}
         >
           {/* Czyste, wyraziste geometryczne serduszko w kolorze żółtym */}
@@ -178,7 +185,7 @@ export const DariusCharacter: React.FC<DariusCharacterProps> = ({ props, frame }
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.5))",
+              filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.6))",
             }}
           >
             <svg
@@ -193,14 +200,29 @@ export const DariusCharacter: React.FC<DariusCharacterProps> = ({ props, frame }
               <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
             </svg>
           </div>
+        </div>
+      )}
 
-          {/* Płynnie unoszące się nutki muzyczne */}
+      {/* ================= NUTKI WYCHODZĄCE BEZPOŚREDNIO Z AVATARA DARIUSA ================= */}
+      {showHeartAndNotes && heartOpacity > 0.001 && (
+        <div
+          style={{
+            position: "absolute",
+            left: 0,
+            top: circleSize * 0.28, // Wychodzą z tułowia / klatki piersiowej Dariusa
+            width: 0,
+            height: 0,
+            pointerEvents: "none",
+            zIndex: 25,
+            transform: `scale(${heartScale})`,
+          }}
+        >
           {[
-            { isDouble: false, baseX: -44, startY: 10, endY: -78, driftX: -22, duration: 48, delay: 0, size: 24, color: lineColor },
-            { isDouble: true,  baseX: 38,  startY: 14, endY: -84, driftX: 24,  duration: 52, delay: 10, size: 26, color: accentColor },
-            { isDouble: true,  baseX: -26, startY: 18, endY: -92, driftX: -16, duration: 46, delay: 20, size: 22, color: lineColor },
-            { isDouble: false, baseX: 48,  startY: 8,  endY: -88, driftX: 20,  duration: 50, delay: 30, size: 24, color: lineColor },
-            { isDouble: false, baseX: -12, startY: 16, endY: -98, driftX: 14,  duration: 54, delay: 40, size: 20, color: accentColor },
+            { isDouble: false, baseX: -32, startY: 10, endY: -82, driftX: -26, duration: 46, delay: 0, size: 30, color: lineColor },
+            { isDouble: true,  baseX: 28,  startY: 18, endY: -90, driftX: 28,  duration: 52, delay: 9,  size: 34, color: accentColor },
+            { isDouble: true,  baseX: -18, startY: 26, endY: -100, driftX: -18, duration: 48, delay: 18, size: 32, color: lineColor },
+            { isDouble: false, baseX: 36,  startY: 8,  endY: -94, driftX: 22,  duration: 50, delay: 27, size: 30, color: lineColor },
+            { isDouble: false, baseX: -6,  startY: 20, endY: -110, driftX: 16,  duration: 54, delay: 36, size: 28, color: accentColor },
           ].map((n, i) => {
             const timeSinceStart = frame - heartNotesStartFrame - n.delay;
             if (timeSinceStart < 0) return null;
@@ -213,14 +235,14 @@ export const DariusCharacter: React.FC<DariusCharacterProps> = ({ props, frame }
             const floatY = interpolate(easedProg, [0, 1], [n.startY, n.endY]);
 
             // Organiczne falowanie na boki (S-curve)
-            const sway = Math.sin(prog * Math.PI * 2) * 12;
+            const sway = Math.sin(prog * Math.PI * 2) * 14;
             const floatX = interpolate(prog, [0, 1], [n.baseX, n.baseX + n.driftX]) + sway;
 
             // Delikatny przechył
             const rot = Math.sin(prog * Math.PI * 2) * 16;
 
             // Płynna zmiana wielkości
-            const noteScale = interpolate(prog, [0, 0.25, 0.75, 1], [0.4, 1.0, 1.0, 0.8]);
+            const noteScale = interpolate(prog, [0, 0.22, 0.78, 1], [0.35, 1.0, 1.0, 0.75]);
 
             // Całkowicie płynny łuk przezroczystości bez przeskoków
             const alphaCurve = Math.sin(prog * Math.PI);
