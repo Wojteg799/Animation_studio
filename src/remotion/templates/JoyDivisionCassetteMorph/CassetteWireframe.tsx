@@ -10,6 +10,10 @@ interface CassetteWireframeProps {
   detailsOpacity?: number; // 1 = full details, 0 = only chassis lines (for squash)
   squashFactor?: number; // 1 = normal height, 0 = completely flat line
   chassisFill?: string; // e.g. "#000000"
+  spoolColor?: string; // opcjonalny kolor szpulek (np. złoty #facc15)
+  showLabel?: boolean; // opcjonalny pasek etykiety z tekstem
+  labelText?: string; // np. "????"
+  labelColor?: string; // kolor tekstu etykiety
 }
 
 export const CassetteWireframe: React.FC<CassetteWireframeProps> = ({
@@ -22,6 +26,10 @@ export const CassetteWireframe: React.FC<CassetteWireframeProps> = ({
   detailsOpacity = 1,
   squashFactor = 1,
   chassisFill = "#000000",
+  spoolColor,
+  showLabel = false,
+  labelText = "",
+  labelColor,
 }) => {
   // If completely flattened, render single flat horizontal line
   if (squashFactor <= 0.01) {
@@ -41,6 +49,8 @@ export const CassetteWireframe: React.FC<CassetteWireframeProps> = ({
 
   // Base internal viewBox: 240 x 152
   const currentHeight = height * Math.max(0.01, squashFactor);
+  const effectiveSpoolColor = spoolColor || strokeColor;
+  const effectiveLabelColor = labelColor || strokeColor;
 
   return (
     <svg
@@ -155,7 +165,7 @@ export const CassetteWireframe: React.FC<CassetteWireframeProps> = ({
             cx="0"
             cy="0"
             r="15"
-            stroke={strokeColor}
+            stroke={effectiveSpoolColor}
             strokeWidth={strokeWidth}
             vectorEffect="non-scaling-stroke"
           />
@@ -163,7 +173,7 @@ export const CassetteWireframe: React.FC<CassetteWireframeProps> = ({
             cx="0"
             cy="0"
             r="6.5"
-            stroke={strokeColor}
+            stroke={effectiveSpoolColor}
             strokeWidth={strokeWidth * 0.8}
             vectorEffect="non-scaling-stroke"
           />
@@ -171,7 +181,7 @@ export const CassetteWireframe: React.FC<CassetteWireframeProps> = ({
             <path
               key={`left-cog-${deg}`}
               d="M -1.8 -14 L -1 -6.5 L 1 -6.5 L 1.8 -14 Z"
-              fill={strokeColor}
+              fill={effectiveSpoolColor}
               transform={`rotate(${deg})`}
             />
           ))}
@@ -188,7 +198,7 @@ export const CassetteWireframe: React.FC<CassetteWireframeProps> = ({
             cx="0"
             cy="0"
             r="15"
-            stroke={strokeColor}
+            stroke={effectiveSpoolColor}
             strokeWidth={strokeWidth}
             vectorEffect="non-scaling-stroke"
           />
@@ -196,7 +206,7 @@ export const CassetteWireframe: React.FC<CassetteWireframeProps> = ({
             cx="0"
             cy="0"
             r="6.5"
-            stroke={strokeColor}
+            stroke={effectiveSpoolColor}
             strokeWidth={strokeWidth * 0.8}
             vectorEffect="non-scaling-stroke"
           />
@@ -204,7 +214,7 @@ export const CassetteWireframe: React.FC<CassetteWireframeProps> = ({
             <path
               key={`right-cog-${deg}`}
               d="M -1.8 -14 L -1 -6.5 L 1 -6.5 L 1.8 -14 Z"
-              fill={strokeColor}
+              fill={effectiveSpoolColor}
               transform={`rotate(${deg})`}
             />
           ))}
@@ -255,18 +265,50 @@ export const CassetteWireframe: React.FC<CassetteWireframeProps> = ({
         </g>
       )}
 
-      {/* 9. Top Label Indicator Line */}
+      {/* 9. Top Label Indicator Line OR Full Retro Label with Text (e.g. ????) */}
       {detailsOpacity > 0.2 && (
-        <line
-          x1="32"
-          y1="24"
-          x2="208"
-          y2="24"
-          stroke={strokeColor}
-          strokeWidth={strokeWidth * 0.6}
-          strokeOpacity={0.35 * detailsOpacity}
-          vectorEffect="non-scaling-stroke"
-        />
+        showLabel && labelText ? (
+          <g opacity={detailsOpacity}>
+            {/* Ramka papierowego paska etykiety kasety */}
+            <rect
+              x="28"
+              y="12"
+              width="184"
+              height="24"
+              rx="3"
+              fill={chassisFill === "transparent" ? "transparent" : "#0a0a10"}
+              stroke={effectiveLabelColor}
+              strokeWidth={strokeWidth * 0.75}
+              strokeOpacity={0.7}
+              vectorEffect="non-scaling-stroke"
+            />
+            {/* Napis na etykiecie (np. ????) */}
+            <text
+              x="120"
+              y="25.5"
+              fill={effectiveLabelColor}
+              fontSize="13"
+              fontWeight="900"
+              fontFamily="system-ui, -apple-system, monospace, sans-serif"
+              letterSpacing="4"
+              textAnchor="middle"
+              dominantBaseline="middle"
+            >
+              {labelText}
+            </text>
+          </g>
+        ) : (
+          <line
+            x1="32"
+            y1="24"
+            x2="208"
+            y2="24"
+            stroke={strokeColor}
+            strokeWidth={strokeWidth * 0.6}
+            strokeOpacity={0.35 * detailsOpacity}
+            vectorEffect="non-scaling-stroke"
+          />
+        )
       )}
     </svg>
   );

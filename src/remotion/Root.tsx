@@ -56,6 +56,31 @@ import {
   DariusInternetQuestProps,
   defaultDariusInternetQuestProps,
 } from "./templates/DariusInternetQuest/schema";
+import { AntonRiedel } from "./templates/AntonRiedel";
+import {
+  AntonRiedelProps,
+  defaultAntonRiedelProps,
+} from "./templates/AntonRiedel/schema";
+import { SingleCassette } from "./templates/SingleCassette";
+import {
+  SingleCassetteProps,
+  defaultSingleCassetteProps,
+} from "./templates/SingleCassette/schema";
+import { GabaskinsQuest } from "./templates/GabaskinsQuest";
+import {
+  GabaskinsQuestProps,
+  defaultGabaskinsQuestProps,
+} from "./templates/GabaskinsQuest/schema";
+import { GabrielPaulFacebook } from "./templates/GabrielPaulFacebook";
+import {
+  GabrielPaulFacebookProps,
+  defaultGabrielPaulFacebookProps,
+} from "./templates/GabrielPaulFacebook/schema";
+import { InvestigationBreakthrough } from "./templates/InvestigationBreakthrough";
+import {
+  InvestigationBreakthroughProps,
+  defaultInvestigationBreakthroughProps,
+} from "./templates/InvestigationBreakthrough/schema";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -346,6 +371,336 @@ export const RemotionRoot: React.FC = () => {
           };
           return {
             durationInFrames: customProps.durationInFrames || customProps.customDuration || 360,
+            props: customProps,
+          };
+        }}
+      />
+
+      {/* 0E. ANTON RIEDEL: KAMUFLAŻ LYDII (OKULARY, NOS & WĄSY) */}
+      <Composition
+        id="AntonRiedel"
+        component={AntonRiedel}
+        durationInFrames={180}
+        fps={30}
+        width={1920}
+        height={1080}
+        defaultProps={defaultAntonRiedelProps}
+        calculateMetadata={async ({ props }) => {
+          const customProps = props as AntonRiedelProps & {
+            customFps?: number;
+            customDuration?: number;
+          };
+          return {
+            durationInFrames: customProps.durationInFrames || customProps.customDuration || 180,
+            props: customProps,
+          };
+        }}
+      />
+
+      <Composition
+        id="AntonRiedel-4K"
+        component={AntonRiedel}
+        durationInFrames={180}
+        fps={30}
+        width={3840}
+        height={2160}
+        defaultProps={defaultAntonRiedelProps}
+        calculateMetadata={async ({ props }) => {
+          const customProps = props as AntonRiedelProps & {
+            customFps?: number;
+            customDuration?: number;
+          };
+          return {
+            durationInFrames: customProps.durationInFrames || customProps.customDuration || 180,
+            props: customProps,
+          };
+        }}
+      />
+
+      <Composition
+        id="AntonRiedel-Shorts"
+        component={AntonRiedel}
+        durationInFrames={180}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={defaultAntonRiedelProps}
+        calculateMetadata={async ({ props }) => {
+          const customProps = props as AntonRiedelProps & {
+            customFps?: number;
+            customDuration?: number;
+          };
+          return {
+            durationInFrames: customProps.durationInFrames || customProps.customDuration || 180,
+            props: customProps,
+          };
+        }}
+      />
+
+      {/* 0F. GABASKINS: REDDIT & YOUTUBE (GABRIEL VIEIRA) */}
+      <Composition
+        id="GabaskinsQuest"
+        component={GabaskinsQuest}
+        durationInFrames={240}
+        fps={30}
+        width={1920}
+        height={1080}
+        defaultProps={defaultGabaskinsQuestProps}
+        calculateMetadata={async ({ props }) => {
+          const customProps = props as GabaskinsQuestProps & {
+            customFps?: number;
+            customDuration?: number;
+          };
+          return {
+            durationInFrames: customProps.durationInFrames || customProps.customDuration || 240,
+            props: customProps,
+          };
+        }}
+      />
+
+      <Composition
+        id="GabaskinsQuest-4K"
+        component={GabaskinsQuest}
+        durationInFrames={240}
+        fps={30}
+        width={3840}
+        height={2160}
+        defaultProps={defaultGabaskinsQuestProps}
+        calculateMetadata={async ({ props }) => {
+          const customProps = props as GabaskinsQuestProps & {
+            customFps?: number;
+            customDuration?: number;
+          };
+          return {
+            durationInFrames: customProps.durationInFrames || customProps.customDuration || 240,
+            props: customProps,
+          };
+        }}
+      />
+
+      <Composition
+        id="GabaskinsQuest-Shorts"
+        component={GabaskinsQuest}
+        durationInFrames={240}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={defaultGabaskinsQuestProps}
+        calculateMetadata={async ({ props }) => {
+          const customProps = props as GabaskinsQuestProps & {
+            customFps?: number;
+            customDuration?: number;
+          };
+          return {
+            durationInFrames: customProps.durationInFrames || customProps.customDuration || 240,
+            props: customProps,
+          };
+        }}
+      />
+
+      {/* 0G. GABRIEL & PAUL BASKERVILLE: FACEBOOK & ZAGADKA */}
+      <Composition
+        id="GabrielPaulFacebook"
+        component={GabrielPaulFacebook}
+        durationInFrames={240}
+        fps={30}
+        width={1920}
+        height={1080}
+        defaultProps={defaultGabrielPaulFacebookProps}
+        calculateMetadata={async ({ props }) => {
+          const customProps = props as GabrielPaulFacebookProps & {
+            customFps?: number;
+            customDuration?: number;
+          };
+          return {
+            durationInFrames: customProps.durationInFrames || customProps.customDuration || 240,
+            props: customProps,
+          };
+        }}
+      />
+
+      <Composition
+        id="GabrielPaulFacebook-4K"
+        component={GabrielPaulFacebook}
+        durationInFrames={240}
+        fps={30}
+        width={3840}
+        height={2160}
+        defaultProps={defaultGabrielPaulFacebookProps}
+        calculateMetadata={async ({ props }) => {
+          const customProps = props as GabrielPaulFacebookProps & {
+            customFps?: number;
+            customDuration?: number;
+          };
+          return {
+            durationInFrames: customProps.durationInFrames || customProps.customDuration || 240,
+            props: customProps,
+          };
+        }}
+      />
+
+      <Composition
+        id="GabrielPaulFacebook-Shorts"
+        component={GabrielPaulFacebook}
+        durationInFrames={240}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={defaultGabrielPaulFacebookProps}
+        calculateMetadata={async ({ props }) => {
+          const customProps = props as GabrielPaulFacebookProps & {
+            customFps?: number;
+            customDuration?: number;
+          };
+          return {
+            durationInFrames: customProps.durationInFrames || customProps.customDuration || 240,
+            props: customProps,
+          };
+        }}
+      />
+
+      {/* 0H. PRZEŁOM ŚLEDZTWA: DARIUS, LYDIA & GABRIEL (2007 & MESSENGER) */}
+      <Composition
+        id="InvestigationBreakthrough"
+        component={InvestigationBreakthrough}
+        durationInFrames={300}
+        fps={30}
+        width={1920}
+        height={1080}
+        defaultProps={defaultInvestigationBreakthroughProps}
+        calculateMetadata={async ({ props }) => {
+          const customProps = props as InvestigationBreakthroughProps & {
+            customFps?: number;
+            customDuration?: number;
+          };
+          return {
+            durationInFrames: customProps.durationInFrames || customProps.customDuration || 300,
+            props: customProps,
+          };
+        }}
+      />
+
+      <Composition
+        id="InvestigationBreakthrough-4K"
+        component={InvestigationBreakthrough}
+        durationInFrames={300}
+        fps={30}
+        width={3840}
+        height={2160}
+        defaultProps={defaultInvestigationBreakthroughProps}
+        calculateMetadata={async ({ props }) => {
+          const customProps = props as InvestigationBreakthroughProps & {
+            customFps?: number;
+            customDuration?: number;
+          };
+          return {
+            durationInFrames: customProps.durationInFrames || customProps.customDuration || 300,
+            props: customProps,
+          };
+        }}
+      />
+
+      <Composition
+        id="InvestigationBreakthrough-Shorts"
+        component={InvestigationBreakthrough}
+        durationInFrames={300}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={defaultInvestigationBreakthroughProps}
+        calculateMetadata={async ({ props }) => {
+          const customProps = props as InvestigationBreakthroughProps & {
+            customFps?: number;
+            customDuration?: number;
+          };
+          return {
+            durationInFrames: customProps.durationInFrames || customProps.customDuration || 300,
+            props: customProps,
+          };
+        }}
+      />
+
+      {/* 1B. POJEDYNCZA KASETA WIREFRAME (JOY DIVISION STYLE) */}
+      <Composition
+        id="SingleCassette"
+        component={SingleCassette}
+        durationInFrames={240}
+        fps={30}
+        width={1920}
+        height={1080}
+        defaultProps={defaultSingleCassetteProps}
+        calculateMetadata={async ({ props }) => {
+          const customProps = props as SingleCassetteProps & {
+            videoWidth?: number;
+            videoHeight?: number;
+            customFps?: number;
+            customDuration?: number;
+          };
+          return {
+            width: customProps.videoWidth || 1920,
+            height: customProps.videoHeight || 1080,
+            fps: customProps.customFps || 30,
+            durationInFrames: customProps.durationInFrames || customProps.customDuration || 240,
+            props: customProps,
+          };
+        }}
+      />
+
+      <Composition
+        id="SingleCassette-4K"
+        component={SingleCassette}
+        durationInFrames={240}
+        fps={30}
+        width={3840}
+        height={2160}
+        defaultProps={{
+          ...defaultSingleCassetteProps,
+          cassetteWidth: 1280,
+          cassetteHeight: 810,
+          lineWidth: 4.0,
+        }}
+        calculateMetadata={async ({ props }) => {
+          const customProps = props as SingleCassetteProps & {
+            videoWidth?: number;
+            videoHeight?: number;
+            customFps?: number;
+            customDuration?: number;
+          };
+          return {
+            width: customProps.videoWidth || 3840,
+            height: customProps.videoHeight || 2160,
+            fps: customProps.customFps || 30,
+            durationInFrames: customProps.durationInFrames || customProps.customDuration || 240,
+            props: customProps,
+          };
+        }}
+      />
+
+      <Composition
+        id="SingleCassette-Shorts"
+        component={SingleCassette}
+        durationInFrames={240}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={{
+          ...defaultSingleCassetteProps,
+          cassetteWidth: 720,
+          cassetteHeight: 456,
+          cassetteScale: 1.0,
+        }}
+        calculateMetadata={async ({ props }) => {
+          const customProps = props as SingleCassetteProps & {
+            videoWidth?: number;
+            videoHeight?: number;
+            customFps?: number;
+            customDuration?: number;
+          };
+          return {
+            width: customProps.videoWidth || 1080,
+            height: customProps.videoHeight || 1920,
+            fps: customProps.customFps || 30,
+            durationInFrames: customProps.durationInFrames || customProps.customDuration || 240,
             props: customProps,
           };
         }}

@@ -22,6 +22,9 @@ import {
   Radio,
   Users,
   Gift,
+  Glasses,
+  Share2,
+  FileSearch,
 } from "lucide-react";
 import { AnimatedPhotoFrameProps } from "../../remotion/templates/AnimatedPhotoFrame/schema";
 import { PhotoFrameControls } from "./PhotoFrameControls";
@@ -31,6 +34,16 @@ import { DariusRadioStoryProps } from "../../remotion/templates/DariusRadioStory
 import { DariusStoryControls } from "./DariusStoryControls";
 import { DariusInternetQuestProps } from "../../remotion/templates/DariusInternetQuest/schema";
 import { DariusInternetQuestControls } from "./DariusInternetQuestControls";
+import { AntonRiedelProps } from "../../remotion/templates/AntonRiedel/schema";
+import { AntonRiedelControls } from "./AntonRiedelControls";
+import { GabaskinsQuestProps } from "../../remotion/templates/GabaskinsQuest/schema";
+import { GabaskinsControls } from "./GabaskinsControls";
+import { GabrielPaulFacebookProps } from "../../remotion/templates/GabrielPaulFacebook/schema";
+import { GabrielPaulControls } from "./GabrielPaulControls";
+import { InvestigationBreakthroughProps } from "../../remotion/templates/InvestigationBreakthrough/schema";
+import { InvestigationBreakthroughControls } from "./InvestigationBreakthroughControls";
+import { SingleCassetteProps } from "../../remotion/templates/SingleCassette/schema";
+import { SingleCassetteControls } from "./SingleCassetteControls";
 import { MusicForumScrollProps } from "../../remotion/templates/MusicForumScroll/schema";
 import { MusicForumControls } from "./MusicForumControls";
 import { JoyDivisionCassetteMorphProps } from "../../remotion/templates/JoyDivisionCassetteMorph/schema";
@@ -75,6 +88,31 @@ interface LeftSidebarProps {
   updateDariusQuestProp: <K extends keyof DariusInternetQuestProps>(
     key: K,
     val: DariusInternetQuestProps[K]
+  ) => void;
+  antonProps: AntonRiedelProps;
+  updateAntonProp: <K extends keyof AntonRiedelProps>(
+    key: K,
+    val: AntonRiedelProps[K]
+  ) => void;
+  gabaskinsProps: GabaskinsQuestProps;
+  updateGabaskinsProp: <K extends keyof GabaskinsQuestProps>(
+    key: K,
+    val: GabaskinsQuestProps[K]
+  ) => void;
+  gabrielPaulProps: GabrielPaulFacebookProps;
+  updateGabrielPaulProp: <K extends keyof GabrielPaulFacebookProps>(
+    key: K,
+    val: GabrielPaulFacebookProps[K]
+  ) => void;
+  breakthroughProps: InvestigationBreakthroughProps;
+  updateBreakthroughProp: <K extends keyof InvestigationBreakthroughProps>(
+    key: K,
+    val: InvestigationBreakthroughProps[K]
+  ) => void;
+  singleCassetteProps: SingleCassetteProps;
+  updateSingleCassetteProp: <K extends keyof SingleCassetteProps>(
+    key: K,
+    val: SingleCassetteProps[K]
   ) => void;
   joyDivisionProps: JoyDivisionCassetteMorphProps;
   updateJoyDivisionProp: <K extends keyof JoyDivisionCassetteMorphProps>(
@@ -127,6 +165,16 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
   updateDariusProp,
   dariusQuestProps,
   updateDariusQuestProp,
+  antonProps,
+  updateAntonProp,
+  gabaskinsProps,
+  updateGabaskinsProp,
+  gabrielPaulProps,
+  updateGabrielPaulProp,
+  breakthroughProps,
+  updateBreakthroughProp,
+  singleCassetteProps,
+  updateSingleCassetteProp,
   joyDivisionProps,
   updateJoyDivisionProp,
   cassetteProps,
@@ -153,10 +201,15 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
   const isCharacterCategory =
     selectedTemplateId === "character-stage" ||
     selectedTemplateId === "darius-radio-story" ||
-    selectedTemplateId === "darius-internet-quest";
+    selectedTemplateId === "darius-internet-quest" ||
+    selectedTemplateId === "anton-riedel" ||
+    selectedTemplateId === "gabaskins-quest" ||
+    selectedTemplateId === "gabriel-paul-facebook" ||
+    selectedTemplateId === "investigation-breakthrough";
 
   const isIntroCategory =
     selectedTemplateId === "joy-division-cassette-morph" ||
+    selectedTemplateId === "single-cassette" ||
     selectedTemplateId === "retro-cassette-intro";
 
   const isBackgroundCategory =
@@ -344,14 +397,14 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
           </div>
         )}
 
-        {/* When in Character Category: 3-way template selector */}
+        {/* When in Character Category: 4-way template selector */}
         {isCharacterCategory && (
           <div className="space-y-1.5 pt-1">
             <div className="text-[10px] font-mono text-zinc-400 uppercase flex items-center justify-between">
               <span>Wybór Szablonu Postaci:</span>
-              <span className="text-amber-400 font-bold">3 Szablony</span>
+              <span className="text-amber-400 font-bold">4 Szablony</span>
             </div>
-            <div className="grid grid-cols-3 gap-1.5">
+            <div className="grid grid-cols-4 gap-1.5">
               {/* Option 1: Darius i Lydia 1 (Prezent & Domena Internetowa) */}
               <button
                 type="button"
@@ -364,11 +417,75 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
                 title="Darius i Lydia 1: Prezent urodzinowy (domena www), publikacja próbek w sieci, kolejne rozpoznania ✓ i pytajnik ?"
               >
                 <Users className="w-3.5 h-3.5 text-sky-400" />
-                <span className="text-[10px] leading-tight font-bold">Darius i Lydia 1</span>
-                <span className="text-[8px] font-mono text-zinc-400">Prezent & Sieć</span>
+                <span className="text-[9px] leading-tight font-bold">Darius & Lydia</span>
+                <span className="text-[7.5px] font-mono text-zinc-400">Prezent</span>
               </button>
 
-              {/* Option 2: Darius Radio & Mixtape Story */}
+              {/* Option 2: Anton Riedel (Kamuflaż Lydii) */}
+              <button
+                type="button"
+                onClick={() => onSelectTemplate("anton-riedel")}
+                className={`p-2 rounded-lg border text-center transition-all flex flex-col items-center gap-0.5 ${
+                  selectedTemplateId === "anton-riedel"
+                    ? "bg-amber-500/20 border-amber-500/70 shadow text-amber-300 font-bold"
+                    : "bg-[#181822] hover:bg-[#20202e] border-white/5 text-zinc-400 hover:text-white"
+                }`}
+                title="Anton Riedel: Postać Lydii w okularach kamuflażu z dużym nosem i wąsem"
+              >
+                <Glasses className="w-3.5 h-3.5 text-sky-400" />
+                <span className="text-[9px] leading-tight font-bold">Anton Riedel</span>
+                <span className="text-[7.5px] font-mono text-zinc-400">Kamuflaż</span>
+              </button>
+
+              {/* Option 2B: Gabaskins (Gabriel Vieira) - Reddit & YouTube */}
+              <button
+                type="button"
+                onClick={() => onSelectTemplate("gabaskins-quest")}
+                className={`p-2 rounded-lg border text-center transition-all flex flex-col items-center gap-0.5 ${
+                  selectedTemplateId === "gabaskins-quest"
+                    ? "bg-emerald-500/20 border-emerald-500/70 shadow text-emerald-300 font-bold"
+                    : "bg-[#181822] hover:bg-[#20202e] border-white/5 text-zinc-400 hover:text-white"
+                }`}
+                title="Gabaskins (Gabriel Vieira): Zielona postać z antenką Reddit Snoo publikująca nagranie na YT i subredditach"
+              >
+                <Share2 className="w-3.5 h-3.5 text-emerald-400" />
+                <span className="text-[9px] leading-tight font-bold">Gabaskins</span>
+                <span className="text-[7.5px] font-mono text-zinc-400">Reddit & YT</span>
+              </button>
+
+              {/* Option 2C: Gabriel & Paul Baskerville - Facebook & Pytajnik */}
+              <button
+                type="button"
+                onClick={() => onSelectTemplate("gabriel-paul-facebook")}
+                className={`p-2 rounded-lg border text-center transition-all flex flex-col items-center gap-0.5 ${
+                  selectedTemplateId === "gabriel-paul-facebook"
+                    ? "bg-amber-600/25 border-amber-500/70 shadow text-amber-300 font-bold"
+                    : "bg-[#181822] hover:bg-[#20202e] border-white/5 text-zinc-400 hover:text-white"
+                }`}
+                title="Gabriel & Paul Baskerville: Kontakt przez Facebooka, odpowiedź dziennikarza i znak zapytania"
+              >
+                <MessageSquare className="w-3.5 h-3.5 text-blue-400" />
+                <span className="text-[9px] leading-tight font-bold">Gabriel & Paul</span>
+                <span className="text-[7.5px] font-mono text-zinc-400">Facebook & ?</span>
+              </button>
+
+              {/* Option 2D: Przełom Śledztwa - Darius, Lydia & Gabriel (2007 & Messenger) */}
+              <button
+                type="button"
+                onClick={() => onSelectTemplate("investigation-breakthrough")}
+                className={`p-2 rounded-lg border text-center transition-all flex flex-col items-center gap-0.5 ${
+                  selectedTemplateId === "investigation-breakthrough"
+                    ? "bg-amber-500/20 border-amber-500/70 shadow text-amber-300 font-bold"
+                    : "bg-[#181822] hover:bg-[#20202e] border-white/5 text-zinc-400 hover:text-white"
+                }`}
+                title="Przełom Śledztwa: Darius słyszy radio i kasetę, kontaktuje się z Lydią (śledztwo 2007) i piszą do Gabriela na Messengerze"
+              >
+                <FileSearch className="w-3.5 h-3.5 text-sky-400" />
+                <span className="text-[9px] leading-tight font-bold">Przełom 2007</span>
+                <span className="text-[7.5px] font-mono text-zinc-400">Trio & Chat</span>
+              </button>
+
+              {/* Option 3: Darius Radio & Mixtape Story */}
               <button
                 type="button"
                 onClick={() => onSelectTemplate("darius-radio-story")}
@@ -380,11 +497,11 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
                 title="Opowieść: Darius fan muzyki nagrywa piosenki z radia na kasetę, wkładka i znak zapytania"
               >
                 <Radio className="w-3.5 h-3.5 text-yellow-400" />
-                <span className="text-[10px] leading-tight font-bold">Darius & Radio</span>
-                <span className="text-[8px] font-mono text-zinc-400">Mixtape & Kaseta</span>
+                <span className="text-[9px] leading-tight font-bold">Darius & Radio</span>
+                <span className="text-[7.5px] font-mono text-zinc-400">Kaseta</span>
               </button>
 
-              {/* Option 3: Character Stage (Kółka & Relacje) */}
+              {/* Option 4: Character Stage (Kółka & Relacje) */}
               <button
                 type="button"
                 onClick={() => onSelectTemplate("character-stage")}
@@ -396,21 +513,21 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
                 title="Postacie w kółkach z podpisami, ruchem i nitkami śledczymi"
               >
                 <User className="w-3.5 h-3.5 text-amber-400" />
-                <span className="text-[10px] leading-tight font-bold">Studio Postaci</span>
-                <span className="text-[8px] font-mono text-zinc-400">Kółka & Relacje</span>
+                <span className="text-[9px] leading-tight font-bold">Postacie</span>
+                <span className="text-[7.5px] font-mono text-zinc-400">Relacje</span>
               </button>
             </div>
           </div>
         )}
 
-        {/* When in Intro Category: 2-way template selector */}
+        {/* When in Intro Category: 3-way template selector */}
         {isIntroCategory && (
           <div className="space-y-1.5 pt-1">
             <div className="text-[10px] font-mono text-zinc-400 uppercase flex items-center justify-between">
               <span>Wybór Szablonu Intro:</span>
-              <span className="text-amber-400 font-bold">2 Animacje</span>
+              <span className="text-amber-400 font-bold">3 Animacje</span>
             </div>
-            <div className="grid grid-cols-2 gap-1.5">
+            <div className="grid grid-cols-3 gap-1.5">
               {/* Option 1: Joy Division 25 Kaset */}
               <button
                 type="button"
@@ -422,11 +539,26 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
                 title="25 kaset w białym outline przeistacza się w okładkę Joy Division Unknown Pleasures"
               >
                 <Activity className="w-3.5 h-3.5 text-amber-400" />
-                <span className="text-[10px] leading-tight font-bold">25 Kaset → Joy Div</span>
-                <span className="text-[8px] font-mono text-zinc-400">Pulsar Wave</span>
+                <span className="text-[9px] leading-tight font-bold">25 Kaset</span>
+                <span className="text-[7.5px] font-mono text-zinc-400">Joy Division</span>
               </button>
 
-              {/* Option 2: Retro Kaseta & Podpis */}
+              {/* Option 2: 1 Kaseta Wireframe (Joy Division Style) */}
+              <button
+                type="button"
+                onClick={() => onSelectTemplate("single-cassette")}
+                className={`p-2 rounded-lg border text-center transition-all flex flex-col items-center gap-0.5 ${selectedTemplateId === "single-cassette"
+                    ? "bg-amber-500/20 border-amber-500/70 shadow text-amber-300 font-bold"
+                    : "bg-[#181822] hover:bg-[#20202e] border-white/5 text-zinc-400 hover:text-white"
+                  }`}
+                title="Jedna minimalistyczna kaseta magnetofonowa wireframe z obracającymi się szpulami"
+              >
+                <Disc className="w-3.5 h-3.5 text-yellow-400" />
+                <span className="text-[9px] leading-tight font-bold">1 Kaseta</span>
+                <span className="text-[7.5px] font-mono text-zinc-400">Wireframe</span>
+              </button>
+
+              {/* Option 3: Retro Kaseta & Podpis */}
               <button
                 type="button"
                 onClick={() => onSelectTemplate("retro-cassette-intro")}
@@ -436,9 +568,9 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
                   }`}
                 title="Vintage kaseta z kręcącymi się szpulkami i długopisem podpisującym tytuł"
               >
-                <Disc className="w-3.5 h-3.5 text-amber-400" />
-                <span className="text-[10px] leading-tight font-bold">Kaseta & Podpis</span>
-                <span className="text-[8px] font-mono text-zinc-400">Długopis BiC</span>
+                <FileText className="w-3.5 h-3.5 text-sky-400" />
+                <span className="text-[9px] leading-tight font-bold">Retro Kaseta</span>
+                <span className="text-[7.5px] font-mono text-zinc-400">Długopis</span>
               </button>
             </div>
           </div>
@@ -589,12 +721,67 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
               fps={fps}
             />
           </div>
+        ) : selectedTemplateId === "anton-riedel" ? (
+          /* ================= 00D. ANTON RIEDEL (KAMUFLAŻ LYDII) CONTROLS ================= */
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <AntonRiedelControls
+              props={antonProps}
+              updateProp={updateAntonProp}
+              durationFrames={durationFrames}
+              setDurationFrames={setDurationFrames}
+              fps={fps}
+            />
+          </div>
+        ) : selectedTemplateId === "gabaskins-quest" ? (
+          /* ================= 00E. GABASKINS (REDDIT & YOUTUBE) CONTROLS ================= */
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <GabaskinsControls
+              props={gabaskinsProps}
+              updateProp={updateGabaskinsProp}
+              durationFrames={durationFrames}
+              setDurationFrames={setDurationFrames}
+              fps={fps}
+            />
+          </div>
+        ) : selectedTemplateId === "gabriel-paul-facebook" ? (
+          /* ================= 00F. GABRIEL & PAUL BASKERVILLE CONTROLS ================= */
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <GabrielPaulControls
+              props={gabrielPaulProps}
+              updateProp={updateGabrielPaulProp}
+              durationFrames={durationFrames}
+              setDurationFrames={setDurationFrames}
+              fps={fps}
+            />
+          </div>
+        ) : selectedTemplateId === "investigation-breakthrough" ? (
+          /* ================= 00G. PRZEŁOM ŚLEDZTWA (2007 & MESSENGER) CONTROLS ================= */
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <InvestigationBreakthroughControls
+              props={breakthroughProps}
+              updateProp={updateBreakthroughProp}
+              durationFrames={durationFrames}
+              setDurationFrames={setDurationFrames}
+              fps={fps}
+            />
+          </div>
         ) : selectedTemplateId === "joy-division-cassette-morph" ? (
           /* ================= 0A. JOY DIVISION 25 KASET MORPH CONTROLS ================= */
           <div className="flex-1 overflow-y-auto p-4 space-y-4">
             <JoyDivisionControls
               props={joyDivisionProps}
               updateProp={updateJoyDivisionProp}
+              durationFrames={durationFrames}
+              setDurationFrames={setDurationFrames}
+              fps={fps}
+            />
+          </div>
+        ) : selectedTemplateId === "single-cassette" ? (
+          /* ================= 0A-2. POJEDYNCZA KASETA WIREFRAME CONTROLS ================= */
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <SingleCassetteControls
+              props={singleCassetteProps}
+              updateProp={updateSingleCassetteProp}
               durationFrames={durationFrames}
               setDurationFrames={setDurationFrames}
               fps={fps}

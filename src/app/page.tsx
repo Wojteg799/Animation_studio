@@ -23,6 +23,22 @@ import {
   defaultDariusInternetQuestProps,
 } from "../remotion/templates/DariusInternetQuest/schema";
 import {
+  AntonRiedelProps,
+  defaultAntonRiedelProps,
+} from "../remotion/templates/AntonRiedel/schema";
+import {
+  GabaskinsQuestProps,
+  defaultGabaskinsQuestProps,
+} from "../remotion/templates/GabaskinsQuest/schema";
+import {
+  GabrielPaulFacebookProps,
+  defaultGabrielPaulFacebookProps,
+} from "../remotion/templates/GabrielPaulFacebook/schema";
+import {
+  InvestigationBreakthroughProps,
+  defaultInvestigationBreakthroughProps,
+} from "../remotion/templates/InvestigationBreakthrough/schema";
+import {
   MusicForumScrollProps,
   defaultMusicForumScrollProps,
   defaultMusicForum2007XPProps,
@@ -31,6 +47,10 @@ import {
   JoyDivisionCassetteMorphProps,
   defaultJoyDivisionCassetteMorphProps,
 } from "../remotion/templates/JoyDivisionCassetteMorph/schema";
+import {
+  SingleCassetteProps,
+  defaultSingleCassetteProps,
+} from "../remotion/templates/SingleCassette/schema";
 import {
   RetroCassetteIntroProps,
   defaultRetroCassetteIntroProps,
@@ -78,11 +98,26 @@ export default function StudioPage() {
   const [dariusQuestProps, setDariusQuestProps] = useState<DariusInternetQuestProps>(
     defaultDariusInternetQuestProps
   );
+  const [antonProps, setAntonProps] = useState<AntonRiedelProps>(
+    defaultAntonRiedelProps
+  );
+  const [gabaskinsProps, setGabaskinsProps] = useState<GabaskinsQuestProps>(
+    defaultGabaskinsQuestProps
+  );
+  const [gabrielPaulProps, setGabrielPaulProps] = useState<GabrielPaulFacebookProps>(
+    defaultGabrielPaulFacebookProps
+  );
+  const [breakthroughProps, setBreakthroughProps] = useState<InvestigationBreakthroughProps>(
+    defaultInvestigationBreakthroughProps
+  );
   const [musicForumProps, setMusicForumProps] = useState<MusicForumScrollProps>(
     defaultMusicForumScrollProps
   );
   const [joyDivisionProps, setJoyDivisionProps] = useState<JoyDivisionCassetteMorphProps>(
     defaultJoyDivisionCassetteMorphProps
+  );
+  const [singleCassetteProps, setSingleCassetteProps] = useState<SingleCassetteProps>(
+    defaultSingleCassetteProps
   );
   const [cassetteProps, setCassetteProps] = useState<RetroCassetteIntroProps>(
     defaultRetroCassetteIntroProps
@@ -131,8 +166,18 @@ export default function StudioPage() {
         setDurationFrames(dariusProps.durationInFrames || 360);
       } else if (templateId === "darius-internet-quest") {
         setDurationFrames(dariusQuestProps.durationInFrames || 360);
+      } else if (templateId === "anton-riedel") {
+        setDurationFrames(antonProps.durationInFrames || 180);
+      } else if (templateId === "gabaskins-quest") {
+        setDurationFrames(gabaskinsProps.durationInFrames || 240);
+      } else if (templateId === "gabriel-paul-facebook") {
+        setDurationFrames(gabrielPaulProps.durationInFrames || 240);
+      } else if (templateId === "investigation-breakthrough") {
+        setDurationFrames(breakthroughProps.durationInFrames || 300);
       } else if (templateId === "joy-division-cassette-morph") {
         setDurationFrames(joyDivisionProps.durationInFrames || 240);
+      } else if (templateId === "single-cassette") {
+        setDurationFrames(singleCassetteProps.durationInFrames || 240);
       } else if (templateId === "retro-cassette-intro") {
         setDurationFrames(210); // 7 seconds @ 30fps
       } else if (isBackground) {
@@ -225,6 +270,74 @@ export default function StudioPage() {
       []
     );
 
+    // Update a single prop for Anton Riedel
+    const updateAntonProp = useCallback(
+      <K extends keyof AntonRiedelProps>(
+        key: K,
+        val: AntonRiedelProps[K]
+      ) => {
+        setAntonProps((prev) => ({
+          ...prev,
+          [key]: val,
+        }));
+        if (key === "durationInFrames" && typeof val === "number") {
+          setDurationFrames(val);
+        }
+      },
+      []
+    );
+
+    // Update a single prop for Gabaskins (Gabriel Vieira)
+    const updateGabaskinsProp = useCallback(
+      <K extends keyof GabaskinsQuestProps>(
+        key: K,
+        val: GabaskinsQuestProps[K]
+      ) => {
+        setGabaskinsProps((prev) => ({
+          ...prev,
+          [key]: val,
+        }));
+        if (key === "durationInFrames" && typeof val === "number") {
+          setDurationFrames(val);
+        }
+      },
+      []
+    );
+
+    // Update a single prop for Gabriel & Paul Baskerville
+    const updateGabrielPaulProp = useCallback(
+      <K extends keyof GabrielPaulFacebookProps>(
+        key: K,
+        val: GabrielPaulFacebookProps[K]
+      ) => {
+        setGabrielPaulProps((prev) => ({
+          ...prev,
+          [key]: val,
+        }));
+        if (key === "durationInFrames" && typeof val === "number") {
+          setDurationFrames(val);
+        }
+      },
+      []
+    );
+
+    // Update a single prop for Investigation Breakthrough (Darius, Lydia, Gabriel)
+    const updateBreakthroughProp = useCallback(
+      <K extends keyof InvestigationBreakthroughProps>(
+        key: K,
+        val: InvestigationBreakthroughProps[K]
+      ) => {
+        setBreakthroughProps((prev) => ({
+          ...prev,
+          [key]: val,
+        }));
+        if (key === "durationInFrames" && typeof val === "number") {
+          setDurationFrames(val);
+        }
+      },
+      []
+    );
+
     // Update a single prop for Joy Division Cassette Morph
     const updateJoyDivisionProp = useCallback(
       <K extends keyof JoyDivisionCassetteMorphProps>(
@@ -232,6 +345,23 @@ export default function StudioPage() {
         val: JoyDivisionCassetteMorphProps[K]
       ) => {
         setJoyDivisionProps((prev) => ({
+          ...prev,
+          [key]: val,
+        }));
+        if (key === "durationInFrames" && typeof val === "number") {
+          setDurationFrames(val);
+        }
+      },
+      []
+    );
+
+    // Update a single prop for Single Cassette
+    const updateSingleCassetteProp = useCallback(
+      <K extends keyof SingleCassetteProps>(
+        key: K,
+        val: SingleCassetteProps[K]
+      ) => {
+        setSingleCassetteProps((prev) => ({
           ...prev,
           [key]: val,
         }));
@@ -365,11 +495,41 @@ export default function StudioPage() {
               ...defaultDariusInternetQuestProps,
               ...dariusQuestProps,
             };
+          } else if (selectedTemplateId === "anton-riedel") {
+            compositionId = "AntonRiedel";
+            inputProps = {
+              ...defaultAntonRiedelProps,
+              ...antonProps,
+            };
+          } else if (selectedTemplateId === "gabaskins-quest") {
+            compositionId = "GabaskinsQuest";
+            inputProps = {
+              ...defaultGabaskinsQuestProps,
+              ...gabaskinsProps,
+            };
+          } else if (selectedTemplateId === "gabriel-paul-facebook") {
+            compositionId = "GabrielPaulFacebook";
+            inputProps = {
+              ...defaultGabrielPaulFacebookProps,
+              ...gabrielPaulProps,
+            };
+          } else if (selectedTemplateId === "investigation-breakthrough") {
+            compositionId = "InvestigationBreakthrough";
+            inputProps = {
+              ...defaultInvestigationBreakthroughProps,
+              ...breakthroughProps,
+            };
           } else if (selectedTemplateId === "joy-division-cassette-morph") {
             compositionId = "JoyDivisionCassetteMorph";
             inputProps = {
               ...defaultJoyDivisionCassetteMorphProps,
               ...joyDivisionProps,
+            };
+          } else if (selectedTemplateId === "single-cassette") {
+            compositionId = "SingleCassette";
+            inputProps = {
+              ...defaultSingleCassetteProps,
+              ...singleCassetteProps,
             };
           } else if (selectedTemplateId === "retro-cassette-intro") {
             compositionId = "RetroCassetteIntro";
@@ -433,8 +593,18 @@ export default function StudioPage() {
           ? dariusProps
         : selectedTemplateId === "darius-internet-quest"
           ? dariusQuestProps
+        : selectedTemplateId === "anton-riedel"
+          ? antonProps
+        : selectedTemplateId === "gabaskins-quest"
+          ? gabaskinsProps
+        : selectedTemplateId === "gabriel-paul-facebook"
+          ? gabrielPaulProps
+        : selectedTemplateId === "investigation-breakthrough"
+          ? breakthroughProps
         : selectedTemplateId === "joy-division-cassette-morph"
           ? joyDivisionProps
+        : selectedTemplateId === "single-cassette"
+          ? singleCassetteProps
           : selectedTemplateId === "retro-cassette-intro"
             ? cassetteProps
             : isVoidTemplate
@@ -482,8 +652,18 @@ export default function StudioPage() {
               updateDariusProp={updateDariusProp}
               dariusQuestProps={dariusQuestProps}
               updateDariusQuestProp={updateDariusQuestProp}
+              antonProps={antonProps}
+              updateAntonProp={updateAntonProp}
+              gabaskinsProps={gabaskinsProps}
+              updateGabaskinsProp={updateGabaskinsProp}
+              gabrielPaulProps={gabrielPaulProps}
+              updateGabrielPaulProp={updateGabrielPaulProp}
+              breakthroughProps={breakthroughProps}
+              updateBreakthroughProp={updateBreakthroughProp}
               joyDivisionProps={joyDivisionProps}
               updateJoyDivisionProp={updateJoyDivisionProp}
+              singleCassetteProps={singleCassetteProps}
+              updateSingleCassetteProp={updateSingleCassetteProp}
               cassetteProps={cassetteProps}
               updateCassetteProp={updateCassetteProp}
               lowerThirdProps={lowerThirdProps}
@@ -511,8 +691,18 @@ export default function StudioPage() {
                   ? dariusProps.durationInFrames
                   : selectedTemplateId === "darius-internet-quest" && dariusQuestProps.durationInFrames
                   ? dariusQuestProps.durationInFrames
+                  : selectedTemplateId === "anton-riedel" && antonProps.durationInFrames
+                  ? antonProps.durationInFrames
+                  : selectedTemplateId === "gabaskins-quest" && gabaskinsProps.durationInFrames
+                  ? gabaskinsProps.durationInFrames
+                  : selectedTemplateId === "gabriel-paul-facebook" && gabrielPaulProps.durationInFrames
+                  ? gabrielPaulProps.durationInFrames
+                  : selectedTemplateId === "investigation-breakthrough" && breakthroughProps.durationInFrames
+                  ? breakthroughProps.durationInFrames
                   : selectedTemplateId === "joy-division-cassette-morph" && joyDivisionProps.durationInFrames
                   ? joyDivisionProps.durationInFrames
+                  : selectedTemplateId === "single-cassette" && singleCassetteProps.durationInFrames
+                  ? singleCassetteProps.durationInFrames
                   : durationFrames
               }
             />

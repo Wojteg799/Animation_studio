@@ -147,16 +147,21 @@ c:\Users\...\Animation_studio\
      czerwone przekreślenie X (eliminacja śledcza) oraz pieczęć "ŚCIŚLE TAJNE".
    - Pliki: CharacterBadge.tsx, ConnectionLine.tsx, default-avatars.ts, schema.ts, index.tsx.
 
-0C. Opowieść Dariusa: Nagrywanie z Radia & Tajemnicza Kaseta (id: "darius-radio-story")
-   - Koncepcja: Animacja narracyjna stworzona do zdania:
-     "Darius jest wielkim fanem muzyki, nagrywa piosenki z radia na kasety i tworzy własne składanki, przy nagraniach zapisując tytuły i wykonawców. Jednak w tym konkretnym przypadku nie notuje nazwy piosenki ani zespołu."
-   - 4 Fazy Sceny:
-     1. Faza 1: Wejście postaci Dariusa w słuchawkach z podpisem w stylu Vox, pulsujące serduszko oraz unoszące się tańczące nuty muzyczne (wielki fan muzyki).
-     2. Faza 2: Nuty i serduszko znikają; pojawia się retro tuner radiowy z lat 80. (NDR 1 • 89.2 MHz, skala częstotliwości, VU-meter) połączony falami sygnału z magnetofonem kasetowym z wirującymi szpulami i pulsującą czerwoną diodą ● REC (nagrywanie składanki Mixtape #4).
-     3. Faza 3: Płynne wysunięcie papierowej wkładki J-Card do kasety z liniami i sekwencyjnym wpisywaniem tytułów i wykonawców (The Cure, Depeche Mode, New Order).
-     4. Faza 4: Przy Dariusie wyrasta duży, ekspresyjny znak zapytania `?` z neonową poświatą, a na wkładce linijka 4. zostaje pusta z migającym kursorem `[ ??? — ??? ]` i ostrzeżeniem o braku zapowiedzi DJ-a.
-   - Transparentność: Domyślnie 100% przezroczyste tło (Alpha Channel) z opcją przełączenia na ciemne tło kinowe.
-   - Pliki: DariusCharacter.tsx, RadioCassetteDeck.tsx, CassetteTracklistCard.tsx, darius-avatar.ts, schema.ts, index.tsx, DariusStoryControls.tsx.
+0D. Darius & Lydia 1: Domena Internetowa & Poszukiwania (id: "darius-internet-quest")
+   - Koncepcja: Lydia (niebieska) wręcza Dariusowi (żółty) domenę www.unknown-song.net na urodziny,
+     publikacja próbek piosenek na stronie, kolejne rozpoznane utwory (✓) i tajemniczy znak zapytania (?).
+   - Pliki: DariusLydiaCharacters.tsx, WebsiteTrackerCard.tsx, schema.ts, index.tsx, DariusInternetQuestControls.tsx.
+
+0E. Anton Riedel: Kamuflaż Lydii (id: "anton-riedel")
+   - Koncepcja: Postać Lydii w klasycznym komicznym kamuflażu Groucho Marxa (okulary z dużym nochalem i bujnymi wąsami)
+     z podpisem "ANTON RIEDEL". Alias, pod którym Lydia szukała utworu na forach dyskusyjnych w 2007 roku.
+   - Efekt i animacja:
+     - Okulary mogą być na twarzy od początku lub opadać z góry (bouncy spring) z komiksowym uderzeniem (impact lines).
+     - Opcjonalna animacja transformacji: najpierw podpis "LYDIA", a po opadnięciu maski karta obraca się na "ANTON RIEDEL".
+     - Style maski: Czarno-Biały (wireframe-black), Cielisty Nochala (comedy-color), Czysta Biel (pure-white).
+     - Suwaki dopasowania maski (skala, przesunięcie X/Y), anatomia głowy, kółka i presety skali postaci (100%-175%).
+   - Transparentność: 100% przezroczyste tło (ProRes 4444 Alpha Channel).
+   - Pliki: DisguiseGlasses.tsx, AntonCharacter.tsx, schema.ts, index.tsx, AntonRiedelControls.tsx.
 
 A. Joy Division: 25 Kaset → Unknown Pleasures (id: "joy-division-cassette-morph")
    - Koncepcja: 25 kaset magnetofonowych w minimalistycznym białym outline, które

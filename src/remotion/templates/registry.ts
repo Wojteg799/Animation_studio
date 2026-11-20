@@ -57,6 +57,31 @@ import {
   DariusInternetQuestProps,
   defaultDariusInternetQuestProps,
 } from "./DariusInternetQuest/schema";
+import { AntonRiedel } from "./AntonRiedel";
+import {
+  AntonRiedelProps,
+  defaultAntonRiedelProps,
+} from "./AntonRiedel/schema";
+import { SingleCassette } from "./SingleCassette";
+import {
+  SingleCassetteProps,
+  defaultSingleCassetteProps,
+} from "./SingleCassette/schema";
+import { GabaskinsQuest } from "./GabaskinsQuest";
+import {
+  GabaskinsQuestProps,
+  defaultGabaskinsQuestProps,
+} from "./GabaskinsQuest/schema";
+import { GabrielPaulFacebook } from "./GabrielPaulFacebook";
+import {
+  GabrielPaulFacebookProps,
+  defaultGabrielPaulFacebookProps,
+} from "./GabrielPaulFacebook/schema";
+import { InvestigationBreakthrough } from "./InvestigationBreakthrough";
+import {
+  InvestigationBreakthroughProps,
+  defaultInvestigationBreakthroughProps,
+} from "./InvestigationBreakthrough/schema";
 
 export type TemplateCategory =
   | "Archiwa & Fora (Forums)"
@@ -145,6 +170,58 @@ export const TEMPLATES: TemplateDefinition[] = [
     isBackground: false,
   },
 
+  // 0E. ANTON RIEDEL: KAMUFLAŻ LYDII (OKULARY, NOS & WĄSY)
+  {
+    id: "anton-riedel",
+    name: "Anton Riedel: Kamuflaż Lydii (Okulary & Wąsy)",
+    category: "Postacie & Relacje (Characters)",
+    description: "Postać Lydii w klasycznym komicznym kamuflażu (okulary Groucho z dużym nosem i wąsami) z podpisem ANTON RIEDEL, animacją opadania maski i opcjonalną transformacją.",
+    component: AntonRiedel,
+    defaultProps: defaultAntonRiedelProps,
+    defaultDurationInFrames: 180, // 6 seconds at 30fps
+    tags: ["Anton Riedel", "Lydia", "Kamuflaż", "Okulary", "Wąsy", "Disguise", "Lostwave", "Alpha"],
+    isBackground: false,
+  },
+
+  // 0F. GABASKINS: REDDIT & YOUTUBE (GABRIEL VIEIRA)
+  {
+    id: "gabaskins-quest",
+    name: "Gabaskins: Reddit & YouTube (Gabriel Vieira)",
+    category: "Postacie & Relacje (Characters)",
+    description: "Gabriel Vieira (Gabaskins) z Brazylii w zielonym stylu z antenką Reddit Snoo, odkrycie nagrania i publikacja na YouTube oraz różnych subredditach z animowanymi liniami sygnału.",
+    component: GabaskinsQuest,
+    defaultProps: defaultGabaskinsQuestProps,
+    defaultDurationInFrames: 240, // 8 seconds at 30fps
+    tags: ["Gabaskins", "Gabriel Vieira", "Reddit", "YouTube", "Snoo", "Antenka", "Zielony", "Lostwave", "Alpha"],
+    isBackground: false,
+  },
+
+  // 0G. GABRIEL & PAUL BASKERVILLE: FACEBOOK & ZAGADKA
+  {
+    id: "gabriel-paul-facebook",
+    name: "Gabriel & Paul Baskerville: Facebook & Pytajnik",
+    category: "Postacie & Relacje (Characters)",
+    description: "Gabriel kontaktuje się z Paulem Baskerville'em (na brązowo z radiowymi słuchawkami NDR) przez Facebooka. Dziennikarz odpowiada, lecz obok niego pojawia się znak zapytania — nie rozpoznaje utworu i nie pamięta, czy go grał.",
+    component: GabrielPaulFacebook,
+    defaultProps: defaultGabrielPaulFacebookProps,
+    defaultDurationInFrames: 240, // 8 seconds at 30fps
+    tags: ["Gabriel", "Paul Baskerville", "Facebook", "NDR", "Dziennikarz", "Brązowy", "Pytajnik", "Lostwave", "Alpha"],
+    isBackground: false,
+  },
+
+  // 0H. PRZEŁOM ŚLEDZTWA: DARIUS, LYDIA & GABRIEL (2007 & MESSENGER)
+  {
+    id: "investigation-breakthrough",
+    name: "Przełom Śledztwa: Darius, Lydia & Gabriel (2007 & Messenger)",
+    category: "Postacie & Relacje (Characters)",
+    description: "Darius słyszy audycję w radiu i rozpoznaje swoją kasetę, kontaktuje się z Lydią i odkrywają, że śledztwo prowadzi do jej wpisów z 2007 roku. Lydia pisze do Gabriela na Messengerze, by wyjaśnić pochodzenie nagrania.",
+    component: InvestigationBreakthrough,
+    defaultProps: defaultInvestigationBreakthroughProps,
+    defaultDurationInFrames: 300, // 10 seconds at 30fps
+    tags: ["Darius", "Lydia", "Gabriel", "Radio", "Kaseta", "2007", "Messenger", "Lostwave", "Alpha"],
+    isBackground: false,
+  },
+
   // 1. JOY DIVISION: 25 KASET -> UNKNOWN PLEASURES
   {
     id: "joy-division-cassette-morph",
@@ -155,6 +232,19 @@ export const TEMPLATES: TemplateDefinition[] = [
     defaultProps: defaultJoyDivisionCassetteMorphProps,
     defaultDurationInFrames: 240, // 8 seconds at 30fps
     tags: ["Joy Division", "Unknown Pleasures", "25 Kaset", "Morph", "Pulsar", "Retro", "Minimalizm"],
+    isBackground: false,
+  },
+
+  // 1B. POJEDYNCZA KASETA WIREFRAME (UNKNOWN PLEASURES)
+  {
+    id: "single-cassette",
+    name: "Pojedyncza Kaseta Wireframe (Joy Division Style)",
+    category: "Czołówki & Intro (Intros)",
+    description: "Jedna minimalistyczna kaseta magnetofonowa wireframe z obracającymi się szpulami, delikatnym unoszeniem w przestrzeni i przezroczystym tłem do montażu.",
+    component: SingleCassette,
+    defaultProps: defaultSingleCassetteProps,
+    defaultDurationInFrames: 240, // 8 seconds at 30fps
+    tags: ["Kaseta", "Wireframe", "Joy Division", "Unknown Pleasures", "Minimalizm", "Szpule", "Alpha"],
     isBackground: false,
   },
 
