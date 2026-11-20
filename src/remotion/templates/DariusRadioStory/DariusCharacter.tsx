@@ -59,6 +59,7 @@ export const DariusCharacter: React.FC<DariusCharacterProps> = ({ props, frame }
     avatarBodyY = 168,
     avatarScale = 1.35,
     heartScale = 1.25,
+    heartOffsetY = 0,
     questionMarkScale = 1.35,
     showHeartAndNotes = true,
     showQuestionMark = true,
@@ -161,7 +162,7 @@ export const DariusCharacter: React.FC<DariusCharacterProps> = ({ props, frame }
         <div
           style={{
             position: "absolute",
-            top: -circleSize * 0.52,
+            top: -circleSize * 0.44 + heartOffsetY,
             opacity: heartOpacity,
             display: "flex",
             alignItems: "center",

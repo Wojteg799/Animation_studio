@@ -18,6 +18,7 @@ export const DariusRadioStorySchema = z.object({
   radioScale: z.number().min(0.5).max(2.5).default(1.2), // Większe radio i kaseta
   tracklistScale: z.number().min(0.5).max(2.5).default(1.15), // Większa karta notatek i ołówek
   heartScale: z.number().min(0.5).max(2.5).default(1.25), // Większe serce i nutki
+  heartOffsetY: z.number().min(-80).max(80).default(0), // Przesunięcie pionowe serca
   questionMarkScale: z.number().min(0.5).max(3.0).default(1.35), // Większy wyrazisty pytajnik
 
   // Kolorystyka czarno-biała z żółtymi akcentami
@@ -60,6 +61,7 @@ export const defaultDariusRadioStoryProps: DariusRadioStoryProps = {
   radioScale: 1.2,
   tracklistScale: 1.15,
   heartScale: 1.25,
+  heartOffsetY: 0,
   questionMarkScale: 1.35,
 
   accentColor: "#facc15", // Żółty akcent

@@ -450,6 +450,25 @@ export const DariusStoryControls: React.FC<DariusStoryControlsProps> = ({
           />
         </div>
 
+        {/* Pozycja Y Serca */}
+        <div className="space-y-1 pt-1.5">
+          <div className="flex justify-between items-center text-[10px]">
+            <span className="text-zinc-400">Wysokość / Pozycja Y Serca:</span>
+            <span className="font-mono text-yellow-400">
+              {(props.heartOffsetY ?? 0) > 0 ? `+${props.heartOffsetY}` : props.heartOffsetY ?? 0}px
+            </span>
+          </div>
+          <input
+            type="range"
+            min="-50"
+            max="50"
+            step="1"
+            value={props.heartOffsetY ?? 0}
+            onChange={(e) => updateProp("heartOffsetY", parseInt(e.target.value))}
+            className="w-full accent-yellow-400"
+          />
+        </div>
+
         {/* Pytajnik Scale */}
         <div className="space-y-1 pt-2 border-t border-white/5">
           <div className="flex justify-between items-center text-[11px]">
