@@ -62,6 +62,11 @@ import {
   AntonRiedelProps,
   defaultAntonRiedelProps,
 } from "./AntonRiedel/schema";
+import { Lydia } from "./Lydia";
+import {
+  LydiaProps,
+  defaultLydiaProps,
+} from "./Lydia/schema";
 import { SingleCassette } from "./SingleCassette";
 import {
   SingleCassetteProps,
@@ -180,6 +185,19 @@ export const TEMPLATES: TemplateDefinition[] = [
     defaultProps: defaultAntonRiedelProps,
     defaultDurationInFrames: 180, // 6 seconds at 30fps
     tags: ["Anton Riedel", "Lydia", "Kamuflaż", "Okulary", "Wąsy", "Disguise", "Lostwave", "Alpha"],
+    isBackground: false,
+  },
+
+  // 0E-2. LYDIA: WEJŚCIE POSTACI (SOLO)
+  {
+    id: "lydia",
+    name: "Lydia: Wejście Postaci (Solo)",
+    category: "Postacie & Relacje (Characters)",
+    description: "Lydia (błękitna sylwetka w minimalistycznym kółku) wyskakująca sprężyście na ekran dokładnie w stylu Antona Riedla, z podpisem LYDIA i przezroczystym tłem do montażu.",
+    component: Lydia,
+    defaultProps: defaultLydiaProps,
+    defaultDurationInFrames: 180, // 6 seconds at 30fps
+    tags: ["Lydia", "Postać", "Solo", "Wejście", "Pop-in", "Błękitny", "Lostwave", "Alpha"],
     isBackground: false,
   },
 

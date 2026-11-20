@@ -36,6 +36,8 @@ import { DariusInternetQuestProps } from "../../remotion/templates/DariusInterne
 import { DariusInternetQuestControls } from "./DariusInternetQuestControls";
 import { AntonRiedelProps } from "../../remotion/templates/AntonRiedel/schema";
 import { AntonRiedelControls } from "./AntonRiedelControls";
+import { LydiaProps } from "../../remotion/templates/Lydia/schema";
+import { LydiaControls } from "./LydiaControls";
 import { GabaskinsQuestProps } from "../../remotion/templates/GabaskinsQuest/schema";
 import { GabaskinsControls } from "./GabaskinsControls";
 import { GabrielPaulFacebookProps } from "../../remotion/templates/GabrielPaulFacebook/schema";
@@ -93,6 +95,11 @@ interface LeftSidebarProps {
   updateAntonProp: <K extends keyof AntonRiedelProps>(
     key: K,
     val: AntonRiedelProps[K]
+  ) => void;
+  lydiaProps: LydiaProps;
+  updateLydiaProp: <K extends keyof LydiaProps>(
+    key: K,
+    val: LydiaProps[K]
   ) => void;
   gabaskinsProps: GabaskinsQuestProps;
   updateGabaskinsProp: <K extends keyof GabaskinsQuestProps>(
@@ -167,6 +174,8 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
   updateDariusQuestProp,
   antonProps,
   updateAntonProp,
+  lydiaProps,
+  updateLydiaProp,
   gabaskinsProps,
   updateGabaskinsProp,
   gabrielPaulProps,
@@ -203,6 +212,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
     selectedTemplateId === "darius-radio-story" ||
     selectedTemplateId === "darius-internet-quest" ||
     selectedTemplateId === "anton-riedel" ||
+    selectedTemplateId === "lydia" ||
     selectedTemplateId === "gabaskins-quest" ||
     selectedTemplateId === "gabriel-paul-facebook" ||
     selectedTemplateId === "investigation-breakthrough";
@@ -727,6 +737,17 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
             <AntonRiedelControls
               props={antonProps}
               updateProp={updateAntonProp}
+              durationFrames={durationFrames}
+              setDurationFrames={setDurationFrames}
+              fps={fps}
+            />
+          </div>
+        ) : selectedTemplateId === "lydia" ? (
+          /* ================= 00D-2. LYDIA (WEJŚCIE POSTACI) CONTROLS ================= */
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <LydiaControls
+              props={lydiaProps}
+              updateProp={updateLydiaProp}
               durationFrames={durationFrames}
               setDurationFrames={setDurationFrames}
               fps={fps}

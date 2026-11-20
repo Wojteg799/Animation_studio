@@ -27,6 +27,10 @@ import {
   defaultAntonRiedelProps,
 } from "../remotion/templates/AntonRiedel/schema";
 import {
+  LydiaProps,
+  defaultLydiaProps,
+} from "../remotion/templates/Lydia/schema";
+import {
   GabaskinsQuestProps,
   defaultGabaskinsQuestProps,
 } from "../remotion/templates/GabaskinsQuest/schema";
@@ -101,6 +105,9 @@ export default function StudioPage() {
   const [antonProps, setAntonProps] = useState<AntonRiedelProps>(
     defaultAntonRiedelProps
   );
+  const [lydiaProps, setLydiaProps] = useState<LydiaProps>(
+    defaultLydiaProps
+  );
   const [gabaskinsProps, setGabaskinsProps] = useState<GabaskinsQuestProps>(
     defaultGabaskinsQuestProps
   );
@@ -168,6 +175,8 @@ export default function StudioPage() {
         setDurationFrames(dariusQuestProps.durationInFrames || 360);
       } else if (templateId === "anton-riedel") {
         setDurationFrames(antonProps.durationInFrames || 180);
+      } else if (templateId === "lydia") {
+        setDurationFrames(lydiaProps.durationInFrames || 180);
       } else if (templateId === "gabaskins-quest") {
         setDurationFrames(gabaskinsProps.durationInFrames || 240);
       } else if (templateId === "gabriel-paul-facebook") {
@@ -277,6 +286,23 @@ export default function StudioPage() {
         val: AntonRiedelProps[K]
       ) => {
         setAntonProps((prev) => ({
+          ...prev,
+          [key]: val,
+        }));
+        if (key === "durationInFrames" && typeof val === "number") {
+          setDurationFrames(val);
+        }
+      },
+      []
+    );
+
+    // Update a single prop for Lydia
+    const updateLydiaProp = useCallback(
+      <K extends keyof LydiaProps>(
+        key: K,
+        val: LydiaProps[K]
+      ) => {
+        setLydiaProps((prev) => ({
           ...prev,
           [key]: val,
         }));
@@ -501,6 +527,12 @@ export default function StudioPage() {
               ...defaultAntonRiedelProps,
               ...antonProps,
             };
+          } else if (selectedTemplateId === "lydia") {
+            compositionId = "Lydia";
+            inputProps = {
+              ...defaultLydiaProps,
+              ...lydiaProps,
+            };
           } else if (selectedTemplateId === "gabaskins-quest") {
             compositionId = "GabaskinsQuest";
             inputProps = {
@@ -595,6 +627,8 @@ export default function StudioPage() {
           ? dariusQuestProps
         : selectedTemplateId === "anton-riedel"
           ? antonProps
+        : selectedTemplateId === "lydia"
+          ? lydiaProps
         : selectedTemplateId === "gabaskins-quest"
           ? gabaskinsProps
         : selectedTemplateId === "gabriel-paul-facebook"
@@ -654,6 +688,8 @@ export default function StudioPage() {
               updateDariusQuestProp={updateDariusQuestProp}
               antonProps={antonProps}
               updateAntonProp={updateAntonProp}
+              lydiaProps={lydiaProps}
+              updateLydiaProp={updateLydiaProp}
               gabaskinsProps={gabaskinsProps}
               updateGabaskinsProp={updateGabaskinsProp}
               gabrielPaulProps={gabrielPaulProps}
@@ -693,6 +729,8 @@ export default function StudioPage() {
                   ? dariusQuestProps.durationInFrames
                   : selectedTemplateId === "anton-riedel" && antonProps.durationInFrames
                   ? antonProps.durationInFrames
+                  : selectedTemplateId === "lydia" && lydiaProps.durationInFrames
+                  ? lydiaProps.durationInFrames
                   : selectedTemplateId === "gabaskins-quest" && gabaskinsProps.durationInFrames
                   ? gabaskinsProps.durationInFrames
                   : selectedTemplateId === "gabriel-paul-facebook" && gabrielPaulProps.durationInFrames

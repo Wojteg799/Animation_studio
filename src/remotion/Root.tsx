@@ -61,6 +61,11 @@ import {
   AntonRiedelProps,
   defaultAntonRiedelProps,
 } from "./templates/AntonRiedel/schema";
+import { Lydia } from "./templates/Lydia";
+import {
+  LydiaProps,
+  defaultLydiaProps,
+} from "./templates/Lydia/schema";
 import { SingleCassette } from "./templates/SingleCassette";
 import {
   SingleCassetteProps,
@@ -427,6 +432,67 @@ export const RemotionRoot: React.FC = () => {
         defaultProps={defaultAntonRiedelProps}
         calculateMetadata={async ({ props }) => {
           const customProps = props as AntonRiedelProps & {
+            customFps?: number;
+            customDuration?: number;
+          };
+          return {
+            durationInFrames: customProps.durationInFrames || customProps.customDuration || 180,
+            props: customProps,
+          };
+        }}
+      />
+
+      {/* 0E-2. LYDIA: WEJŚCIE POSTACI (SOLO) */}
+      <Composition
+        id="Lydia"
+        component={Lydia}
+        durationInFrames={180}
+        fps={30}
+        width={1920}
+        height={1080}
+        defaultProps={defaultLydiaProps}
+        calculateMetadata={async ({ props }) => {
+          const customProps = props as LydiaProps & {
+            customFps?: number;
+            customDuration?: number;
+          };
+          return {
+            durationInFrames: customProps.durationInFrames || customProps.customDuration || 180,
+            props: customProps,
+          };
+        }}
+      />
+
+      <Composition
+        id="Lydia-4K"
+        component={Lydia}
+        durationInFrames={180}
+        fps={30}
+        width={3840}
+        height={2160}
+        defaultProps={defaultLydiaProps}
+        calculateMetadata={async ({ props }) => {
+          const customProps = props as LydiaProps & {
+            customFps?: number;
+            customDuration?: number;
+          };
+          return {
+            durationInFrames: customProps.durationInFrames || customProps.customDuration || 180,
+            props: customProps,
+          };
+        }}
+      />
+
+      <Composition
+        id="Lydia-Shorts"
+        component={Lydia}
+        durationInFrames={180}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={defaultLydiaProps}
+        calculateMetadata={async ({ props }) => {
+          const customProps = props as LydiaProps & {
             customFps?: number;
             customDuration?: number;
           };
